@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="sitemap.xsl"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    <url>
+        <loc>https://shiyujun.cn/tags/Elasticsearch/</loc>
+        <lastmod>2019-03-19T09:19:36.495Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/Mybatis/</loc>
+        <lastmod>2019-03-19T09:19:36.534Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/Java%E5%B0%8F%E6%8A%80%E5%B7%A7/</loc>
+        <lastmod>2019-03-19T09:19:36.538Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/</loc>
+        <lastmod>2019-03-19T09:19:36.538Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/Drools/</loc>
+        <lastmod>2019-03-19T09:19:36.569Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/git/</loc>
+        <lastmod>2019-03-19T09:19:36.571Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/</loc>
+        <lastmod>2019-03-19T09:19:36.575Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/Vue/</loc>
+        <lastmod>2019-03-19T09:19:36.614Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/UML/</loc>
+        <lastmod>2019-03-19T09:19:36.629Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/%E5%BC%80%E6%BA%90%E7%BB%84%E4%BB%B6/</loc>
+        <lastmod>2019-03-19T09:19:36.682Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/maven/</loc>
+        <lastmod>2019-03-19T09:19:36.702Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/Https/</loc>
+        <lastmod>2019-03-19T09:19:36.715Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/web%E5%AE%89%E5%85%A8/</loc>
+        <lastmod>2019-03-19T09:19:36.751Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/Spring/</loc>
+        <lastmod>2019-03-19T09:19:36.770Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/Java%E8%BF%9B%E9%98%B6/</loc>
+        <lastmod>2019-03-19T09:19:36.772Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/SpringCloud/</loc>
+        <lastmod>2019-03-19T09:19:36.873Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
+        <lastmod>2019-03-19T09:19:36.881Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/JS/</loc>
+        <lastmod>2019-03-19T09:19:36.888Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/%E6%94%AF%E4%BB%98/</loc>
+        <lastmod>2019-03-19T09:19:36.899Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</loc>
+        <lastmod>2019-03-19T09:19:36.919Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/Java%E5%B7%A5%E5%85%B7%E7%B1%BB/</loc>
+        <lastmod>2019-03-19T09:19:36.930Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/kubernetes/</loc>
+        <lastmod>2019-06-11T09:12:35.809Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/RabbitMQ/</loc>
+        <lastmod>2019-07-07T07:53:25.292Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/Linux/</loc>
+        <lastmod>2019-07-07T07:53:25.321Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/%E6%B1%87%E6%80%BB/</loc>
+        <lastmod>2019-07-07T07:53:25.325Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/</loc>
+        <lastmod>2019-07-07T07:53:25.478Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/</loc>
+        <lastmod>2019-07-07T07:53:25.660Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/%E9%9B%86%E5%90%88/</loc>
+        <lastmod>2019-07-07T07:53:26.010Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</loc>
+        <lastmod>2019-07-07T07:53:26.206Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/MySQL/</loc>
+        <lastmod>2019-07-07T07:53:26.208Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/Redis/</loc>
+        <lastmod>2019-07-07T07:53:26.215Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/JVM/</loc>
+        <lastmod>2019-07-07T07:53:26.249Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/RabbitMQ/</loc>
+        <lastmod>2019-07-07T08:20:10.598Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/Docker/</loc>
+        <lastmod>2019-07-07T08:56:55.824Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/Kubernetes/</loc>
+        <lastmod>2019-07-07T13:06:36.256Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+</urlset>
+<!-- XML Sitemap generated by Hexo SEO Friendly Sitemap Generator -->

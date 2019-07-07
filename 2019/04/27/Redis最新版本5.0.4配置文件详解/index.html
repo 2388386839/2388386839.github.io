@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Java知识进阶学习，无套路免费技术干货：并发、搜索引擎、微服务、虚拟机、产品、支付、大数据、前端、数据库、架构设计、消息队列、数据结构、设计模式、存储、分布式、网络、面试题等。">
+    <meta name="keyword"  content="石玉军,Java学习录，Java学习，个人博客">
+
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Redis最新版本5.0.4配置文件详解 - Java学习录
+        
+    </title>
+
+    <link rel="canonical" href="https://shiyujun.cn/2019/04/27/Redis最新版本5.0.4配置文件详解/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+    <!--??????????? -->
+    <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+    <!--???? -->
+   <script>
+   var _hmt = _hmt || [];
+   (function() {
+     var hm = document.createElement("script");
+     hm.src = "https://hm.baidu.com/hm.js?eb90dcd1823a43971326ae1a2633c8f7";
+     var s = document.getElementsByTagName("script")[0];
+     s.parentNode.insertBefore(hm, s);
+   })();
+   </script>
+
+
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+ <div id="divCenter" align="center"
+             style="position: absolute; display: none;  width: 300px; height: 300px; overflow:auto;  position:fixed;z-index:9999;margin-top: 30%;margin-left: 30%;">
+            <img id="bigImg" class="bigImg" onclick="document.getElementById('divCenter').style.display = 'none'"
+                    src="img/wxjiaoliu.png" style="height:90%;width:90%;"/>
+        </div>
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header-->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/header_img/home-bg-o.png')
+            /*post*/
+        
+    }
+
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                        </div>
+                        <h1>Redis最新版本5.0.4配置文件详解</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by 石玉军 on
+                            2019-04-27
+                        </span>
+
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Java学习录</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">首页</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">关于我</a>
+                        </li>
+						
+						
+						
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">归档</a>
+                        </li>
+						
+						
+						
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">标签</a>
+                        </li>
+						
+						
+						
+                        
+                    
+                   
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+		
+
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+
+    <div class="container">
+        <div class="row">
+
+
+            <div class="
+                col-lg-8 col-lg-offset-1
+                col-md-8 col-md-offset-1
+                col-sm-12 col-xs-12
+                post-container">
+
+                <p>#当你需要为某个配置项指定内存大小的时候，必须要带上单位，<br>
+#通常的格式就是 1k 5gb 4m 等：<br>
+#1k  =&gt; 1000 bytes<br>
+#1kb =&gt; 1024 bytes<br>
+#1m  =&gt; 1000000 bytes<br>
+#1mb =&gt; 1024<em>1024 bytes<br>
+#1g  =&gt; 1000000000 bytes<br>
+#1gb =&gt; 1024</em>1024*1024 bytes</p>
+<p></p><h3><span id="文件引入"> 文件引入 </span></h3><p></p>
+<p>#引入其他的配置文件<br>
+#include /path/to/local.conf<br>
+#include /path/to/other.conf</p>
+<p></p><h3><span id="模块加载"> 模块加载 </span></h3><p></p>
+<p>#启动时加载模块<br>
+#loadmodule /path/to/my_module.so<br>
+#loadmodule /path/to/other_module.so</p>
+<p></p><h3><span id="网络"> 网络 </span></h3><p></p>
+<p>#指定redis只能接受来自此IP绑定的网卡的请求，注意此默认值默认外网是不可访问的<br>
+bind 127.0.0.1</p>
+<p>#是否开启保护模式。如果没有指定bind和密码，redis只会本地进行访问，拒绝外部访问。<br>
+protected-mode yes</p>
+<p>#默认端口，建议生产环境不要使用默认端口避免被恶意扫描到<br>
+port 6379</p>
+<p>#TCP连接中已完成队列(完成三次握手之后)的长度<br>
+tcp-backlog 511</p>
+<p>#配置unix socket来让redis支持监听本地连接。<br>
+#unixsocket /tmp/redis.sock</p>
+<p>#配置unix socket使用文件的权限<br>
+#unixsocketperm 700</p>
+<p>#客户端连接空闲超过timeout将会被断开，为0则断开<br>
+timeout 0</p>
+<p>#tcp keepalive参数<br>
+tcp-keepalive 300</p>
+<p></p><h3><span id="基本配置"> 基本配置 </span></h3><p></p>
+<p>#是否后台启动<br>
+daemonize no</p>
+<p>#可以通过upstart和systemd管理Redis守护进程<br>
+#选项：<br>
+#supervised no - 没有监督互动<br>
+#supervised upstart - 通过将Redis置于SIGSTOP模式来启动信号<br>
+#supervised systemd - signal systemd将READY = 1写入$ NOTIFY_SOCKET<br>
+#supervised auto - 检测upstart或systemd方法基于 UPSTART_JOB或NOTIFY_SOCKET环境变量<br>
+supervised no</p>
+<p>#配置PID文件路径<br>
+pidfile /var/run/redis_6379.pid</p>
+<p>#日志级别<br>
+#参数：<br>
+#	debug<br>
+#	verbose<br>
+#	notice<br>
+#	warning<br>
+loglevel notice</p>
+<p>#日志文件<br>
+logfile “”</p>
+<p>#是否打开记录syslog功能<br>
+#syslog-enabled no</p>
+<p>#syslog标识符<br>
+#syslog-ident redis</p>
+<p>#日志的来源<br>
+#syslog-facility local0</p>
+<p>#数据库的数量，默认使用的数据库是DB 0<br>
+#可以通过”SELECT “命令选择一个db<br>
+#集群环境默认只有DB 0<br>
+databases 16</p>
+<p>#是否一直显示logo<br>
+always-show-logo yes</p>
+<p></p><h3><span id="数据持久化rdb">数据持久化RDB</span></h3><br>
+#保存数据到磁盘:<br>
+#save <seconds> <changes><p></p>
+<h1><span id=""></span></h1>
+<p>#Will save the DB if both the given number of seconds and the given<br>
+#number of write operations against the DB occurred.</p>
+<h1><span id=""></span></h1>
+<p>#In the example below the behaviour will be to save:</p>
+<h1><span id=""></span></h1>
+<p>#15分钟有一个key发生变化就保存数据到磁盘<br>
+#after 900 sec (15 min) if at least 1 key changed</p>
+<h1><span id=""></span></h1>
+<p>#5分钟有10个key发生变化就保存数据到磁盘<br>
+#after 300 sec (5 min) if at least 10 keys changed</p>
+<h1><span id=""></span></h1>
+<p>#1分钟有10000个key发生变化就保存数据到磁盘<br>
+#after 60 sec if at least 10000 keys changed</p>
+<h1><span id=""></span></h1>
+<p>#Note: you can disable saving completely by commenting out all “save” lines.</p>
+<h1><span id=""></span></h1>
+<p>#还可以删除所有以前配置的保存。<br>
+#通过添加带有单个空字符串参数的保存指令<br>
+#like in the following example:</p>
+<p>save 900 1<br>
+save 300 10<br>
+save 60 10000</p>
+<p>#持久化出现错误后，是否依然进行继续进行工作<br>
+stop-writes-on-bgsave-error yes</p>
+<p>#是否校验rdb文件<br>
+rdbcompression yes</p>
+<p>#使用压缩rdb文件，rdb文件压缩使用LZF压缩算法，<br>
+rdbchecksum yes</p>
+<p>#rdb文件名称<br>
+dbfilename dump.rdb</p>
+<p>#rdb使用上面的“dbfilename配置指令的文件名保存到这个目录<br>
+dir ./</p>
+<p></p><h3><span id="主从复制">主从复制</span></h3><br>
+#指定主节点。旧版本是：slaveof <masterip> <masterport><br>
+#replicaof <masterip> <masterport><p></p>
+<p>#master的密码<br>
+#masterauth <master-password></master-password></p>
+<p>#当一个slave失去和master的连接，或者同步正在进行中，slave的行为有两种可能：<br>
+#如果 replica-serve-stale-data 设置为 “yes” (默认值)，slave会继续响应客户端请求，可能是正常数据，也可能是还没获得值的空数据。<br>
+#如果 replica-serve-stale-data 设置为 “no”，slave会回复&quot;正在从master同步（SYNC with master in progress）&quot;来处理各种请求，除了 INFO 和 SLAVEOF 命令。<br>
+replica-serve-stale-data yes</p>
+<p>#配置从是否为只读，开启后从则不能写入数据，旧版本是：slave-read-only yes<br>
+replica-read-only yes</p>
+<p>#同步策略: 磁盘或socket，默认磁盘方式</p>
+<p>repl-diskless-sync no</p>
+<p>#如果非磁盘同步方式开启，可以配置同步延迟时间，以等待master产生子进程通过socket传输RDB数据给slave。<br>
+#默认值为5秒，设置为0秒则每次传输无延迟。<br>
+repl-diskless-sync-delay 5</p>
+<p>#slave根据指定的时间间隔向master发送ping请求。默认10秒。<br>
+#repl-ping-replica-period 10</p>
+<p>#同步的超时时间<br>
+#slave在与master SYNC期间有大量数据传输，造成超时<br>
+#在slave角度，master超时，包括数据、ping等<br>
+#在master角度，slave超时，当master发送REPLCONF ACK pings#确保这个值大于指定的repl-ping-slave-period，否则在主从间流量不高时每次都会检测到超时<br>
+#repl-timeout 60</p>
+<p>#是否在slave套接字发送SYNC之后禁用 TCP_NODELAY<br>
+#如果选择yes，Redis将使用更少的TCP包和带宽来向slaves发送数据。但是这将使数据传输到slave上有延迟，Linux内核的默认配置会达到40毫秒。<br>
+#如果选择no，数据传输到salve的延迟将会减少但要使用更多的带宽。<br>
+#默认我们会为低延迟做优化，但高流量情况或主从之间的跳数过多时，可以设置为“yes”。<br>
+repl-disable-tcp-nodelay no</p>
+<p>#设置数据备份的backlog大小<br>
+#repl-backlog-size 1mb</p>
+<p>#从最后一个slave断开开始计时多少秒后，backlog缓冲将会释放。<br>
+#repl-backlog-ttl 3600</p>
+<p>#优先级<br>
+replica-priority 100</p>
+<p>#如果master少于N个延时小于等于M秒的已连接slave，就可以停止接收写操作。<br>
+#N个slave需要是“oneline”状态。<br>
+#延时是以秒为单位，并且必须小于等于指定值，是从最后一个从slave接收到的ping（通常每秒发送）开始计数。<br>
+#该选项不保证N个slave正确同步写操作，但是限制数据丢失的窗口期。<br>
+#例如至少需要3个延时小于等于10秒的slave用下面的指令：<br>
+#min-replicas-to-write 3<br>
+#min-replicas-max-lag 10</p>
+<p></p><h3><span id="安全">安全</span></h3><p></p>
+<p>#密码<br>
+#requirepass foobared</p>
+<p>#命令重命名<br>
+#设置命令为空时禁用命令<br>
+#rename-command CONFIG “”</p>
+<p></p><h3><span id="限制">限制</span></h3><p></p>
+<p>#设置最多同时连接的客户端数量<br>
+#maxclients 10000</p>
+<p>#内存限制<br>
+#maxmemory <bytes></bytes></p>
+<p>#如果达到上方最大的内存限制，Redis如何选择删除key<br>
+#volatile-lru -&gt; 根据LRU算法删除设置过期时间的key<br>
+#allkeys-lru -&gt; 根据LRU算法删除任何key<br>
+#volatile-random -&gt; 随机移除设置过过期时间的key<br>
+#allkeys-random -&gt; 随机移除任何key<br>
+#volatile-ttl -&gt; 移除即将过期的key(minor TTL)<br>
+#noeviction -&gt; 不移除任何key，只返回一个写错误<br>
+#注意：对所有策略来说，如果Redis找不到合适的可以删除的key都会在写操作时返回一个错误。<br>
+#目前为止涉及的命令：set setnx setex append incr decr rpush lpush rpushx lpushx linsert lset rpoplpush sadd sinter sinterstore sunion sunionstore sdiff sdiffstore zadd zincrby zunionstore zinterstore hset hsetnx hmset hincrby incrby decrby getset mset msetnx exec sort<br>
+#maxmemory-policy noeviction</p>
+<p>#LRU和最小TTL算法的样本个数<br>
+#maxmemory-samples 5</p>
+<p></p><h3><span id="懒删除">懒删除</span></h3><p></p>
+<p>#内存满逐出<br>
+lazyfree-lazy-eviction no<br>
+#过期key删除<br>
+lazyfree-lazy-expire no<br>
+#内部删除，比如rename oldkey newkey时，如果newkey存在需要删除newkey<br>
+lazyfree-lazy-server-del no<br>
+#接收完RDB文件后清空数据选项<br>
+replica-lazy-flush no</p>
+<p></p><h3><span id="持久化方式aof">持久化方式AOF</span></h3><br>
+#每次启动时Redis都会先把这个文件的数据读入内存里，先忽略RDB文件<br>
+appendonly no<p></p>
+<p>#AOF文件名称<br>
+appendfilename “appendonly.aof”</p>
+<p>#fsync() 系统调用告诉操作系统把数据写到磁盘上，而不是等更多的数据进入输出缓冲区。<br>
+#有些操作系统会真的把数据马上刷到磁盘上；有些则会尽快去尝试这么做。<br>
+#Redis支持三种不同的模式：<br>
+#no：不要立刻刷，只有在操作系统需要刷的时候再刷。比较快。<br>
+#always：每次写操作都立刻写入到aof文件。慢，但是最安全。<br>
+#everysec：每秒写一次。折中方案。<br>
+#默认的 “everysec” 通常来说能在速度和数据安全性之间取得比较好的平衡。<br>
+appendfsync everysec</p>
+<p>#如果AOF的同步策略设置成 “always” 或者 “everysec”，并且后台的存储进程（后台存储或写入AOF 日志）会产生很多磁盘I/O开销。某些Linux的配置下会使Redis因为 fsync()系统调用而阻塞很久。<br>
+#注意，目前对这个情况还没有完美修正，甚至不同线程的 fsync() 会阻塞我们同步的write(2)调用。<br>
+#为了缓解这个问题，可以用下面这个选项。它可以在 BGSAVE 或 BGREWRITEAOF 处理时阻止fsync()。<br>
+#这就意味着如果有子进程在进行保存操作，那么Redis就处于&quot;不可同步&quot;的状态。<br>
+#这实际上是说，在最差的情况下可能会丢掉30秒钟的日志数据。（默认Linux设定）<br>
+#如果把这个设置成&quot;yes&quot;带来了延迟问题，就保持&quot;no&quot;，这是保存持久数据的最安全的方式。<br>
+no-appendfsync-on-rewrite no</p>
+<p>#自动重写AOF文件。如果AOF日志文件增大到指定百分比，Redis能够通过 BGREWRITEAOF 自动重写AOF日志文件。<br>
+#工作原理：Redis记住上次重写时AOF文件的大小（如果重启后还没有写操作，就直接用启动时的AOF大小）<br>
+#这个基准大小和当前大小做比较。如果当前大小超过指定比例，就会触发重写操作。<br>
+#你还需要指定被重写日志的最小尺寸，这样避免了达到指定百分比但尺寸仍然很小的情况还要重写。<br>
+#指定百分比为0会禁用AOF自动重写特性。</p>
+<p>auto-aof-rewrite-percentage 100<br>
+#文件达到大小阈值的时候进行重写<br>
+auto-aof-rewrite-min-size 64mb</p>
+<p>#如果设置为yes，如果一个因异常被截断的AOF文件被redis启动时加载进内存，redis将会发送日志通知用户<br>
+#如果设置为no，erdis将会拒绝启动。此时需要用&quot;redis-check-aof&quot;工具修复文件。</p>
+<p>aof-load-truncated yes</p>
+<p>#加载时Redis识别出AOF文件以“REDIS”开头字符串，<br>
+#并加载带此前缀的RDB文件，然后继续加载AOF<br>
+aof-use-rdb-preamble yes</p>
+<p></p><h3><span id="lua脚本配置">Lua脚本配置</span></h3><p></p>
+<p>#Lua 脚本的最大执行毫秒数</p>
+<p>lua-time-limit 5000</p>
+<p></p><h3><span id="集群">集群</span></h3><p></p>
+<p>#开启redis集群<br>
+#cluster-enabled yes</p>
+<p>#配置redis自动生成的集群配置文件名。确保同一系统中运行的各redis实例该配置文件不要重名。<br>
+#cluster-config-file nodes-6379.conf</p>
+<p>#集群节点超时毫秒数<br>
+#cluster-node-timeout 15000</p>
+<p>#如果数据太旧，集群中的不可用master的slave节点会避免成为备用master。如果slave和master失联时间超过:(node-timeout * slave-validity-factor) + repl-ping-slave-period则不会被提升为master。<br>
+#如node-timeout为30秒，slave-validity-factor为10, 默认default repl-ping-slave-period为10秒,失联时间超过310秒slave就不会成为master。<br>
+#较大的slave-validity-factor值可能允许包含过旧数据的slave成为master，同时较小的值可能会阻止集群选举出新master。<br>
+#为了达到最大限度的高可用性，可以设置为0，即slave不管和master失联多久都可以提升为master<br>
+#cluster-replica-validity-factor 10</p>
+<p>#只有在之前master有其它指定数量的工作状态下的slave节点时，slave节点才能提升为master。默认为1（即该集群至少有3个节点，1 master＋2 slaves，master宕机，仍有另外1个slave的情况下其中1个slave可以提升）<br>
+#测试环境可设置为0，生成环境中至少设置为1<br>
+#cluster-migration-barrier 1</p>
+<p>#默认情况下如果redis集群如果检测到至少有1个hash slot不可用，集群将停止查询数据。<br>
+#如果所有slot恢复则集群自动恢复。<br>
+#如果需要集群部分可用情况下仍可提供查询服务，设置为no。<br>
+#cluster-require-full-coverage yes</p>
+<p>#选项设置为yes时，会阻止replicas尝试对其master在主故障期间进行故障转移<br>
+#然而，master仍然可以执行手动故障转移,如果强制这样做的话。<br>
+#cluster-replica-no-failover no</p>
+<p></p><h3><span id="docker集群配置">Docker集群配置</span></h3><p></p>
+<p>#默认情况下，Redis会自动检测自己的IP和从配置中获取绑定的PORT，告诉客户端或者是其他节点。<br>
+#而在Docker环境中，如果使用的不是host网络模式，在容器内部的IP和PORT都是隔离的，那么客户端和其他节点无法通过节点公布的IP和PORT建立连接。<br>
+#如果开启以下配置，Redis节点会将配置中的这些IP和PORT告知客户端或其他节点。而这些IP和PORT是通过Docker转发到容器内的临时IP和PORT的。<br>
+#cluster-announce-ip<br>
+#cluster-announce-port<br>
+#集群总线端口<br>
+#cluster-announce-bus-port</p>
+<p></p><h3><span id="慢查询日志">慢查询日志</span></h3><p></p>
+<p>#记录超过多少微秒的查询命令<br>
+#1000000等于1秒，设置为0则记录所有命令<br>
+slowlog-log-slower-than 10000</p>
+<p>#记录大小，可通过SLOWLOG RESET命令重置<br>
+slowlog-max-len 128</p>
+<p></p><h3><span id="延时监控系统">延时监控系统</span></h3><br>
+#记录执行时间大于或等于预定时间（毫秒）的操作,为0时不记录<br>
+latency-monitor-threshold 0<p></p>
+<p></p><h3><span id="事件通知">事件通知</span></h3><p></p>
+<p>#Redis能通知 Pub/Sub 客户端关于键空间发生的事件，默认关闭<br>
+notify-keyspace-events “”</p>
+<p></p><h3><span id="内部数据结构">内部数据结构</span></h3><p></p>
+<p>#当hash只有少量的entry时，并且最大的entry所占空间没有超过指定的限制时，会用一种节省内存的<br>
+#数据结构来编码。可以通过下面的指令来设定限制<br>
+hash-max-ziplist-entries 512<br>
+hash-max-ziplist-value 64</p>
+<p>#当取正值的时候，表示按照数据项个数来限定每个quicklist节点上的ziplist长度。比如，当这个参数配置<br>
+#成5的时候，表示每个quicklist节点的ziplist最多包含5个数据项。<br>
+#当取负值的时候，表示按照占用字节数来限定每个quicklist节点上的ziplist长度。这时，它只能取-1到-5<br>
+#这五个值，每个值含义如下：<br>
+#-5: 每个quicklist节点上的ziplist大小不能超过64 Kb。（注：1kb =&gt; 1024 bytes）<br>
+#-4: 每个quicklist节点上的ziplist大小不能超过32 Kb。<br>
+#-3: 每个quicklist节点上的ziplist大小不能超过16 Kb。<br>
+#-2: 每个quicklist节点上的ziplist大小不能超过8 Kb。（-2是Redis给出的默认值）<br>
+#-1: 每个quicklist节点上的ziplist大小不能超过4 Kb。<br>
+list-max-ziplist-size -2</p>
+<p>#这个参数表示一个quicklist两端不被压缩的节点个数。<br>
+#注：这里的节点个数是指quicklist双向链表的节点个数，而不是指ziplist里面的数据项个数。<br>
+#实际上，一个quicklist节点上的ziplist，如果被压缩，就是整体被压缩的。<br>
+#参数list-compress-depth的取值含义如下：<br>
+#0: 是个特殊值，表示都不压缩。这是Redis的默认值。<br>
+#1: 表示quicklist两端各有1个节点不压缩，中间的节点压缩。<br>
+#2: 表示quicklist两端各有2个节点不压缩，中间的节点压缩。<br>
+#3: 表示quicklist两端各有3个节点不压缩，中间的节点压缩。<br>
+#依此类推…<br>
+#由于0是个特殊值，很容易看出quicklist的头节点和尾节点总是不被压缩的，以便于在表的两端进行快速存取。<br>
+list-compress-depth 0</p>
+<p>#set有一种特殊编码的情况：当set数据全是十进制64位有符号整型数字构成的字符串时。<br>
+#下面这个配置项就是用来设置set使用这种编码来节省内存的最大长度。<br>
+set-max-intset-entries 512</p>
+<p>#与hash和list相似，有序集合也可以用一种特别的编码方式来节省大量空间。<br>
+#这种编码只适合长度和元素都小于下面限制的有序集合<br>
+zset-max-ziplist-entries 128<br>
+zset-max-ziplist-value 64</p>
+<p>#HyperLogLog稀疏结构表示字节的限制。该限制包括<br>
+#16个字节的头。当HyperLogLog使用稀疏结构表示<br>
+#这些限制，它会被转换成密度表示。<br>
+#值大于16000是完全没用的，因为在该点<br>
+#密集的表示是更多的内存效率。<br>
+#建议值是3000左右，以便具有的内存好处, 减少内存的消耗<br>
+hll-sparse-max-bytes 3000</p>
+<p>#Streams宏节点最大大小/项目。 流数据结构是基数编码内部多个项目的大节点树。 使用此配置<br>
+#可以配置单个节点的字节数，以及切换到新节点之前可能包含的最大项目数<br>
+#追加新的流条目。 如果以下任何设置设置为0，忽略限制，因此例如可以设置一个<br>
+#大入口限制将max-bytes设置为0，将max-entries设置为所需的值<br>
+stream-node-max-bytes 4096<br>
+stream-node-max-entries 100</p>
+<p>#启用哈希刷新，每100个CPU毫秒会拿出1个毫秒来刷新Redis的主哈希表（顶级键值映射表）<br>
+activerehashing yes</p>
+<p>#客户端的输出缓冲区的限制，可用于强制断开那些因为某种原因从服务器读取数据的速度不够快的客户端<br>
+client-output-buffer-limit normal 0 0 0<br>
+client-output-buffer-limit slave 256mb 64mb 60<br>
+client-output-buffer-limit pubsub 32mb 8mb 60</p>
+<p>#客户端查询缓冲区累积新命令。 它们仅限于固定的默认情况下，<br>
+#多数情况下为了避免协议不同步导致客户端查询缓冲区中未绑定的内存使用量的错误<br>
+#但是，如果你有使用的话，你可以在这里配置它，比如我们有很多执行请求或类似的。<br>
+#client-query-buffer-limit 1gb</p>
+<p>#在Redis协议中，批量请求，即表示单个的元素strings，通常限制为512 MB。<br>
+#但是，您可以z更改此限制<br>
+#proto-max-bulk-len 512mb</p>
+<p>#默认情况下，“hz”的被设定为10。提高该值将在Redis空闲时使用更多的CPU时，但同时当有多个key<br>
+#同时到期会使Redis的反应更灵敏，以及超时可以更精确地处理<br>
+hz 10</p>
+<p>#开启动态hz<br>
+dynamic-hz yes</p>
+<p>#当一个子进程重写AOF文件时，如果启用下面的选项，则文件每生成32M数据会被同步<br>
+aof-rewrite-incremental-fsync yes</p>
+<p>#当redis保存RDB文件时，如果启用了以下选项，每生成32 MB数据，文件将被fsync-ed。<br>
+#这很有用，以便以递增方式将文件提交到磁盘并避免大延迟峰值。<br>
+rdb-save-incremental-fsync yes</p>
+<p></p><h3><span id="碎片整理">碎片整理</span></h3><p></p>
+<p>#启用主动碎片整理<br>
+#activedefrag yes</p>
+<p>#启动活动碎片整理的最小碎片浪费量<br>
+#active-defrag-ignore-bytes 100mb</p>
+<p>#启动碎片整理的最小碎片百分比<br>
+#active-defrag-threshold-lower 10</p>
+<p>#使用最大消耗时的最大碎片百分比<br>
+#active-defrag-threshold-upper 100</p>
+<p>#在CPU百分比中进行碎片整理的最小消耗<br>
+#active-defrag-cycle-min 5</p>
+<p>#磁盘碎片整理的最大消耗<br>
+#active-defrag-cycle-max 75</p>
+<p>#将从主字典扫描处理的最大set / hash / zset / list字段数<br>
+#active-defrag-max-scan-fields 1000</p>
+<p></p><h4 style="color:red"><span id="推荐阅读">推荐阅读</span></h4><p></p>
+<ol>
+<li><a href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A" target="_blank" rel="noopener">SpringCloud学习系列汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q/" target="_blank" rel="noopener">多线程面试必备基础知识汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ" target="_blank" rel="noopener">Java集合源码分析汇总-JDK1.8</a></li>
+<li><a href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA" target="_blank" rel="noopener">Linux常用命令速查-汇总篇</a></li>
+</ol>
+<p></p><h4 style="color:red"><span id="博客所有文章首发于公众号java学习录转载请保留扫码关注公众号即可领取2000gjava学习资源">博客所有文章首发于公众号《Java学习录》转载请保留<br>
+扫码关注公众号即可领取2000GJava学习资源 </span></h4><p></p>
+<p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1">jpg)</p>
+</masterport></masterip></masterport></masterip></changes></seconds>
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/04/29/缓存淘汰、缓存穿透、缓存击穿、缓存雪崩、数据库缓存双写一致性/" data-toggle="tooltip" data-placement="top" title="缓存淘汰、缓存穿透、缓存击穿、缓存雪崩、数据库缓存双写一致性">&larr; 上一篇</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/04/25/分布式系统下的哈希一致性算法设计/" data-toggle="tooltip" data-placement="top" title="分布式系统下的哈希一致性算法设计">下一篇 &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+<div id="SOHUCS" sid="shiyujun.cn/2019/04/27/Redis最新版本5.0.4配置文件详解/"></div>
+<script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js" ></script>
+<script type="text/javascript">
+window.changyan.api.config({
+appid: 'cytJA6t4E',
+conf: 'prod_0a2ca470a8a2da2d6a3e76b5a8fd5abb'
+});
+</script>
+
+
+
+            </div>
+             <div>
+                        <!-- Sidebar Container -->
+<div class="
+    col-lg-3 col-lg-offset-0
+    col-md-3 col-md-offset-0
+    col-sm-12
+    col-xs-12
+    sidebar-container
+">
+    
+        
+
+<div id="site_search">
+  <input type="text"  style="outline: currentcolor none medium;" autocomplete="off" autocorrect="off" autocapitalize="off"
+   id="local-search-input" name="q" results="0" oninput="search()" placeholder="search my blog..."
+  class="local-search-input" />
+  <div id="local-search-result"></div>
+</div>
+
+<br>
+<br>
+   <h5>标签</h5>
+
+    <div class="tags">
+        
+
+            <a href="/tags/#JVM" title="JVM" rel="11">JVM</a>
+
+        
+
+            <a href="/tags/#Java工具类" title="Java工具类" rel="8">Java工具类</a>
+
+        
+
+            <a href="/tags/#Java小技巧" title="Java小技巧" rel="2">Java小技巧</a>
+
+        
+
+            <a href="/tags/#多线程" title="多线程" rel="11">多线程</a>
+
+        
+
+            <a href="/tags/#汇总" title="汇总" rel="2">汇总</a>
+
+        
+
+            <a href="/tags/#Elasticsearch" title="Elasticsearch" rel="1">Elasticsearch</a>
+
+        
+
+            <a href="/tags/#Java进阶" title="Java进阶" rel="2">Java进阶</a>
+
+        
+
+            <a href="/tags/#集合" title="集合" rel="8">集合</a>
+
+        
+
+            <a href="/tags/#kubernetes" title="kubernetes" rel="2">kubernetes</a>
+
+        
+
+            <a href="/tags/#Linux" title="Linux" rel="7">Linux</a>
+
+        
+
+            <a href="/tags/#Redis" title="Redis" rel="8">Redis</a>
+
+        
+
+            <a href="/tags/#Spring" title="Spring" rel="2">Spring</a>
+
+        
+
+            <a href="/tags/#Mybatis" title="Mybatis" rel="1">Mybatis</a>
+
+        
+
+            <a href="/tags/#Docker" title="Docker" rel="2">Docker</a>
+
+        
+
+            <a href="/tags/#开发工具" title="开发工具" rel="1">开发工具</a>
+
+        
+
+            <a href="/tags/#Drools" title="Drools" rel="3">Drools</a>
+
+        
+
+            <a href="/tags/#git" title="git" rel="1">git</a>
+
+        
+
+            <a href="/tags/#支付" title="支付" rel="2">支付</a>
+
+        
+
+            <a href="/tags/#第三方登录" title="第三方登录" rel="1">第三方登录</a>
+
+        
+
+            <a href="/tags/#基础算法" title="基础算法" rel="9">基础算法</a>
+
+        
+
+            <a href="/tags/#设计模式" title="设计模式" rel="18">设计模式</a>
+
+        
+
+            <a href="/tags/#Vue" title="Vue" rel="1">Vue</a>
+
+        
+
+            <a href="/tags/#开源组件" title="开源组件" rel="2">开源组件</a>
+
+        
+
+            <a href="/tags/#JS" title="JS" rel="2">JS</a>
+
+        
+
+            <a href="/tags/#UML" title="UML" rel="1">UML</a>
+
+        
+
+            <a href="/tags/#SpringCloud" title="SpringCloud" rel="14">SpringCloud</a>
+
+        
+
+            <a href="/tags/#maven" title="maven" rel="1">maven</a>
+
+        
+
+            <a href="/tags/#Https" title="Https" rel="1">Https</a>
+
+        
+
+            <a href="/tags/#web安全" title="web安全" rel="1">web安全</a>
+
+        
+
+            <a href="/tags/#数据库" title="数据库" rel="1">数据库</a>
+
+        
+
+            <a href="/tags/#微服务" title="微服务" rel="1">微服务</a>
+
+        
+
+            <a href="/tags/#MySQL" title="MySQL" rel="11">MySQL</a>
+
+        
+
+            <a href="/tags/#RabbitMQ" title="RabbitMQ" rel="5">RabbitMQ</a>
+
+        
+
+            <a href="/tags/# RabbitMQ" title=" RabbitMQ" rel="2"> RabbitMQ</a>
+
+        
+
+            <a href="/tags/#Kubernetes" title="Kubernetes" rel="1">Kubernetes</a>
+
+        
+    </div>
+<br>
+<br>
+<hr>
+<h5>微信公众号</h5>
+<div class="tags" >
+
+<img src="https://shiyujun.cn/img/gongzhonghao.jpg" width="200px" height="200px">
+
+    </div>
+<br>
+<hr>
+ <h5 >
+    推荐阅读
+    </h5>
+    <div class="short-about">
+        <ul class="list-inline">
+            <li><h6><a  target="_blank" href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A"><span style="color:red;">--SpringCloud学习系列汇总--</span></a></h6></li>
+            <li><h6><a  target="_blank" href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg"><span style="color:red;">--为什么一线大厂面试必问redis，有啥好问的？--</span></a></h6></li>
+            <li><h6><a  target="_blank" href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q"><span style="color:red;">--多线程面试必备基础知识汇总--</span></a></h6></li>
+            <li><h6><a  target="_blank" href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ"><span style="color:red;">--Java集合源码分析汇总-JDK1.8--</span></a></h6></li>
+            <li><h6><a  target="_blank" href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA"><span style="color:red;">--Linux常用命令速查-汇总篇--</span></a></h6></li>
+            <li><h6><a  target="_blank" href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw"><span style="color:red;">--JVM系列文章汇总--</span></a></h6></li>
+            <li><h6><a  target="_blank" href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA"><span style="color:red;">--MySQL系列文章汇总--</span></a></h6></li>
+			<li><h6><a  target="_blank" href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw"><span style="color:red;">--RabbitMQ系列文章汇总--</span></a></h6></li>
+
+        </ul>
+
+    </div>
+
+
+
+<script type="text/javascript">
+function search(){
+
+ var search_path = "search.xml";
+     if (search_path.length == 0) {
+     	search_path = "search.xml";
+     }
+     var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+}
+
+var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length <= 0) {
+                    return;
+                }
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 100;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substr(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<em class=\"search-keyword\">"+keyword+"</em>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                });
+                str += "</ul>";
+                $resultContent.innerHTML = str;
+            });
+        }
+    });
+}
+</script>
+
+<style>
+ul.search-result-list {
+  padding-left: 10px;
+}
+a.search-result-title {
+  font-weight: bold;
+}
+p.search-result {
+  color=#555;
+}
+em.search-keyword {
+  font-weight: bold;
+  color: red;
+}
+
+input.local-search-input {
+    font-size: 12px;
+    padding: 4px 9px 4px 27px;
+    height: 30px;
+    width: 200px;
+    color: #666;
+    border: 1px solid #ccc;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.17);
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.17);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.17);
+    outline: none;
+    background: #fcfcfc url(//shiyujun.cn/img/search.png) no-repeat 7px 7px;
+}
+outline: currentcolor none medium;
+</style>
+        <hr>
+    
+        <!-- Short About -->
+<section class="visible-md visible-lg">
+    <h5 >
+    github
+    </h5>
+    <div class="short-about">
+        <ul class="list-inline">
+            <li>
+                <iframe src="https://ghbtns.com/github-btn.html?user=shiyujun&type=follow&count=true" frameborder="0" scrolling="0" width="200px" height="30px"></iframe></li>
+
+            
+
+            <li><h6><a   target="_blank" href="https://github.com/shiyujun/syj-ratelimit"><span style="color:red;">--分布式应用级网关限流组件--</span></a></h6></li>
+            <li>
+                <iframe src="https://ghbtns.com/github-btn.html?user=shiyujun&repo=syj-ratelimit&type=star&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+                <iframe src="https://ghbtns.com/github-btn.html?user=shiyujun&repo=syj-ratelimit&type=fork&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+            </li>
+            <li><h6 ><a href="https://github.com/shiyujun/spring-cloud-demo"><span style="color:red;">--SpringCloud学习demo--</span></a></h6></li>
+            <li>
+                <iframe src="https://ghbtns.com/github-btn.html?user=shiyujun&repo=spring-cloud-demo&type=star&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+                <iframe src="https://ghbtns.com/github-btn.html?user=shiyujun&repo=spring-cloud-demo&type=fork&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+            </li>
+			<li><h6 ><a  target="_blank" href="https://github.com/shiyujun/syj-minicode"><span style="color:red;">--不写代码就能完成一个模块的组件--</span></a></h6></li>
+            <li>
+                <iframe src="https://ghbtns.com/github-btn.html?user=shiyujun&repo=syj-minicode&type=star&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+                <iframe src="https://ghbtns.com/github-btn.html?user=shiyujun&repo=syj-minicode&type=fork&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+            </li>
+			 <li><h6 ><a  target="_blank" href="https://github.com/shiyujun/drools"><span style="color:red;">--SpringBoot2.0+drools7.14.0.Final整合学习代码--</span></a></h6></li>
+			 <li>
+                <iframe src="https://ghbtns.com/github-btn.html?user=shiyujun&repo=drools&type=star&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+                <iframe src="https://ghbtns.com/github-btn.html?user=shiyujun&repo=drools&type=fork&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+            </li>
+            <li><h6 ><a  target="_blank" href="https://github.com/shiyujun/syj-study-demo"><span style="color:red;">--Java学习笔记--</span></a></h6></li>
+            <li>
+                <iframe src="https://ghbtns.com/github-btn.html?user=shiyujun&repo=syj-study-demo&type=star&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+                <iframe src="https://ghbtns.com/github-btn.html?user=shiyujun&repo=syj-study-demo&type=fork&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+            </li>
+        </ul>
+
+    </div>
+<br>
+
+    <h5>联系我</h5>
+    <div class="short-about">
+
+        <ul class="list-inline">
+
+            <li title="QQ" class="qq tp" onclick="window.open('http://wpa.qq.com/msgrd?v=3&uin=2388386839&site=qq&menu=yes')"></li>
+            <li title="微信" class="wx tp" onclick="document.getElementById('divCenter').style.display = 'block'"></li>
+      </ul>
+    </div>
+
+</section>
+
+        <hr>
+    
+</div>
+                        </div>
+            <!-- Tabe of Content -->
+            <!-- Table of Contents 读博客右边栏
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">目录1</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"> 文件引入 </span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"> 模块加载 </span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"> 网络 </span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text"> 基本配置 </span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">数据持久化RDB</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number"></span> <span class="toc-nav-text"></span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number"></span> <span class="toc-nav-text"></span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number"></span> <span class="toc-nav-text"></span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number"></span> <span class="toc-nav-text"></span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number"></span> <span class="toc-nav-text"></span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number"></span> <span class="toc-nav-text"></span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number"></span> <span class="toc-nav-text"></span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">主从复制</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">安全</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">限制</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">懒删除</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">持久化方式AOF</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">Lua脚本配置</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">集群</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">8.</span> <span class="toc-nav-text">Docker集群配置</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">9.</span> <span class="toc-nav-text">慢查询日志</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">10.</span> <span class="toc-nav-text">延时监控系统</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">11.</span> <span class="toc-nav-text">事件通知</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">12.</span> <span class="toc-nav-text">内部数据结构</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">13.</span> <span class="toc-nav-text">碎片整理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">13.1.</span> <span class="toc-nav-text">推荐阅读</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">13.2.</span> <span class="toc-nav-text">博客所有文章首发于公众号《Java学习录》转载请保留
+扫码关注公众号即可领取2000GJava学习资源 </span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+-->
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+
+               
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer style="padding:0px;">
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+   
+    
+    
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+                <p class="copyright text-muted">
+                    Copyright &copy; 石玉军 2019  
+					<span class="post-meta-divider">|</span>
+					<span id="busuanzi_container_site_pv">本网站已被访问<span id="busuanzi_value_site_pv"></span>次</span>
+					<span class="post-meta-divider">|</span>
+					<span id="busuanzi_container_site_uv">您是第<span id="busuanzi_value_site_uv"></span>位访客</span>
+    
+                    <br>
+                    
+                <a target="_black" href="http://www.miitbeian.gov.cn/">鲁ICP备18002448号-1</a>    
+                </p>
+				
+				
+				
+				
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://shiyujun.cn/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<script>
+!function(){
+ function n(n,e,t){
+ return n.getAttribute(e)||t
+ }
+ function e(n){
+ return document.getElementsByTagName(n)
+ }
+
+ function t(){
+ var t=e("script"),o=t.length,i=t[o-1];
+ return{
+ l:o,z:n(i,"zIndex",-1),o:n(i,"opacity",.5),c:n(i,"color","0,0,0"),n:n(i,"count",99)
+ }
+ }
+
+ function o(){
+ a=m.width=window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth,
+ c=m.height=window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight
+ }
+
+ function i(){
+ r.clearRect(0,0,a,c);
+ var n,e,t,o,m,l;
+ s.forEach(function(i,x){
+ for(i.x+=i.xa,i.y+=i.ya,i.xa*=i.x>a||i.x<0?-1:1,i.ya*=i.y>c||i.y<0?-1:1,r.fillRect(i.x-.5,i.y-.5,1,1),e=x+1;e<u.length;e++)n=u[e],
+ null!==n.x&&null!==n.y&&(o=i.x-n.x,m=i.y-n.y,
+ l=o*o+m*m,l<n.max&&(n===y&&l>=n.max/2&&(i.x-=.03*o,i.y-=.03*m),
+ t=(n.max-l)/n.max,r.beginPath(),r.lineWidth=t/2,r.strokeStyle="rgba("+d.c+","+(t+.2)+")",r.moveTo(i.x,i.y),r.lineTo(n.x,n.y),r.stroke()))
+ }),
+ x(i)
+ }
+ var a,c,u,m=document.createElement("canvas"),
+ d=t(),l="c_n"+d.l,r=m.getContext("2d"),
+x=window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||
+ function(n){
+ window.setTimeout(n,1e3/45)
+ },
+ w=Math.random,y={x:null,y:null,max:2e4};m.id=l,m.style.cssText="position:fixed;top:0;left:0;z-index:"+d.z+";opacity:"+d.o,e("body")[0].appendChild(m),o(),window.onresize=o,
+ window.onmousemove=function(n){
+ n=n||window.event,y.x=n.clientX,y.y=n.clientY
+ },
+ window.onmouseout=function(){
+ y.x=null,y.y=null
+ };
+
+ for(var s=[],f=0;d.n>f;f++){
+ var h=w()*a,g=w()*c,v=2*w()-1,p=2*w()-1;s.push({x:h,y:g,xa:v,ya:p,max:6e3})
+ }
+ u=s.concat([y]),
+ setTimeout(function(){i()},100)
+
+ }();
+
+ </script>
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://shiyujun.cn/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
