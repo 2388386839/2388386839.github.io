@@ -251,6 +251,39 @@
 
 <div class="post-preview">
 
+    <a href="/2019/05/08/Java堆/">
+        <h2 class="post-title">
+             Java堆 
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文涉及：JVM中的新生代老年代、堆的内存分配策略、深浅堆的概念等
+
+Java 堆是被所有线程共享的一块内存区域，在虚拟机启动时创建。这个区域是用来存放对象实例的，几乎所有对象实例都会在这里分配内存。平常我们听说的垃圾收集、GC等名词都是由堆发展而来的
+新生代和老年代
+根据垃圾收集算法来看，堆可以分为新生代和老年代，而新生代又分为eden区和s0、s1（s0、s1又叫from、to）三个区......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-05-08 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#JVM" title="JVM">JVM</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/05/08/M的类加载机制/">
         <h2 class="post-title">
              JVM的类加载机制 
@@ -581,37 +614,6 @@ bgsave命令：Redis进程执行fork操作创建子进程，......
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/04/19/Redis常用命令、5种数据类型的内部编码实现以及实用场景/">
-        <h2 class="post-title">
-            Redis常用命令、5种数据类型的内部编码实现以及实用场景
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            ◆
-全局命令
-◆
-123456789101112131415161718flush db   # 清除当前数据库的所有keysflush all    # 清除所有数据库的所有keyskeys *            # 查看所有keyskeys prefix_*     # 查看前缀为"prefix_"的所有keysexists key      # 确认一个key是否存在set key......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-04-19 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Redis" title="Redis">Redis</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -691,7 +693,7 @@ bgsave命令：Redis进程执行fork操作创建子进程，......
 
         
 
-            <a href="/tags/#kubernetes" title="kubernetes" rel="2">kubernetes</a>
+            <a href="/tags/#kubernetes" title="kubernetes" rel="3">kubernetes</a>
 
         
 
