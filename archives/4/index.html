@@ -251,6 +251,44 @@
 
 <div class="post-preview">
 
+    <a href="/2019/05/08/JVM垃圾收集详解/">
+        <h2 class="post-title">
+             JVM垃圾收集详解 
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文涉及：垃圾对象的判定、常见垃圾收集算法
+
+哪些对象需要回收
+判断对象是否需要回收的算法有引用计数法和可达性分析法
+引用计数法
+为每个对象标记一个引用数量，当这个对象被另外一个对象引用时它的引用数据就加一，当另外一个对象释放了对它的引用它的引用数量就减一。当它的引用变为0时意味着没有对象引用，就可以回收了
+引用计数法存在的问题
+
+
+系统无时无刻不在进行引用的增加和修改，引用和去引用伴随着......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-05-08 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#JVM" title="JVM">JVM</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/05/08/Java堆/">
         <h2 class="post-title">
              Java堆 
@@ -570,50 +608,6 @@ Redis默认部署是以主节点的形式部署的，我们......
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/04/23/Redis-的持久化机制/">
-        <h2 class="post-title">
-             Redis 的持久化机制 
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-本文涉及：Redis的全量备份方式RDB和增量备份方式AOF的相关内容
-
-◆
-全量备份RDB
-◆
-RDB持久化触发方式
-
-触发RDB持久化的过程分为手动触发和自动触发两种方式
-
-手动触发：
-
-
-save命令：阻塞当前Redis服务器，直到RDB过程完成为止，除非是没有任何服务在使用此redis，否则千万不要使用此命令进行备份
-
-
-bgsave命令：Redis进程执行fork操作创建子进程，......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-04-23 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Redis" title="Redis">Redis</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -693,7 +687,7 @@ bgsave命令：Redis进程执行fork操作创建子进程，......
 
         
 
-            <a href="/tags/#kubernetes" title="kubernetes" rel="3">kubernetes</a>
+            <a href="/tags/#kubernetes" title="kubernetes" rel="4">kubernetes</a>
 
         
 

@@ -251,6 +251,35 @@
 
 <div class="post-preview">
 
+    <a href="/2019/03/31/生产者消费者/">
+        <h2 class="post-title">
+            生产者/消费者问题
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            生产者消费者模型具体来讲，就是在一个系统中，存在生产者和消费者两种角色，他们通过内存缓冲区进行通信（解耦），生产者将消费者需要的资源生产出来放到缓冲区，消费者把从缓冲区把资源拿走消费。
+在这个模型中，最关键就是内存缓冲区为空的时候消费者必须等待，而内存缓冲区满的时候，生产者必须等待。其他时候就是一边在生产一边在消费。值得注意的是多线程对内存缓冲区的操作时必须保证线程安全，所以需要设计锁的策略......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-03-31 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#多线程" title="多线程">多线程</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/03/28/ork-Jion框架详解/">
         <h2 class="post-title">
             Fork/Jion框架详解
@@ -559,39 +588,6 @@ Java作为平台无关性语言，JLS(Java语言规范)定义了一个统一的�
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/03/17/揭秘Spring技术内幕/">
-        <h2 class="post-title">
-            简述Spring技术内幕
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-相信任何一个开发者都使用过Spring这个框架，或许你刚开始使用Spring、或许你有看过源码解析系列文章、或许你曾调试过源码、或许你。。。总之不管你的情况如何，你有想过自己实现一个Spring框架么？本篇文章就就来简单描述一下Spring中的IOC、MVC、AOP都是如何实现的
-
-IOC
-1. 加载配置
-早期的Spring框架关于bean的定义都是配置在xml文件中的，就算是现在有了Se......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-03-17 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Spring" title="Spring">Spring</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -671,7 +667,7 @@ IOC
 
         
 
-            <a href="/tags/#kubernetes" title="kubernetes" rel="3">kubernetes</a>
+            <a href="/tags/#kubernetes" title="kubernetes" rel="4">kubernetes</a>
 
         
 

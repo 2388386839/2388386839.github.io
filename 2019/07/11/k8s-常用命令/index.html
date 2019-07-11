@@ -13,11 +13,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Java原子类操作原理剖析 - Java学习录
+          k8s常用命令 - Java学习录
         
     </title>
 
-    <link rel="canonical" href="https://shiyujun.cn/2019/03/27/va原子类操作原理剖析/">
+    <link rel="canonical" href="https://shiyujun.cn/2019/07/11/k8s-常用命令/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -117,14 +117,14 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#多线程" title="多线程">多线程</a>
+                              <a class="tag" href="/tags/#kubernetes" title="kubernetes">kubernetes</a>
                             
                         </div>
-                        <h1>Java原子类操作原理剖析</h1>
+                        <h1>k8s常用命令</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by 石玉军 on
-                            2019-03-27
+                            2019-07-11
                         </span>
 
                     </div>
@@ -254,88 +254,47 @@
                 col-sm-12 col-xs-12
                 post-container">
 
-                <p>◆<br>
-CAS的概念<br>
-◆</p>
-<p>对于并发控制来说，使用锁是一种悲观的策略。它总是假设每次请求都会产生冲突，如果多个线程请求同一个资源，则使用锁宁可牺牲性能也要保证线程安全。而无锁则是比较乐观的看待这个问题，它会假设每次访问都没有冲突，这样就提高了效率。但是事实难料、这个冲突是避免不了的，无锁也考虑到了肯定会遇到冲突，对于冲突的解决无锁就使用一种比较交换（CAS）的技术来检测冲突。一旦检测到冲突就重试当前操作直到成功为止。</p>
-<p>◆<br>
-CAS算法<br>
-◆</p>
-<p>CAS机制中使用了3个基本操作数CAS（V,E,N）：V表示要更新的变量，E表示预期值，N表示新值。</p>
-<p>CAS更新一个变量的时候，只有当变量的预期值E和要更新的变量V的实际值相同时，才会将V的值修改为N。</p>
-<p>一个简单的例子：<br>
-在内存地址V当中，存储一个值为1的变量。</p>
-<p>此时线程1想把变量的值增加1.对线程1来说，预期值E=1，要修改的新值N=2.</p>
-<p>在线程1要提交更新之前，另一个线程2抢先一步，把V的值率先更新成了2。</p>
-<p>此时线程1开始提交更新，首先进行预期值E和变量V的实际值比较，发现E不等于V的实际值，提交失败。</p>
-<p>失败后线程1 重新获取内存地址V的当前值，并重新计算想要修改的值。此时对线程1来说，E=2，V=2。这个重新尝试的过程被称为自旋。</p>
-<p>如果这一次依然在提交时发现被线程2把V值更新到了3则再次重复步骤5。此时E=3，V=3</p>
-<p>步骤5执行执行完毕后再次更新发现没有其他线程改变V的值。线程1进行比较，发现A和V的值是相等的。则线程1进行交换，把V的值替换为N，也就是2.</p>
-<p>◆<br>
-Java中CAS的底层实现<br>
-◆</p>
-<p>我们看一下AtomicInteger当中常用的自增方法incrementAndGet：</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="function"><span class="keyword">int</span> <span class="title">incrementAndGet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> unsafe.getAndAddInt(<span class="keyword">this</span>, valueOffset, <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<p>这里涉及到两个重要的对象，一个是unsafe，一个是valueOffset。</p>
-<p>unsafe是什么东西呢？它JVM为我们提供了一个访问操作系统的后门，unsafe为我们提供了硬件级别的原子操作。而valueOffset对象，是通过unsafe.objectFiledOffset方法得到，所代表的是AtomicInteger对象value成员变量在内存中的偏移量。我们可以简单的把valueOffset理解为value变量的内存地址。</p>
-<p>而unsafe的getAndAddInt方法顾名思义就是使用操作系统的原子操作来为我们实现当前的的++操作并把旧值返回回来。因为是返回的旧值所以<br>
-incrementAndGet方法返回的数据应该是这个旧值加上1</p>
-<p>◆<br>
-CAS的缺点<br>
-◆</p>
-<pre><code>CPU开销过大
-在并发量比较高的情况下，如果许多线程反复尝试更新某一个变量，却又一直更新不成功，循环往复，会给CPU带来很到的压力。
-    
-不能保证代码块的原子性
-CAS机制所保证的知识一个变量的原子性操作，而不能保证整个代码块的原子性。比如需要保证3个变量共同进行原子性的更新，就不得不使用synchronized了。
+                <h4><span id="主节点相关操作">主节点相关操作</span></h4>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">更改配置文件，重新加载</span><br><span class="line">systemctl daemon-reload</span><br><span class="line"></span><br><span class="line">启动master相关组件</span><br><span class="line">systemctl <span class="keyword">start</span> kube-apiserver/kube-controller-manager/ube-scheduler/etcd.service</span><br><span class="line"></span><br><span class="line">停止<span class="keyword">master</span>相关组件</span><br><span class="line">systemctl <span class="keyword">stop</span> kube-apiserver/kube-controller-manager/ube-scheduler/etcd.service</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">重启<span class="keyword">master</span>相关组件</span><br><span class="line">systemctl restart kube-apiserver/kube-controller-manager/ube-scheduler/etcd.service</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">查看<span class="keyword">master</span>相关组件状态</span><br><span class="line">systemctl <span class="keyword">status</span> kube-apiserver/kube-controller-manager/ube-scheduler/etcd.service</span><br><span class="line"></span><br><span class="line">查看各组件信息</span><br><span class="line">kubectl <span class="keyword">get</span> componentstatuses</span><br><span class="line"></span><br><span class="line">查看kubelet进程启动参数</span><br><span class="line">ps -ef | grep kubelet</span><br><span class="line"></span><br><span class="line">查看日志:</span><br><span class="line">journalctl -u kubelet -f</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">查看集群信息</span><br><span class="line">kubectl cluster-info</span><br><span class="line"></span><br><span class="line">查看各组件信息</span><br><span class="line">kubectl -s <span class="keyword">http</span>://localhost:<span class="number">8080</span> <span class="keyword">get</span> componentstatuses</span><br></pre></td></tr></table></figure>
+<h4><span id="工作节点相关操作">工作节点相关操作</span></h4>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">启动worker端相关组件</span><br><span class="line">systemctl start kube-proxy<span class="regexp">/docker/</span>kubelet</span><br><span class="line"></span><br><span class="line">停止worker端相关组件</span><br><span class="line">systemctl stop kube-proxy<span class="regexp">/docker/</span>kubelet</span><br><span class="line"></span><br><span class="line">重启worker端相关组件</span><br><span class="line">systemctl restart kube-proxy<span class="regexp">/docker/</span>kubelet</span><br><span class="line"></span><br><span class="line">查看worker端相关组件状态</span><br><span class="line">systemctl status kube-proxy<span class="regexp">/docker/</span>kubelet</span><br></pre></td></tr></table></figure>
+<h4><span id="节点相关操作">节点相关操作</span></h4>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">设为<span class="keyword">node</span><span class="title">为不可调度状态：</span></span><br><span class="line"><span class="title">kubectl</span> cordon node1</span><br><span class="line"></span><br><span class="line">解除<span class="keyword">node</span><span class="title">不可调度状态</span></span><br><span class="line"><span class="title">kubectl</span> uncordon node1</span><br><span class="line"></span><br><span class="line">将pod赶到其他节点：</span><br><span class="line">kubectl drain node1</span><br><span class="line"></span><br><span class="line"><span class="literal">master</span>运行pod</span><br><span class="line">kubectl taint nodes <span class="literal">master</span>.k8s <span class="keyword">node</span><span class="title">-role</span>.kubernetes.io/<span class="literal">master</span>-</span><br><span class="line"></span><br><span class="line"><span class="literal">master</span>不运行pod</span><br><span class="line">kubectl taint nodes <span class="literal">master</span>.k8s <span class="keyword">node</span><span class="title">-role</span>.kubernetes.io/<span class="attr">master=</span>:NoSchedule</span><br></pre></td></tr></table></figure>
+<h4><span id="查看类命令">查看类命令</span></h4>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">获取节点相应服务的信息：</span><br><span class="line">kubectl <span class="builtin-name">get</span> nodes</span><br><span class="line"></span><br><span class="line">查看pod相关信息</span><br><span class="line">kubectl <span class="builtin-name">get</span> pods </span><br><span class="line"></span><br><span class="line">查看指定namespace的pod信息</span><br><span class="line">kubectl <span class="builtin-name">get</span> pods -n namespace</span><br><span class="line"></span><br><span class="line">按selector名来查找pod</span><br><span class="line">kubectl <span class="builtin-name">get</span> pod --selector <span class="attribute">name</span>=redis</span><br><span class="line"></span><br><span class="line">查看集群所有的pod信息</span><br><span class="line">kubectl <span class="builtin-name">get</span> pods -A</span><br><span class="line"></span><br><span class="line">查看pods所在的运行节点</span><br><span class="line">kubectl <span class="builtin-name">get</span> pods -o wide</span><br><span class="line"></span><br><span class="line">查看pods定义的详细信息</span><br><span class="line">kubectl <span class="builtin-name">get</span> pods -o yaml</span><br><span class="line"></span><br><span class="line">查看运行的pod的环境变量</span><br><span class="line">kubectl exec pod名 env</span><br><span class="line"></span><br><span class="line">查看指定pod的日志</span><br><span class="line">kubectl logs  podname </span><br><span class="line"></span><br><span class="line">滚动查看指定pod的日志</span><br><span class="line">kubectl logs -f podname </span><br><span class="line"></span><br><span class="line">查看service相关信息</span><br><span class="line">kubectl <span class="builtin-name">get</span> services</span><br><span class="line"></span><br><span class="line">查看deployment相关信息</span><br><span class="line">kubectl <span class="builtin-name">get</span> deployment</span><br><span class="line"></span><br><span class="line">查看指定pod的详细信息</span><br><span class="line">kubectl describe pods-dasdeqwew2312-g6q8c</span><br><span class="line"></span><br><span class="line">查看deployment历史修订版本</span><br><span class="line">kubectl rollout history deployment/nginx-deployment</span><br></pre></td></tr></table></figure>
+<h4><span id="操作类命令">操作类命令</span></h4>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">创建资源</span><br><span class="line">kubectl <span class="keyword">create</span> -f xx.yaml</span><br><span class="line"></span><br><span class="line">重建资源</span><br><span class="line">kubectl <span class="keyword">replace</span> -f xx.yaml  [<span class="comment">--force]</span></span><br><span class="line"></span><br><span class="line">删除资源</span><br><span class="line">kubectl <span class="keyword">delete</span> -f xx.yaml</span><br><span class="line"></span><br><span class="line">删除指定pod</span><br><span class="line">kubectl <span class="keyword">delete</span> pod podname</span><br><span class="line"></span><br><span class="line">删除指定rc</span><br><span class="line">kubectl <span class="keyword">delete</span> rc rcname</span><br><span class="line"></span><br><span class="line">删除指定service</span><br><span class="line">kubectl <span class="keyword">delete</span> service servicename</span><br><span class="line"></span><br><span class="line">删除所有pod</span><br><span class="line">kubectl <span class="keyword">delete</span> pod <span class="comment">--all</span></span><br><span class="line"></span><br><span class="line">导出所有configmap</span><br><span class="line">kubectl <span class="keyword">get</span> configmap -n kube-<span class="keyword">system</span> -o wide -o yaml &gt; configmap.yaml</span><br><span class="line"></span><br><span class="line">进入pod</span><br><span class="line">kubectl exec -it redis-<span class="keyword">master</span><span class="number">-1033017107</span>-q47hh /<span class="keyword">bin</span>/sh</span><br><span class="line"></span><br><span class="line">增加lable值</span><br><span class="line">kubectl label pod redis-<span class="keyword">master</span><span class="number">-1033017107</span>-q47hh <span class="keyword">role</span>=<span class="keyword">master</span> </span><br><span class="line"></span><br><span class="line">修改lable值</span><br><span class="line">kubectl label pod redis-<span class="keyword">master</span><span class="number">-1033017107</span>-q47hh <span class="keyword">role</span>=backend <span class="comment">--overwrite </span></span><br><span class="line"></span><br><span class="line">更新资源</span><br><span class="line">kubectl <span class="keyword">patch</span> pod rc-nginx<span class="number">-2</span>-kpiqt -p <span class="string">'&#123;"metadata":&#123;"labels":&#123;"app":"nginx-3"&#125;&#125;&#125;'</span></span><br></pre></td></tr></table></figure>
+<h4><span id="升级相关">升级相关</span></h4>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">指定资源副本数量</span><br><span class="line">kubectl scale rc nginx <span class="comment">--replicas=5 </span></span><br><span class="line"></span><br><span class="line">版本升级</span><br><span class="line">kubectl rolling-<span class="keyword">update</span> redis-<span class="keyword">master</span> <span class="comment">--image=redis-master:2.0</span></span><br><span class="line"></span><br><span class="line">版本回滚</span><br><span class="line">kubectl <span class="keyword">rolling</span>-<span class="keyword">update</span> redis-<span class="keyword">master</span> <span class="comment">--image=redis-master:1.0 --rollback </span></span><br><span class="line"></span><br><span class="line">实时观察滚动升级状态</span><br><span class="line">kubectl rollout <span class="keyword">status</span> deployment/nginx-deployment</span><br></pre></td></tr></table></figure>
+<p></p><h4 style="color:red"><span id="推荐阅读">推荐阅读</span></h4><p></p>
+<ol>
+<li><a href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A" target="_blank" rel="noopener">SpringCloud学习系列汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg" target="_blank" rel="noopener">为什么一线大厂面试必问redis，有啥好问的？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q/" target="_blank" rel="noopener">多线程面试必备基础知识汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ" target="_blank" rel="noopener">Java集合源码分析汇总-JDK1.8</a></li>
+<li><a href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA" target="_blank" rel="noopener">Linux常用命令速查-汇总篇</a></li>
+<li><a href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw" target="_blank" rel="noopener">JVM系列文章汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA" target="_blank" rel="noopener">MySQL系列文章汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw" target="_blank" rel="noopener">RabbitMQ系列文章汇总</a></li>
+</ol>
+<p></p><h4 style="color:red"><span id="博客所有文章首发于公众号java学习录转载请保留扫码关注公众号即可领取2000gjava学习资源">博客所有文章首发于公众号《Java学习录》转载请保留<br>
+扫码关注公众号即可领取2000GJava学习资源 </span></h4><p></p>
+<p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>
 
-ABA问题
-这是CAS机制最大的问题所在。
-</code></pre>
-<p>我们现在来说什么是ABA问题。</p>
-<p>假设小王账户有1000块钱，即v=1000。</p>
-<p>这时有三个线程想使用CAS的方式更新这个小王的账户。线程1和线程2已经获取当前账户余额为1000，线程3还未获取当前值。</p>
-<p>线程1为花呗扣款、线程2为花呗扣款的备用操作（避免第一次扣款失败），线程3为工资入账</p>
-<p>接下来，线程1先一步执行成功，把当前账户成功从1000减少到500；同时线程2因为某种原因被阻塞住，没有及时扣款；线程3在线程1扣款之后，获取了当前值500。</p>
-<p>在之后，线程2仍然处于阻塞状态，线程3继续执行，成功入账工资500，把当前值又变回了1000。</p>
-<p>此时，线程2恢复运行状态，进行更新之前查询E和V相同，所以毫不犹豫的进行又一次账户扣款。</p>
-<p>这种扣款的方式对于小王来说肯定是不可接受的（估计都要疯了），解决方案就是在操作的时候加个版本号或者是时间戳来标示状态信息。</p>
-<p>同样以刚才的例子来说：</p>
-<p>假设小王账户有1000块钱，即v=1000。</p>
-<p>这时有三个线程想使用CAS的方式更新这个小王的账户。线程1和线程2已经获取当前账户余额为1000，线程3还未获取当前值。但是呢，这里线程1和2还需要记录一个获取当前账户余额的最后更新时间，比如9.30.</p>
-<p>同样的线程1为花呗扣款、线程2为花呗扣款的备用操作（避免第一次扣款失败），线程3为工资入账。</p>
-<p>接下来，线程1先一步执行成功，把当前账户成功从1000减少到500；此时账户余额的时间戳就已经变了，比如9.31。同时线程2因为某种原因被阻塞住，没有及时扣款；线程3在线程1扣款之后，获取了当前值500和时间戳9.31。</p>
-<p>在之后，线程2仍然处于阻塞状态，线程3继续执行，成功入账工资500，把账户又变回了1000，同时时间戳更新为9.32。</p>
-<p>此时，线程2恢复运行状态，进行更新之前查询E和V虽然相同，但是时间戳确是不一样的。</p>
-<p>◆<br>
-Java提供的12种原子操作类<br>
-◆</p>
-<p>原子更新基本类型</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AtomicBoolean：原子更新布尔类型。</span><br><span class="line">AtomicInteger：原子更新整型。</span><br><span class="line">AtomicLong：原子更新长整型。</span><br></pre></td></tr></table></figure>
-<p>原子更新数组</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AtomicIntegerArray：原子更新整型数组里的元素。</span><br><span class="line">AtomicLongArray：原子更新长整型数组里面的元素。</span><br><span class="line">AtomicReferenceArray：原子更新引用类型数组里的元素。</span><br></pre></td></tr></table></figure>
-<p>原子更新引用类型</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AtomicReference：原子更新引用类型。</span><br><span class="line">AtomicReferenceFieldUpdater：原子更新引用类型里的字段。</span><br><span class="line">AtomicMarkableReference：原子更新带有标记位的引用类型。</span><br></pre></td></tr></table></figure>
-<p>原子更新字段</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AtomicIntegerFieldUpdater：原子更新整型字段的更新器。</span><br><span class="line">AtomicLongFieldUpdater：原子更新长整型字段的更新器。</span><br><span class="line">AtomicStampedReference：原子更新带有版本号的引用类型。</span><br></pre></td></tr></table></figure>
                 
 
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2019/03/28/ork-Jion框架详解/" data-toggle="tooltip" data-placement="top" title="Fork/Jion框架详解">&larr; 上一篇</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2019/03/26/hreadLocal及InheritableThreadLocal的原理剖析/" data-toggle="tooltip" data-placement="top" title="ThreadLocal及InheritableThreadLocal的原理剖析">下一篇 &rarr;</a>
+                            <a href="/2019/07/09/l-pod、deployment、service/" data-toggle="tooltip" data-placement="top" title="k8s核心yml--Pod、Deployment、Service">下一篇 &rarr;</a>
                         </li>
                     
                 </ul>
 
-<div id="SOHUCS" sid="shiyujun.cn/2019/03/27/va原子类操作原理剖析/"></div>
+<div id="SOHUCS" sid="shiyujun.cn/2019/07/11/k8s-常用命令/"></div>
 <script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js" ></script>
 <script type="text/javascript">
 window.changyan.api.config({
@@ -743,7 +702,8 @@ outline: currentcolor none medium;
         <div id="toc" class="toc-article">
         <strong class="toc-title">目录1</strong>
         
-          <ol class="nav">none</ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">主节点相关操作</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">工作节点相关操作</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">节点相关操作</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">查看类命令</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">操作类命令</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">升级相关</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">推荐阅读</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">8.</span> <span class="toc-nav-text">博客所有文章首发于公众号《Java学习录》转载请保留
+扫码关注公众号即可领取2000GJava学习资源 </span></a></li></ol>
         
         </div>
       </aside>
