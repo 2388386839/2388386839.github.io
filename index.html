@@ -251,6 +251,79 @@
 
 <div class="post-preview">
 
+    <a href="/2019/07/19/如何参与一个开源项目/">
+        <h2 class="post-title">
+            如何参与一个开源项目!
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            1、首先在github上注册一个自己的账号
+2、然后在左上部分搜索一个开源项目,比如说我的项目syj-ratelimit
+
+3、进入项目之后，单击右上角的fork按钮，github就会在你的帐户下fork一个同样的项目。
+
+4、此时点击右上角自己的头像，可以看到一个your repositories，点击进入就可以看到刚才的那个项目了
+
+5、现在你就可以在这个项目里取发挥你的个人才智进行修改......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-07-19 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#开源组件" title="开源组件">开源组件</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/07/16/Spring所有注解大揭秘/">
+        <h2 class="post-title">
+             Spring所有注解大揭秘 
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            声明bean的注解
+
+@Component 组件，没有明确的角色
+@Service 在业务逻辑层使用（service层）
+@Repository 在数据访问层使用（dao层）
+@Controller 在展现层使用，控制器的声明
+
+注入bean的注解
+
+@Autowired：由Spring提供，根据类型进行自动装配，如果组合@Qualifier使用将按名称进行装配
+@Inject：由JSR-3......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-07-16 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/# Spring" title=" Spring"> Spring</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/07/11/k8s-常用命令/">
         <h2 class="post-title">
             k8s常用命令
@@ -341,43 +414,6 @@ Pod 是一组紧密关联的容器集合，它们共享 PID、IPC、Network 和 
 
 <div class="post-preview">
 
-    <a href="/2019/07/07/abbitMQ高级面试题/">
-        <h2 class="post-title">
-            RabbitMQ高级面试题
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-本文涉及：投递失败的消息怎么处理、如何实现延时队列、如何指定消息的优先级、消息的持久化是如何实现的、如何保证消息不丢失
-
-投递失败的消息怎么处理
-首先投递失败存在如下两个情况
-
-当交换器无法根据自身的类型和路由键找到符合条件的队列
-如果交换器在将消息路由到队列时发现队列上并不存在任何消费者
-解决方案：
-在生产者投递消息时指定mandatory或者imrnediate参数设为 true 时，......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-07-07 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
     <a href="/2019/07/07/abbitMQ如何实现高可用/">
         <h2 class="post-title">
             RabbitMQ如何实现高可用
@@ -435,6 +471,43 @@ k8s是Google开源的容器集群管理系统（思想来源于谷歌内部系�
         <div class="tags">
             
               <a href="/tags/#Kubernetes" title="Kubernetes">Kubernetes</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/07/07/abbitMQ高级面试题/">
+        <h2 class="post-title">
+            RabbitMQ高级面试题
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文涉及：投递失败的消息怎么处理、如何实现延时队列、如何指定消息的优先级、消息的持久化是如何实现的、如何保证消息不丢失
+
+投递失败的消息怎么处理
+首先投递失败存在如下两个情况
+
+当交换器无法根据自身的类型和路由键找到符合条件的队列
+如果交换器在将消息路由到队列时发现队列上并不存在任何消费者
+解决方案：
+在生产者投递消息时指定mandatory或者imrnediate参数设为 true 时，......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-07-07 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
             
         </div>
     
@@ -503,75 +576,6 @@ Producer生产者
         <div class="tags">
             
               <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/06/24/abbitMQ常用命令/">
-        <h2 class="post-title">
-             RabbitMQ常用命令 
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            服务启动:
-1rabbitmq-server –detached
-服务关闭:
-1rabbitmqctl stop 若单机有多个实例，则在rabbitmqctl后加–n 指定名称
-开启某个插件：
-1rabbitmq-plugins enable xxx
-关闭某个插件：
-1rabbitmq-plugins disablexxx
-注意：重启服务器后生效。
-新建virtual_host:
-1rabb......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-06-24 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/# RabbitMQ" title=" RabbitMQ"> RabbitMQ</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/06/18/abbitMQ集群安装/">
-        <h2 class="post-title">
-             RabbitMQ集群安装 
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            首先参考上一篇文章【CentsOS原生RabbitMQ安装过程】在两到三台机器上先安装单独的RabbitMQ节点
-修改一下hostname
-1234[root@rnode1 ~]# vim /etc/hosts172.16.20.110 rnode1172.16.20.111 rnode2172.16.20.112 rnode3
-erlang节点之间通信需要相同的cookie文件，将其中一个......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-06-18 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/# RabbitMQ" title=" RabbitMQ"> RabbitMQ</a>
             
         </div>
     
@@ -710,7 +714,7 @@ erlang节点之间通信需要相同的cookie文件，将其中一个......
 
         
 
-            <a href="/tags/#开源组件" title="开源组件" rel="2">开源组件</a>
+            <a href="/tags/#开源组件" title="开源组件" rel="3">开源组件</a>
 
         
 
@@ -759,6 +763,10 @@ erlang节点之间通信需要相同的cookie文件，将其中一个......
         
 
             <a href="/tags/#Kubernetes" title="Kubernetes" rel="1">Kubernetes</a>
+
+        
+
+            <a href="/tags/# Spring" title=" Spring" rel="1"> Spring</a>
 
         
     </div>

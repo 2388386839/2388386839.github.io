@@ -251,6 +251,75 @@
 
 <div class="post-preview">
 
+    <a href="/2019/06/24/abbitMQ常用命令/">
+        <h2 class="post-title">
+             RabbitMQ常用命令 
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            服务启动:
+1rabbitmq-server –detached
+服务关闭:
+1rabbitmqctl stop 若单机有多个实例，则在rabbitmqctl后加–n 指定名称
+开启某个插件：
+1rabbitmq-plugins enable xxx
+关闭某个插件：
+1rabbitmq-plugins disablexxx
+注意：重启服务器后生效。
+新建virtual_host:
+1rabb......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-06-24 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/# RabbitMQ" title=" RabbitMQ"> RabbitMQ</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/06/18/abbitMQ集群安装/">
+        <h2 class="post-title">
+             RabbitMQ集群安装 
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            首先参考上一篇文章【CentsOS原生RabbitMQ安装过程】在两到三台机器上先安装单独的RabbitMQ节点
+修改一下hostname
+1234[root@rnode1 ~]# vim /etc/hosts172.16.20.110 rnode1172.16.20.111 rnode2172.16.20.112 rnode3
+erlang节点之间通信需要相同的cookie文件，将其中一个......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-06-18 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/# RabbitMQ" title=" RabbitMQ"> RabbitMQ</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/06/17/CentsOS原生RabbitMQ安装过程/">
         <h2 class="post-title">
              CentsOS原生RabbitMQ安装过程 
@@ -560,76 +629,6 @@ MySQL中的的索引分为单列索引和组合索引
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/05/27/ySQL调优之数据类型选择原则/">
-        <h2 class="post-title">
-            MySQL调优之数据类型选择原则
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-本文涉及：高可用数据库设计时数据类型的选择原则
-
-在进行数据库设计时，如果能够选择最恰当的数据类型就可以为后期的数据库调优打好最坚实的基础
-选择数据类型的原则
-更小的通常更好
-例如存储订单状态字段很多时候使用0、1、2表示使用tinyint类型存储就够了，没必要搞个int、long甚至varchar来。
-越小的数据类型代表着占用越小的磁盘、内存和CPU，也就代表着越快的速度。当然，不要为了......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-05-27 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/05/27/SQL中神奇的show命令详解/">
-        <h2 class="post-title">
-            MySQL中神奇的show命令详解
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-show binary logs：列出服务器上的二进制日志文件
-show binlog events：显示二进制日志中的事件
-show character set：显示所有可用的字符集
-show collation：列出服务器支持的排序规则
-show columns：显示有关给定表或视图中列的信息
-show create database：显示建库语句
-show create event：......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-05-27 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -765,7 +764,7 @@ show create event：......
 
         
 
-            <a href="/tags/#开源组件" title="开源组件" rel="2">开源组件</a>
+            <a href="/tags/#开源组件" title="开源组件" rel="3">开源组件</a>
 
         
 
@@ -814,6 +813,10 @@ show create event：......
         
 
             <a href="/tags/#Kubernetes" title="Kubernetes" rel="1">Kubernetes</a>
+
+        
+
+            <a href="/tags/# Spring" title=" Spring" rel="1"> Spring</a>
 
         
     </div>

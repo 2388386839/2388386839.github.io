@@ -251,6 +251,71 @@
 
 <div class="post-preview">
 
+    <a href="/2019/03/21/Java多线程内存模型/">
+        <h2 class="post-title">
+            Java多线程内存模型
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            ◆
+JMM的基本概念
+◆
+Java作为平台无关性语言，JLS(Java语言规范)定义了一个统一的内存管理模型JMM（Java Memory Model)。JMM规定了jvm内存分为主内存和工作内存 ，主内存存放程序中所有的类实例、静态数据等变量，是多个线程共享的，而工作内存存放的是该线程从主内存中拷贝过来的变量以及访问方法所取得的局部变量，是每个线程私有的其他线程不能访问。每个线程对变量的操......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-03-21 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#多线程" title="多线程">多线程</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/03/20/多线程基本概念/">
+        <h2 class="post-title">
+            多线程基本概念 
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            同步和异步
+同步就好比打电话，通信双方，你一句我一句,一句话得不到回应就会一直问：“喂？喂？可以听到么？是不是信号不好呀”。
+异步就像发短信，发完短信我就去干点别的，看个视频、玩个游戏、干啥都行，等对方给我回信息了我再来处理短信（也可以不处理）。
+线程和进程
+进程的概念听起来很抽象，不大好理解。但是我知道你肯定认识这个东西，请看下图：
+
+上方这些占用我的电脑CPU、内存、磁盘、网络的这些就都......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-03-20 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#多线程" title="多线程">多线程</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/03/17/揭秘Spring技术内幕/">
         <h2 class="post-title">
             简述Spring技术内幕
@@ -518,82 +583,6 @@ S......
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2018/12/07/每天学点SpringCloud（十三）：SpringCloud-Stream整合RabbitMQ/">
-        <h2 class="post-title">
-            每天学点SpringCloud（十三）：SpringCloud-Stream整合RabbitMQ
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            我们知道，当微服务越来越来多的时候，仅仅是feign的http调用方式已经满足不了我们的使用场景了。这个时候系统就需要接入消息中间件了。相比较于传统的Spring项目、SpringBoot项目使用消息中间件的很多配置不同，SpringCloud Stream抽象了中间件产品的不同，在SpringCloud中你仅仅需要修改几行配置文件就可以灵活的切换中间件产品而不需要修改任何代码。
-现在我们以......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2018-12-07 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#SpringCloud" title="SpringCloud">SpringCloud</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2018/11/27/cker常用命令总结/">
-        <h2 class="post-title">
-            Docker常用命令总结
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-本文主要介绍了docker的一些常用命令以及Dockerfile的组成元素
-
-镜像
-拉取镜像
-docker pull
-查看镜像
-docker images
-删除镜像
-docker rmi
-常用参数：
-1. -f：强制删除运行中的容器
-创建镜像
-
-docker commit
-
-常用参数：
-1. -m：本次提交信息
-2. --author=&quot;&quot; ：作者
-2.docker b......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2018-11-27 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Docker" title="Docker">Docker</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -729,7 +718,7 @@ docker commit
 
         
 
-            <a href="/tags/#开源组件" title="开源组件" rel="2">开源组件</a>
+            <a href="/tags/#开源组件" title="开源组件" rel="3">开源组件</a>
 
         
 
@@ -778,6 +767,10 @@ docker commit
         
 
             <a href="/tags/#Kubernetes" title="Kubernetes" rel="1">Kubernetes</a>
+
+        
+
+            <a href="/tags/# Spring" title=" Spring" rel="1"> Spring</a>
 
         
     </div>

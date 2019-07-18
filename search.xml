@@ -4,6 +4,44 @@
   
     
     <entry>
+      <title>如何参与一个开源项目!</title>
+      <link href="/2019/07/19/%E5%A6%82%E4%BD%95%E5%8F%82%E4%B8%8E%E4%B8%80%E4%B8%AA%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/"/>
+      <url>/2019/07/19/%E5%A6%82%E4%BD%95%E5%8F%82%E4%B8%8E%E4%B8%80%E4%B8%AA%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/</url>
+      
+        <content type="html"><![CDATA[<p>1、首先在github上注册一个自己的账号</p><p>2、然后在左上部分搜索一个开源项目,比如说我的项目syj-ratelimit</p><p><img src="/2019/07/19/如何参与一个开源项目/1.png" alt="1"></p><p>3、进入项目之后，单击右上角的fork按钮，github就会在你的帐户下fork一个同样的项目。<br><img src="/2019/07/19/如何参与一个开源项目/2.png" alt="2"><br>4、此时点击右上角自己的头像，可以看到一个your repositories，点击进入就可以看到刚才的那个项目了</p><p><img src="/2019/07/19/如何参与一个开源项目/3.png" alt="3"></p><p>5、现在你就可以在这个项目里取发挥你的个人才智进行修改bug、开发新功能等各种方式的贡献了</p><p>6、当你贡献完毕后就可以把你的贡献推荐给这个项目的开发者了。再次打开github，在你项目的页面上有个这样的按钮，单击它</p><p><img src="/2019/07/19/如何参与一个开源项目/4.png" alt="4"></p><p>7、在新的页面中会显示你这次的改动，继续单击create pull request在弹出的页面中输入本次提交的说明信息，输入完后，单击提交按钮 comment<br><img src="/2019/07/19/如何参与一个开源项目/5.png" alt="5"></p><p>8、到此，你的任务就完成了，等到开源项目的管理人员审核，通过了，他就把你的改动合并到相应的开发分支上。</p><p>9、除了改动代码参与一个开源项目外，为一个项目提出bug也是一种贡献。发现开源项目的bug时，进入项目主页，单击Issue然后选择New Issue在弹出的页面中输入项目bug的描述信息即可</p><p><img src="/2019/07/19/如何参与一个开源项目/6.png" alt="6"></p><p></p><h4 style="color:red"><span id="推荐阅读">推荐阅读</span></h4><p></p><ol><li><a href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A" target="_blank" rel="noopener">SpringCloud学习系列汇总</a></li><li><a href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg" target="_blank" rel="noopener">为什么一线大厂面试必问redis，有啥好问的？</a></li><li><a href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q/" target="_blank" rel="noopener">多线程面试必备基础知识汇总</a></li><li><a href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ" target="_blank" rel="noopener">Java集合源码分析汇总-JDK1.8</a></li><li><a href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA" target="_blank" rel="noopener">Linux常用命令速查-汇总篇</a></li><li><a href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw" target="_blank" rel="noopener">JVM系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA" target="_blank" rel="noopener">MySQL系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw" target="_blank" rel="noopener">RabbitMQ系列文章汇总</a></li></ol><p></p><h4 style="color:red"><span id="博客所有文章首发于公众号java学习录转载请保留扫码关注公众号即可领取2000gjava学习资源">博客所有文章首发于公众号《Java学习录》转载请保留<br>扫码关注公众号即可领取2000GJava学习资源 </span></h4><p></p><p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 开源组件 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title> Spring所有注解大揭秘 </title>
+      <link href="/2019/07/16/Spring%E6%89%80%E6%9C%89%E6%B3%A8%E8%A7%A3%E5%A4%A7%E6%8F%AD%E7%A7%98/"/>
+      <url>/2019/07/16/Spring%E6%89%80%E6%9C%89%E6%B3%A8%E8%A7%A3%E5%A4%A7%E6%8F%AD%E7%A7%98/</url>
+      
+        <content type="html"><![CDATA[<h4><span id="声明bean的注解">声明bean的注解</span></h4><ul><li>@Component 组件，没有明确的角色</li><li>@Service 在业务逻辑层使用（service层）</li><li>@Repository 在数据访问层使用（dao层）</li><li>@Controller 在展现层使用，控制器的声明</li></ul><h4><span id="注入bean的注解">注入bean的注解</span></h4><ul><li>@Autowired：由Spring提供，根据类型进行自动装配，如果组合@Qualifier使用将按名称进行装配</li><li>@Inject：由JSR-330提供使用时需要导入javax.inject.Inject;实现注入同样是根据类型进行自动装配，如果需要按名称进行装配，则需要配合@Named</li><li>@Resource：由JSR-250提供，使用需要导入javax.annotation，根据名称进行自动装配的，一般会指定一个name属性</li></ul><h4><span id="功能注解">功能注解</span></h4><ul><li>@Transactional声明事务</li><li>@Cacheable声明缓存</li></ul><h4><span id="配置类相关注解">配置类相关注解</span></h4><ul><li>@Configuration 声明当前类为配置类</li><li>@Bean 注解在方法上，声明当前方法的返回值为一个bean</li><li>@ComponentScan 用于对Component进行扫描，</li><li>@WishlyConfiguration 为@Configuration与@ComponentScan的组合注解，可以替代这两个注解</li></ul><h4><span id="切面aop相关注解">切面（AOP）相关注解</span></h4><ul><li>@Aspect 声明一个切面</li><li>@After 在方法执行之后执行</li><li>@Before 在方法执行之前执行</li><li>@Around 在方法执行之前与之后都执行</li><li>@PointCut 声明切点</li></ul><h4><span id="bean的属性支持">@Bean的属性支持</span></h4><p>@Scope设置Spring新建Bean的类型，可选择包括：</p><ul><li>Singleton 单例,一个Spring容器中只有一个bean实例，默认模式</li><li>Protetype 每次调用新建一个bean</li><li>Request web项目中，给每个http request新建一个bean</li><li>Session web项目中，给每个http session新建一个bean</li><li>GlobalSession（给每一个 global http session新建一个Bean实例</li></ul><h4><span id="类生命周期注解">类生命周期注解</span></h4><ul><li>@PostConstruct 由JSR-250提供，在类的构造函数执行完之后执行，等价于xml配置文件中bean的initMethod</li><li>@PreDestory 由JSR-250提供，在Bean销毁之前执行</li></ul><h4><span id="配置注入">配置注入</span></h4><p>@Value为属性注入值，支持如下方式的注入：</p><ul><li>普通字符@Value(“Michael Jackson”)</li><li>操作系统属性@Value(&quot;#{systemProperties[‘<a href="http://os.name" target="_blank" rel="noopener">os.name</a>’]}&quot;)</li><li>表达式结果@Value(&quot;#{ T(java.lang.Math).random() * 100 }&quot;)</li><li>其它bean属性@Value(&quot;#{<a href="http://domeClass.name" target="_blank" rel="noopener">domeClass.name</a>}&quot;)</li><li>文件资源@Value(“classpath:cn/shiyujun/test.txt”)</li><li>网站资源@Value(“<a href="https://shiyujun.cn">https://shiyujun.cn</a>”)</li><li>配置文件属性@Value(&quot;${<a href="http://book.name" target="_blank" rel="noopener">book.name</a>}&quot;)</li></ul><p>注入配置文件@PropertySource(“classpath:cn/shiyujun/test.propertie”)</p><h4><span id="环境切换">环境切换</span></h4><ul><li>@Profile 通过设定Environment的ActiveProfiles来设定当前context需要使用的配置环境</li><li>@Conditional根据代码中设置的条件装载不同的bean，包括一系列的注解<ul><li>@ConditionalOnBean存在bean</li><li>@ConditionalOnMissingBean不存在bean</li><li>@ConditionalOnClass存在某个类</li><li>@ConditionalOnMissingClass不存在某个类</li><li>@ConditionalOnProperty(prefix = “syj”, name = “algorithm”, havingValue = “token”)当存在配置文件中以syj为前缀的属性，属性名称为algorithm，然后它的值为token时才会实例化一个类。</li><li>@ConditionalOnProperty(prefix = “syj”, name = “algorithm”, havingValue = “counter”, matchIfMissing = true)如果所有的都不满足的话就选择counter为默认实现</li><li>@ConditionalOnJava如果是Java应用</li><li>@ConditionalOnWebApplication如果是Web应用</li></ul></li></ul><h4><span id="异步相关">异步相关</span></h4><ul><li>@Async 在实际执行的bean方法使用该注解来申明其是一个异步任务</li></ul><h4><span id="定时任务相关">定时任务相关</span></h4><ul><li>@Scheduled 来申明这是一个任务，包括cron,fixDelay,fixRate等类型</li></ul><h4><span id="开启某些功能">开启某些功能</span></h4><ul><li>@EnableAspectJAutoProxy 开启对AspectJ自动代理的支持</li><li>@EnableAsync 开启异步方法的支持</li><li>@EnableScheduling 开启计划任务的支持</li><li>@EnableWebMvc 开启Web MVC的配置支持</li><li>@EnableConfigurationProperties 开启对@ConfigurationProperties注解配置Bean的支持</li><li>@EnableJpaRepositories 开启对SpringData JPA Repository的支持</li><li>@EnableTransactionManagement 开启注解式事务的支持</li><li>@EnableCaching 开启注解式的缓存支持</li></ul><h4><span id="测试相关注解">测试相关注解</span></h4><ul><li>@RunWith Spring中通常用于对JUnit的支持</li><li>@ContextConfiguration 用来加载配置ApplicationContext</li></ul><h4><span id="springmvc部分">SpringMVC部分</span></h4><ul><li>@RequestMapping 用于映射Web请求，包括访问路径和参数</li><li>ResponseBody 支持将返回值放在response内，而不是一个页面</li><li>@PathVariable 用于接收路径参数</li><li>@RestController 该注解为一个组合注解，相当于@Controller和@ResponseBody的组合，注解在类上，意味着，该Controller的所有方法都默认加上了@ResponseBody</li><li>@ControllerAdvice 通过该注解，我们可以将对于控制器的全局配置放置在同一个位置，注解了@Controller的类的方法可使用@ExceptionHandler、@InitBinder、@ModelAttribute注解到方法上，<br>这对所有注解了 @RequestMapping的控制器内的方法有效。</li><li>@ExceptionHandler 用于全局处理控制器里的异常</li><li>@InitBinder 用来设置WebDataBinder，WebDataBinder用来自动绑定前台请求参数到Model中。</li><li>@ModelAttribute 本来的作用是绑定键值对到Model里，在@ControllerAdvice中是让全局的@RequestMapping都能获得在此处设置的键值对。</li></ul><h4><span id="springboot相关">SpringBoot相关</span></h4><ul><li>@EnableAutoConfiguration自动载入应用程序所需的所有Bean。该注解组合了@Import注解，@Import注解导入了EnableAutoCofigurationImportSelector类，它使用SpringFactoriesLoader.loaderFactoryNames方法来扫描具有META-INF/spring.factories文件的jar包。而spring.factories里声明了有哪些自动配置<br>​+  @SpingBootApplication SpringBoot的核心注解，主要目的是开启自动配置。它也是一个组合注解，主要组合了@Configurer，@EnableAutoConfiguration（核心）和@ComponentScan。可以通过@SpringBootApplication(exclude={想要关闭的自动配置的类名.class})来关闭特定的自动配置</li><li>@ImportResource加载xml配置的</li><li>@AutoConfigureAfter在指定的自动配置类之后再配置</li></ul><p></p><h4 style="color:red"><span id="推荐阅读">推荐阅读</span></h4><p></p><ol><li><a href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A" target="_blank" rel="noopener">SpringCloud学习系列汇总</a></li><li><a href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg" target="_blank" rel="noopener">为什么一线大厂面试必问redis，有啥好问的？</a></li><li><a href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q/" target="_blank" rel="noopener">多线程面试必备基础知识汇总</a></li><li><a href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ" target="_blank" rel="noopener">Java集合源码分析汇总-JDK1.8</a></li><li><a href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA" target="_blank" rel="noopener">Linux常用命令速查-汇总篇</a></li><li><a href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw" target="_blank" rel="noopener">JVM系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA" target="_blank" rel="noopener">MySQL系列文章汇总</a></li></ol><p></p><h4 style="color:red"><span id="博客所有文章首发于公众号java学习录转载请保留扫码关注公众号即可领取2000gjava学习资源">博客所有文章首发于公众号《Java学习录》转载请保留<br>扫码关注公众号即可领取2000GJava学习资源 </span></h4><p></p><p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag>  Spring </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>k8s常用命令</title>
       <link href="/2019/07/11/k8s-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
       <url>/2019/07/11/k8s-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
@@ -61,25 +99,6 @@
     
     
     <entry>
-      <title>RabbitMQ高级面试题</title>
-      <link href="/2019/07/07/abbitMQ%E9%AB%98%E7%BA%A7%E9%9D%A2%E8%AF%95%E9%A2%98/"/>
-      <url>/2019/07/07/abbitMQ%E9%AB%98%E7%BA%A7%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
-      
-        <content type="html"><![CDATA[<blockquote><p>本文涉及：投递失败的消息怎么处理、如何实现延时队列、如何指定消息的优先级、消息的持久化是如何实现的、如何保证消息不丢失</p></blockquote><h5><span id="投递失败的消息怎么处理">投递失败的消息怎么处理</span></h5><p>首先投递失败存在如下两个情况</p><ul><li>当交换器无法根据自身的类型和路由键找到符合条件的队列</li><li>如果交换器在将消息路由到队列时发现队列上并不存在任何消费者<br>解决方案：<br>在生产者投递消息时指定mandatory或者imrnediate参数设为 true 时，RabbitMQ 会把无法投递的消息通过Basic.Return 命令将消息返回给生产者，此时生产者需要调用channel.addReturnListener 来添加 ReturnListener 监昕器实现监听投递失败的消息</li></ul><p>如果设置了上方两个参数就要添加ReturnListener 逻辑，使生产者的逻辑变得复杂，RabbitMQ中的备份交换机也可以处理这个问题<br>以通过在声明交换器(调用 channel.exchangeDeclare 方法)的时候添加alternate-exchange 参数来实现<br>对于备份交换器，使用时包含几种特殊情况:<br>如果设置的备份交换器不存在，客户端和 RabbitMQ 服务端都不会有异常出现，此时消息会丢失<br>如果备份交换器没有绑定任何队列，客户端和 RabbitMQ 服务端都不会有异常出现，此时消息会丢失<br>如果备份交换器没有任何匹配的队列，客户端和 RabbitMQ 服务端都不会有异常出现，此时消息会丢失<br>如果备份交换器和 mandatory 参数一起使用，那么 mandatory 参数无效</p><h5><span id="如何设置消息的过期时间">如何设置消息的过期时间</span></h5><p>设置队列属性，队列中所有消息都有相同的过期时间<br>对消息本身进行单独设置，每条消息的 TTL 可以不同<br>如果两种方法一起使用，则消息的 TTL 以两者之间较小的那个数值为准</p><h5><span id="如何实现延时队列">如何实现延时队列</span></h5><ul><li>使用死信交换机<br>消息投递到一个没有消费者的队列中，为这个队列指定死信队列，当消息达到设置过期时间还没有被消费时将会被发布到死信队列中，而消费者订阅死信队列直接消费到了一份延时消息</li></ul><p>延时消息插件<br>从以下地址下载延时插件rabbitmq_delayed_message_exchange</p><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">https:</span><span class="comment">//www.rabbitmq.com/community-plugins.html</span></span><br></pre></td></tr></table></figure><p>把下载好的插件放到以下目录</p><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="class"><span class="keyword">lib</span>/<span class="title">rabbitmq</span>/<span class="title">lib</span>/<span class="title">rabbitmq_server3</span>.6.4/<span class="title">plugins</span></span></span><br></pre></td></tr></table></figure><p>启动插件</p><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmq-plugins <span class="builtin-name">enable</span> rabbitmq_delayed_message_exchange</span><br></pre></td></tr></table></figure><p>声明交换器类型为x-delayed-message来标示此交换机为延时交换机<br>发送消息时在header中添加”x-delay”参数来控制消息的延时时间</p><h5><span id="如何指定消息的优先级">如何指定消息的优先级</span></h5><p>设置队列的 max priority 参数，RabbitMQ中消息的优先级默认是0，最大值是10</p><h5><span id="消息的持久化是如何实现的">消息的持久化是如何实现的</span></h5><p>RabbitMQ的持久化分为:交换器的持久化、队列的持久化和消息的持久化</p><h5><span id="交换器和队列的持久化都是通过在声明时将-durable-参数置为-true-实现的">交换器和队列的持久化都是通过在声明时将 durable 参数置为 true 实现的</span></h5><p>消息的持久化是在发送消息指定deliveryMode为2实现的</p><h5><span id="如何保证消息不丢失">如何保证消息不丢失</span></h5><p>生产者开启事务或者发送方确认机制，交换机、队列和消息全部设置持久化，消费者开启消费确认机制</p><p></p><h4 style="color:red"><span id="推荐阅读">推荐阅读</span></h4><p></p><ol><li><a href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A" target="_blank" rel="noopener">SpringCloud学习系列汇总</a></li><li><a href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg" target="_blank" rel="noopener">为什么一线大厂面试必问redis，有啥好问的？</a></li><li><a href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q/" target="_blank" rel="noopener">多线程面试必备基础知识汇总</a></li><li><a href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ" target="_blank" rel="noopener">Java集合源码分析汇总-JDK1.8</a></li><li><a href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA" target="_blank" rel="noopener">Linux常用命令速查-汇总篇</a></li><li><a href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw" target="_blank" rel="noopener">JVM系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA" target="_blank" rel="noopener">MySQL系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw" target="_blank" rel="noopener">RabbitMQ系列文章汇总</a></li></ol><p></p><h4 style="color:red"><span id="博客所有文章首发于公众号java学习录转载请保留扫码关注公众号即可领取2000gjava学习资源">博客所有文章首发于公众号《Java学习录》转载请保留<br>扫码关注公众号即可领取2000GJava学习资源 </span></h4><p></p><p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> RabbitMQ </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>RabbitMQ如何实现高可用</title>
       <link href="/2019/07/07/abbitMQ%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E9%AB%98%E5%8F%AF%E7%94%A8/"/>
       <url>/2019/07/07/abbitMQ%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E9%AB%98%E5%8F%AF%E7%94%A8/</url>
@@ -110,6 +129,25 @@
         <tags>
             
             <tag> Kubernetes </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>RabbitMQ高级面试题</title>
+      <link href="/2019/07/07/abbitMQ%E9%AB%98%E7%BA%A7%E9%9D%A2%E8%AF%95%E9%A2%98/"/>
+      <url>/2019/07/07/abbitMQ%E9%AB%98%E7%BA%A7%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>本文涉及：投递失败的消息怎么处理、如何实现延时队列、如何指定消息的优先级、消息的持久化是如何实现的、如何保证消息不丢失</p></blockquote><h5><span id="投递失败的消息怎么处理">投递失败的消息怎么处理</span></h5><p>首先投递失败存在如下两个情况</p><ul><li>当交换器无法根据自身的类型和路由键找到符合条件的队列</li><li>如果交换器在将消息路由到队列时发现队列上并不存在任何消费者<br>解决方案：<br>在生产者投递消息时指定mandatory或者imrnediate参数设为 true 时，RabbitMQ 会把无法投递的消息通过Basic.Return 命令将消息返回给生产者，此时生产者需要调用channel.addReturnListener 来添加 ReturnListener 监昕器实现监听投递失败的消息</li></ul><p>如果设置了上方两个参数就要添加ReturnListener 逻辑，使生产者的逻辑变得复杂，RabbitMQ中的备份交换机也可以处理这个问题<br>以通过在声明交换器(调用 channel.exchangeDeclare 方法)的时候添加alternate-exchange 参数来实现<br>对于备份交换器，使用时包含几种特殊情况:<br>如果设置的备份交换器不存在，客户端和 RabbitMQ 服务端都不会有异常出现，此时消息会丢失<br>如果备份交换器没有绑定任何队列，客户端和 RabbitMQ 服务端都不会有异常出现，此时消息会丢失<br>如果备份交换器没有任何匹配的队列，客户端和 RabbitMQ 服务端都不会有异常出现，此时消息会丢失<br>如果备份交换器和 mandatory 参数一起使用，那么 mandatory 参数无效</p><h5><span id="如何设置消息的过期时间">如何设置消息的过期时间</span></h5><p>设置队列属性，队列中所有消息都有相同的过期时间<br>对消息本身进行单独设置，每条消息的 TTL 可以不同<br>如果两种方法一起使用，则消息的 TTL 以两者之间较小的那个数值为准</p><h5><span id="如何实现延时队列">如何实现延时队列</span></h5><ul><li>使用死信交换机<br>消息投递到一个没有消费者的队列中，为这个队列指定死信队列，当消息达到设置过期时间还没有被消费时将会被发布到死信队列中，而消费者订阅死信队列直接消费到了一份延时消息</li></ul><p>延时消息插件<br>从以下地址下载延时插件rabbitmq_delayed_message_exchange</p><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">https:</span><span class="comment">//www.rabbitmq.com/community-plugins.html</span></span><br></pre></td></tr></table></figure><p>把下载好的插件放到以下目录</p><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="class"><span class="keyword">lib</span>/<span class="title">rabbitmq</span>/<span class="title">lib</span>/<span class="title">rabbitmq_server3</span>.6.4/<span class="title">plugins</span></span></span><br></pre></td></tr></table></figure><p>启动插件</p><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmq-plugins <span class="builtin-name">enable</span> rabbitmq_delayed_message_exchange</span><br></pre></td></tr></table></figure><p>声明交换器类型为x-delayed-message来标示此交换机为延时交换机<br>发送消息时在header中添加”x-delay”参数来控制消息的延时时间</p><h5><span id="如何指定消息的优先级">如何指定消息的优先级</span></h5><p>设置队列的 max priority 参数，RabbitMQ中消息的优先级默认是0，最大值是10</p><h5><span id="消息的持久化是如何实现的">消息的持久化是如何实现的</span></h5><p>RabbitMQ的持久化分为:交换器的持久化、队列的持久化和消息的持久化</p><h5><span id="交换器和队列的持久化都是通过在声明时将-durable-参数置为-true-实现的">交换器和队列的持久化都是通过在声明时将 durable 参数置为 true 实现的</span></h5><p>消息的持久化是在发送消息指定deliveryMode为2实现的</p><h5><span id="如何保证消息不丢失">如何保证消息不丢失</span></h5><p>生产者开启事务或者发送方确认机制，交换机、队列和消息全部设置持久化，消费者开启消费确认机制</p><p></p><h4 style="color:red"><span id="推荐阅读">推荐阅读</span></h4><p></p><ol><li><a href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A" target="_blank" rel="noopener">SpringCloud学习系列汇总</a></li><li><a href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg" target="_blank" rel="noopener">为什么一线大厂面试必问redis，有啥好问的？</a></li><li><a href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q/" target="_blank" rel="noopener">多线程面试必备基础知识汇总</a></li><li><a href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ" target="_blank" rel="noopener">Java集合源码分析汇总-JDK1.8</a></li><li><a href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA" target="_blank" rel="noopener">Linux常用命令速查-汇总篇</a></li><li><a href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw" target="_blank" rel="noopener">JVM系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA" target="_blank" rel="noopener">MySQL系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw" target="_blank" rel="noopener">RabbitMQ系列文章汇总</a></li></ol><p></p><h4 style="color:red"><span id="博客所有文章首发于公众号java学习录转载请保留扫码关注公众号即可领取2000gjava学习资源">博客所有文章首发于公众号《Java学习录》转载请保留<br>扫码关注公众号即可领取2000GJava学习资源 </span></h4><p></p><p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> RabbitMQ </tag>
             
         </tags>
       

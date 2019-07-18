@@ -251,6 +251,75 @@
 
 <div class="post-preview">
 
+    <a href="/2019/05/08/VM中的内存溢出详解/">
+        <h2 class="post-title">
+             JVM中的内存溢出详解 
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文涉及：JVM各区域的内存溢出的原因及解决办法。堆溢出、栈溢出、方法区溢出、直接内存溢出
+
+除了程序计数器外，JVM中的其他区域都可能会发生内存溢出
+堆溢出
+1java.lang.OutOfMemoryError: Java heap space
+这个异常是由于堆中存在大量的对象，这些对象无法通过垃圾回收进行收集从而导致的堆内存溢出，堆溢出呢，分为两种情况：
+
+
+内存泄露（大量无用的对象......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-05-08 作
+        </p>
+        <div class="tags">
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/05/08/M垃圾收集器详解/">
+        <h2 class="post-title">
+             JVM垃圾收集器详解 
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文涉及：JVM中各垃圾收集器的介绍及常用参数、JVM的两种模式
+
+串行收集器
+Serial 垃圾收集器
+一个单线程的收集器，使用复制算法。它只会使用一条线程工作，并且在进行垃圾收集的同时，必须暂停其他所有的工作线程（Stop The Word），直到垃圾收集结束。
+虽然在收集垃圾过程中需要暂停所有其他的工作线程，但是对于单个 CPU 环境来说，没有线程交互的开销，可以获得最高的单线程垃圾......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-05-08 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#JVM" title="JVM">JVM</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/05/08/JVM垃圾收集详解/">
         <h2 class="post-title">
              JVM垃圾收集详解 
@@ -529,85 +598,6 @@ volatile-lru：......
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/04/23/Redis哨兵环境搭建/">
-        <h2 class="post-title">
-             Redis哨兵环境搭建 
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            在昨天的文章&lt;Redis主从复制&gt;中部署了Redis的主从复制，一主两从的架构模式可以保证数据不丢失和读写分离，但是却无法保证主节点挂了之后的应用的高可用，基于主从复制，Redis提供了哨兵模式来监控各个节点的状态，当主节点发生意外down机后，哨兵会通过选举算法在从节点中间在选举一个节点晋升为主节点。
-◆
-如何配置Redis的哨兵
-◆
-首先我们需要一个简单的一主两从架构的red......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-04-23 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Redis" title="Redis">Redis</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/04/23/edis主从复制/">
-        <h2 class="post-title">
-             Redis主从复制 
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            ◆
-简单介绍
-◆
-Redis的主从复制可以把数据复制多个副本部署到其他机器，从而避免了系统中的单点问题以及满足故障恢复和负载均衡等需求。
-在Redis的主从复制架构中，存在两种节点，主节点和从节点。
-
-
-一个主节点可以有多个从节点
-
-
-一个从节点只能有一个主节点
-
-
-主从复制是主节点的数据会异步同步到所有的从节点上
-
-
-◆
-如何使用主从复制
-◆
-Redis默认部署是以主节点的形式部署的，我们......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-04-23 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Redis" title="Redis">Redis</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -743,7 +733,7 @@ Redis默认部署是以主节点的形式部署的，我们......
 
         
 
-            <a href="/tags/#开源组件" title="开源组件" rel="2">开源组件</a>
+            <a href="/tags/#开源组件" title="开源组件" rel="3">开源组件</a>
 
         
 
@@ -792,6 +782,10 @@ Redis默认部署是以主节点的形式部署的，我们......
         
 
             <a href="/tags/#Kubernetes" title="Kubernetes" rel="1">Kubernetes</a>
+
+        
+
+            <a href="/tags/# Spring" title=" Spring" rel="1"> Spring</a>
 
         
     </div>
