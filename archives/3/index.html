@@ -251,6 +251,42 @@
 
 <div class="post-preview">
 
+    <a href="/2019/05/27/ySQL索引-基础版/">
+        <h2 class="post-title">
+            MySQL索引-基础版
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文涉及：MySQL的索引类型及区别和如何建立、删除、查看索引
+
+索引类型
+MySQL中的的索引分为单列索引和组合索引
+
+单列索引:主键索引,唯一索引,普通索引都可以作为一个单列索引，单列索引只包含一个列,一个表可以有多个单列索引
+组合索引:一个组合索引包含两个或两个以上的列
+当这样一条语句select * from user where id=1 and name=‘张三’ and ag......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-05-27 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/05/27/ySQL调优之数据类型选择原则/">
         <h2 class="post-title">
             MySQL调优之数据类型选择原则
@@ -582,54 +618,6 @@ GC基本参数
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/05/14/谈Java类加载器/">
-        <h2 class="post-title">
-             浅谈Java类加载器 
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            JDK 默认提供了3种ClassLoader：
-
-
-Bootstrp Classloader（启动类加载器）
-由C++编写，它主要负责加载Java的核心类库：
-
-
-%JAVA_HOME%/jre/lib
-
-
--Xbootclasspath参数指定的路径
-
-
-%JAVA_HOME%/jre/classes中的类
-
-
-需要注意的是这个加载器是虚拟机启动时初始化的，Java程序是无法使用的
-
-
-
-......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-05-14 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#JVM" title="JVM">JVM</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -813,7 +801,7 @@ Bootstrp Classloader（启动类加载器）
 
         
 
-            <a href="/tags/#Kubernetes" title="Kubernetes" rel="1">Kubernetes</a>
+            <a href="/tags/#Kubernetes" title="Kubernetes" rel="2">Kubernetes</a>
 
         
 

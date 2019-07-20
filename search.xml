@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>k8s时区问题解决方案</title>
+      <link href="/2019/07/20/k8s%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
+      <url>/2019/07/20/k8s%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</url>
+      
+        <content type="html"><![CDATA[<p>前几天在使用k8s中的CronJob时发现了一个很奇怪的问题， 按照官方文档的demo跑起来是没有任何问题的，<br>但是当我想要设置每天一个固定时间点例如12点20执行一个job的时候，到了时间之后无论如何都不会执行。</p><p>一开始怀疑是cron表达式写的有问题，但是经过多次试验倒是没问题，然后就想到了时区的问题。</p><p>首先我先尝试使用PodPreset来修改所有容器的时区（在pod 创建时,用户可以使用 podpreset 对象将特定信息注入 pod 中,这些信息可以包括 secret、 卷、 卷挂载和环境变量）</p><p>默认k8s是没有开启PodPreset的，开启PodPreset需要修改master节点上的/etc/kubernetes/manifests/kube-apiserver.yaml文件</p><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">首先在<span class="keyword">CMD</span><span class="bash">末尾添加一个--runtime-config=settings.k8s.io/v1alpha1=<span class="literal">true</span></span></span><br><span class="line"><span class="bash">在--<span class="built_in">enable</span>-admission-plugins的后面增加一个PodPreset</span></span><br><span class="line"><span class="bash">重启k8ssystemctl restart kubelet</span></span><br></pre></td></tr></table></figure><p>创建一个yml，为所有的pod挂载一个时区的环境变量</p><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">apiVersion</span>: settings.k8s.io/v1alpha1</span><br><span class="line"><span class="attribute">kind</span>: PodPreset</span><br><span class="line"><span class="attribute">metadata</span>:</span><br><span class="line">  <span class="attribute">name</span>: tz-env</span><br><span class="line">  <span class="attribute">namespace</span>: unicode-pay</span><br><span class="line"><span class="attribute">spec</span>:</span><br><span class="line">  <span class="attribute">selector</span>:</span><br><span class="line">    <span class="attribute">matchLabels</span>:</span><br><span class="line">  <span class="attribute">env</span>:</span><br><span class="line">    - <span class="attribute">name</span>: TZ</span><br><span class="line">      <span class="attribute">value</span>: Asia/Shanghai</span><br></pre></td></tr></table></figure><p>注意：</p><ol><li>Pod Preset是namespace级别的对象，其作用范围只能是同一个命名空间下容器</li><li>matchLabels为空代表选择所有</li></ol><p>此时再次尝试CronJob之后发现还是不执行，然后进入该命名空间下的其他pod之后查看时间发现也没问题。</p><p>此时想到了虽然把pod的时区更改了，但是k8s调度器可不是按照pod的时间进行调度的，原来此时需要修改的是k8s的时区</p><p>再次来到/etc/kubernetes/manifests目录，使用如下方式修改此目录下4个k8s的组件的时间</p><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">   name: time</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">    volumeMounts:</span><br><span class="line">    -  name: config</span><br><span class="line">       mountPath: /etc/localtime</span><br><span class="line">       readOnly: <span class="literal">true</span></span><br><span class="line">   volumes:</span><br><span class="line">    - name: config</span><br><span class="line">       hostPath:</span><br><span class="line">           path: /etc/localtime</span><br></pre></td></tr></table></figure><p>重启k8s，搞定</p><pre><code>systemctl restart kubelet</code></pre><p></p><h4 style="color:red"><span id="推荐阅读">推荐阅读</span></h4><p></p><ol><li><a href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A" target="_blank" rel="noopener">SpringCloud学习系列汇总</a></li><li><a href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg" target="_blank" rel="noopener">为什么一线大厂面试必问redis，有啥好问的？</a></li><li><a href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q/" target="_blank" rel="noopener">多线程面试必备基础知识汇总</a></li><li><a href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ" target="_blank" rel="noopener">Java集合源码分析汇总-JDK1.8</a></li><li><a href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA" target="_blank" rel="noopener">Linux常用命令速查-汇总篇</a></li><li><a href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw" target="_blank" rel="noopener">JVM系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA" target="_blank" rel="noopener">MySQL系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw" target="_blank" rel="noopener">RabbitMQ系列文章汇总</a></li></ol><p></p><h4 style="color:red"><span id="博客所有文章首发于公众号java学习录转载请保留扫码关注公众号即可领取2000gjava学习资源">博客所有文章首发于公众号《Java学习录》转载请保留<br>扫码关注公众号即可领取2000GJava学习资源 </span></h4><p></p><p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Kubernetes </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>如何参与一个开源项目!</title>
       <link href="/2019/07/19/%E5%A6%82%E4%BD%95%E5%8F%82%E4%B8%8E%E4%B8%80%E4%B8%AA%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/"/>
       <url>/2019/07/19/%E5%A6%82%E4%BD%95%E5%8F%82%E4%B8%8E%E4%B8%80%E4%B8%AA%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/</url>
@@ -99,25 +118,6 @@
     
     
     <entry>
-      <title>RabbitMQ如何实现高可用</title>
-      <link href="/2019/07/07/abbitMQ%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E9%AB%98%E5%8F%AF%E7%94%A8/"/>
-      <url>/2019/07/07/abbitMQ%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E9%AB%98%E5%8F%AF%E7%94%A8/</url>
-      
-        <content type="html"><![CDATA[<p>RabbitMQ一共具有三种模式：单机、普通集群、镜像集群</p><h4><span id="单机模式">单机模式</span></h4><p>单机模式，就是我们平常玩的demo，生产上肯定不能用。具体安装部署过程可以参考我的这篇文章：<a href="">CentsOS原生RabbitMQ安装过程</a></p><h4><span id="普通集群">普通集群</span></h4><p>普通集群就是在多台机器上启动多个实例。每个队列只会存在其中的一个实例上，然后所有实例同步这些队列的元数据。消费者在进行消费的时候，如果连接的实例上恰好不是队列所在的实例，就会根据队列的元数据去队列所在实例上拉取数据</p><p>由此可知，集群模式并没做到分布式，如果队列所在的实例宕机了，会导致接下来其他实例就无法从那个实例拉取消息</p><p>所以集群主要是提高吞吐量的</p><p>关于集群模式的安装部署过程可以参考我的这篇文章：RabbitMQ集群安装</p><h4><span id="镜像集群">镜像集群</span></h4><p>跟普通集群模式不一样的是，在镜像集群模式下，无论队列中的元数据还是消息都会存在于多个实例上，就是说，每个 RabbitMQ 节点都有这个 队列的一个完整镜像。然后每次写消息到队列的时候，都会自动把消息同步到多个实例上</p><p>如何开启镜像集群</p><p>首先镜像集群是在普通集群的基础上的，所以你要先搭建一个普通集群，然后在随意一个实例上执行如下命令创建一个策略即可开启<br>rabbitmqctl set_policy -p vhostName name  “^xxqueue” '{“ha-mode”:“all”}'<br>name是策略的名字</p><p>xxqueue是需要匹配的队列名称，如果要匹配所有的话使用^</p><p></p><h4 style="color:red"><span id="推荐阅读">推荐阅读</span></h4><p></p><ol><li><a href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A" target="_blank" rel="noopener">SpringCloud学习系列汇总</a></li><li><a href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg" target="_blank" rel="noopener">为什么一线大厂面试必问redis，有啥好问的？</a></li><li><a href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q/" target="_blank" rel="noopener">多线程面试必备基础知识汇总</a></li><li><a href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ" target="_blank" rel="noopener">Java集合源码分析汇总-JDK1.8</a></li><li><a href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA" target="_blank" rel="noopener">Linux常用命令速查-汇总篇</a></li><li><a href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw" target="_blank" rel="noopener">JVM系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA" target="_blank" rel="noopener">MySQL系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw" target="_blank" rel="noopener">RabbitMQ系列文章汇总</a></li></ol><p></p><h4 style="color:red"><span id="博客所有文章首发于公众号java学习录转载请保留扫码关注公众号即可领取2000gjava学习资源">博客所有文章首发于公众号《Java学习录》转载请保留<br>扫码关注公众号即可领取2000GJava学习资源 </span></h4><p></p><p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> RabbitMQ </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>Kubernetes是什么东西？</title>
       <link href="/2019/07/07/ubernetes%E6%98%AF%E4%BB%80%E4%B9%88%E4%B8%9C%E8%A5%BF%EF%BC%9F/"/>
       <url>/2019/07/07/ubernetes%E6%98%AF%E4%BB%80%E4%B9%88%E4%B8%9C%E8%A5%BF%EF%BC%9F/</url>
@@ -129,6 +129,25 @@
         <tags>
             
             <tag> Kubernetes </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>RabbitMQ如何实现高可用</title>
+      <link href="/2019/07/07/abbitMQ%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E9%AB%98%E5%8F%AF%E7%94%A8/"/>
+      <url>/2019/07/07/abbitMQ%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E9%AB%98%E5%8F%AF%E7%94%A8/</url>
+      
+        <content type="html"><![CDATA[<p>RabbitMQ一共具有三种模式：单机、普通集群、镜像集群</p><h4><span id="单机模式">单机模式</span></h4><p>单机模式，就是我们平常玩的demo，生产上肯定不能用。具体安装部署过程可以参考我的这篇文章：<a href="">CentsOS原生RabbitMQ安装过程</a></p><h4><span id="普通集群">普通集群</span></h4><p>普通集群就是在多台机器上启动多个实例。每个队列只会存在其中的一个实例上，然后所有实例同步这些队列的元数据。消费者在进行消费的时候，如果连接的实例上恰好不是队列所在的实例，就会根据队列的元数据去队列所在实例上拉取数据</p><p>由此可知，集群模式并没做到分布式，如果队列所在的实例宕机了，会导致接下来其他实例就无法从那个实例拉取消息</p><p>所以集群主要是提高吞吐量的</p><p>关于集群模式的安装部署过程可以参考我的这篇文章：RabbitMQ集群安装</p><h4><span id="镜像集群">镜像集群</span></h4><p>跟普通集群模式不一样的是，在镜像集群模式下，无论队列中的元数据还是消息都会存在于多个实例上，就是说，每个 RabbitMQ 节点都有这个 队列的一个完整镜像。然后每次写消息到队列的时候，都会自动把消息同步到多个实例上</p><p>如何开启镜像集群</p><p>首先镜像集群是在普通集群的基础上的，所以你要先搭建一个普通集群，然后在随意一个实例上执行如下命令创建一个策略即可开启<br>rabbitmqctl set_policy -p vhostName name  “^xxqueue” '{“ha-mode”:“all”}'<br>name是策略的名字</p><p>xxqueue是需要匹配的队列名称，如果要匹配所有的话使用^</p><p></p><h4 style="color:red"><span id="推荐阅读">推荐阅读</span></h4><p></p><ol><li><a href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A" target="_blank" rel="noopener">SpringCloud学习系列汇总</a></li><li><a href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg" target="_blank" rel="noopener">为什么一线大厂面试必问redis，有啥好问的？</a></li><li><a href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q/" target="_blank" rel="noopener">多线程面试必备基础知识汇总</a></li><li><a href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ" target="_blank" rel="noopener">Java集合源码分析汇总-JDK1.8</a></li><li><a href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA" target="_blank" rel="noopener">Linux常用命令速查-汇总篇</a></li><li><a href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw" target="_blank" rel="noopener">JVM系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA" target="_blank" rel="noopener">MySQL系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw" target="_blank" rel="noopener">RabbitMQ系列文章汇总</a></li></ol><p></p><h4 style="color:red"><span id="博客所有文章首发于公众号java学习录转载请保留扫码关注公众号即可领取2000gjava学习资源">博客所有文章首发于公众号《Java学习录》转载请保留<br>扫码关注公众号即可领取2000GJava学习资源 </span></h4><p></p><p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> RabbitMQ </tag>
             
         </tags>
       

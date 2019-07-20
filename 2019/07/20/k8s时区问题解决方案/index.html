@@ -13,11 +13,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          使用原生JS加CSS样式实现图片点击放大缩小功能  - Java学习录
+          k8s时区问题解决方案 - Java学习录
         
     </title>
 
-    <link rel="canonical" href="https://shiyujun.cn/2018/07/26/使用原生JS加CSS样式实现图片点击放大缩小功能/">
+    <link rel="canonical" href="https://shiyujun.cn/2019/07/20/k8s时区问题解决方案/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -117,14 +117,14 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#JS" title="JS">JS</a>
+                              <a class="tag" href="/tags/#Kubernetes" title="Kubernetes">Kubernetes</a>
                             
                         </div>
-                        <h1>使用原生JS加CSS样式实现图片点击放大缩小功能 </h1>
+                        <h1>k8s时区问题解决方案</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by 石玉军 on
-                            2018-07-26
+                            2019-07-20
                         </span>
 
                     </div>
@@ -254,21 +254,40 @@
                 col-sm-12 col-xs-12
                 post-container">
 
-                <p>前几天网站测试的时候发现了博客中的图片的有的太小了看不清楚，随想到了使用一个图片放大的插件，不过度娘了好几分钟以后实在没有找到比较优雅的。然后就自己写了一个，在这里分享给大家。</p>
-<p>对比我度娘的结果，此功能实现没有基于任何框架，原生js、css和html就可以实现,相信聪明的你看了就明白了。</p>
-<p>因为我的网站不是博客么，当我的一篇博客从后台查询出来的时候，有一个字段会记录博客的正文。我们需要放大的图片就在这个正文里了。</p>
-<p>首先我先调用了一个方法为我的正文做了一下转换：</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">imgHander(context) &#123;</span><br><span class="line">    <span class="keyword">var</span> subStr=<span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">'&lt;img'</span>,<span class="string">'ig'</span>);</span><br><span class="line">    <span class="keyword">return</span> context.replace(subStr, <span class="string">"&lt;img onclick='picBig(this)' "</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我给正文中所有的img标签都添加了一个picBig函数,这个参数传递的是这个图片本身，那么这个函数又是怎么实现的呢？</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">picBig</span>(<span class="params">img</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> i=img.currentSrc;</span><br><span class="line">    <span class="keyword">var</span> v = <span class="built_in">document</span>.getElementById(<span class="string">'divCenter'</span>);</span><br><span class="line">    <span class="keyword">var</span> bigImg = <span class="built_in">document</span>.getElementById(<span class="string">'bigImg'</span>);</span><br><span class="line">    bigImg.src=i;</span><br><span class="line">    v.style.display = <span class="string">"block"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>大致上呢，这个函数获取了调用者的图片地址，然后给了一个id为bigImg的img标签，然后呢又把一个di为divCenter的东西给设置了display</p>
-<p>为显示。那么这两个东西又是什么呢，接着忘下看：</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="keyword">div</span> <span class="built_in">id</span>=<span class="string">"divCenter"</span> align=<span class="string">"center"</span></span><br><span class="line">     style=<span class="string">"position: absolute; display: none;  width: 100%; height: 100%; overflow:auto;  position:fixed;z-index:9999;margin-top: 30px;"</span>&gt;</span><br><span class="line">    &lt;img <span class="built_in">id</span>=<span class="string">"bigImg"</span> <span class="built_in">class</span>=<span class="string">"bigImg"</span> onclick=<span class="string">"picClose();"</span></span><br><span class="line">            src=<span class="string">""</span> style=<span class="string">"width:90%;"</span>/&gt;</span><br><span class="line">&lt;/<span class="keyword">div</span>&gt;</span><br></pre></td></tr></table></figure>
-<p>看到这里相信你已经明白了，这个div会显示出来，并且我们刚才点击的图片大小会变成宽度为90%，其实我们的图片放大功能已经实现了不是么。接着图片缩小，是不是very easy，隐藏这个div就是了，点击图片时调用picClose函数。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">picClose</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> v = <span class="built_in">document</span>.getElementById(<span class="string">'divCenter'</span>);</span><br><span class="line">    v.style.display = <span class="string">"none"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>功能已经完全实现了，如果你不着急走的话就在附送你两个小样式。</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">`<span class="selector-class">.blog</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">    <span class="attribute">cursor</span>:<span class="built_in">url</span>(img/big.png),auto;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.bigImg</span>  &#123;</span><br><span class="line">    <span class="attribute">cursor</span>:<span class="built_in">url</span>(img/small.png),auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上方两个样式呢，第一个是当我们鼠标放在需要放大的图片上时会显示一个放大镜，第二个就是图片放大以后鼠标放上就会显示一个缩小的样式，在这里顺便把这两个icon附上。<img src="/2018/07/26/使用原生JS加CSS样式实现图片点击放大缩小功能/1.png" alt="图片"><img src="/2018/07/26/使用原生JS加CSS样式实现图片点击放大缩小功能/2.png" alt="图片"></p>
+                <p>前几天在使用k8s中的CronJob时发现了一个很奇怪的问题， 按照官方文档的demo跑起来是没有任何问题的，<br>
+但是当我想要设置每天一个固定时间点例如12点20执行一个job的时候，到了时间之后无论如何都不会执行。</p>
+<p>一开始怀疑是cron表达式写的有问题，但是经过多次试验倒是没问题，然后就想到了时区的问题。</p>
+<p>首先我先尝试使用PodPreset来修改所有容器的时区（在pod 创建时,用户可以使用 podpreset 对象将特定信息注入 pod 中,这些信息可以包括 secret、 卷、 卷挂载和环境变量）</p>
+<p>默认k8s是没有开启PodPreset的，开启PodPreset需要修改master节点上的/etc/kubernetes/manifests/kube-apiserver.yaml文件</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">首先在<span class="keyword">CMD</span><span class="bash">末尾添加一个--runtime-config=settings.k8s.io/v1alpha1=<span class="literal">true</span></span></span><br><span class="line"><span class="bash">在--<span class="built_in">enable</span>-admission-plugins的后面增加一个PodPreset</span></span><br><span class="line"><span class="bash">重启k8s	systemctl restart kubelet</span></span><br></pre></td></tr></table></figure>
+<p>创建一个yml，为所有的pod挂载一个时区的环境变量</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">apiVersion</span>: settings.k8s.io/v1alpha1</span><br><span class="line"><span class="attribute">kind</span>: PodPreset</span><br><span class="line"><span class="attribute">metadata</span>:</span><br><span class="line">  <span class="attribute">name</span>: tz-env</span><br><span class="line">  <span class="attribute">namespace</span>: unicode-pay</span><br><span class="line"><span class="attribute">spec</span>:</span><br><span class="line">  <span class="attribute">selector</span>:</span><br><span class="line">    <span class="attribute">matchLabels</span>:</span><br><span class="line">  <span class="attribute">env</span>:</span><br><span class="line">    - <span class="attribute">name</span>: TZ</span><br><span class="line">      <span class="attribute">value</span>: Asia/Shanghai</span><br></pre></td></tr></table></figure>
+<p>注意：</p>
+<ol>
+<li>Pod Preset是namespace级别的对象，其作用范围只能是同一个命名空间下容器</li>
+<li>matchLabels为空代表选择所有</li>
+</ol>
+<p>此时再次尝试CronJob之后发现还是不执行，然后进入该命名空间下的其他pod之后查看时间发现也没问题。</p>
+<p>此时想到了虽然把pod的时区更改了，但是k8s调度器可不是按照pod的时间进行调度的，原来此时需要修改的是k8s的时区</p>
+<p>再次来到/etc/kubernetes/manifests目录，使用如下方式修改此目录下4个k8s的组件的时间</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">   name: time</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">    volumeMounts:</span><br><span class="line">    -  name: config</span><br><span class="line">       mountPath: /etc/localtime</span><br><span class="line">       readOnly: <span class="literal">true</span></span><br><span class="line">   volumes:</span><br><span class="line">    - name: config</span><br><span class="line">       hostPath:</span><br><span class="line">           path: /etc/localtime</span><br></pre></td></tr></table></figure>
+<p>重启k8s，搞定</p>
+<pre><code>systemctl restart kubelet
+</code></pre>
+<p></p><h4 style="color:red"><span id="推荐阅读">推荐阅读</span></h4><p></p>
+<ol>
+<li><a href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A" target="_blank" rel="noopener">SpringCloud学习系列汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg" target="_blank" rel="noopener">为什么一线大厂面试必问redis，有啥好问的？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q/" target="_blank" rel="noopener">多线程面试必备基础知识汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ" target="_blank" rel="noopener">Java集合源码分析汇总-JDK1.8</a></li>
+<li><a href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA" target="_blank" rel="noopener">Linux常用命令速查-汇总篇</a></li>
+<li><a href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw" target="_blank" rel="noopener">JVM系列文章汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA" target="_blank" rel="noopener">MySQL系列文章汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw" target="_blank" rel="noopener">RabbitMQ系列文章汇总</a></li>
+</ol>
+<p></p><h4 style="color:red"><span id="博客所有文章首发于公众号java学习录转载请保留扫码关注公众号即可领取2000gjava学习资源">博客所有文章首发于公众号《Java学习录》转载请保留<br>
+扫码关注公众号即可领取2000GJava学习资源 </span></h4><p></p>
+<p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>
 
                 
 
@@ -276,18 +295,14 @@
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2018/07/26/二分查找法/" data-toggle="tooltip" data-placement="top" title="二分查找法">&larr; 上一篇</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2018/07/26/、新浪微博、码云和百度的第三方登录/" data-toggle="tooltip" data-placement="top" title="QQ、新浪微博、码云和百度的第三方登录">下一篇 &rarr;</a>
+                            <a href="/2019/07/19/如何参与一个开源项目/" data-toggle="tooltip" data-placement="top" title="如何参与一个开源项目!">下一篇 &rarr;</a>
                         </li>
                     
                 </ul>
 
-<div id="SOHUCS" sid="shiyujun.cn/2018/07/26/使用原生JS加CSS样式实现图片点击放大缩小功能/"></div>
+<div id="SOHUCS" sid="shiyujun.cn/2019/07/20/k8s时区问题解决方案/"></div>
 <script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js" ></script>
 <script type="text/javascript">
 window.changyan.api.config({
@@ -699,7 +714,8 @@ outline: currentcolor none medium;
         <div id="toc" class="toc-article">
         <strong class="toc-title">目录1</strong>
         
-          <ol class="nav">none</ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">推荐阅读</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">博客所有文章首发于公众号《Java学习录》转载请保留
+扫码关注公众号即可领取2000GJava学习资源 </span></a></li></ol>
         
         </div>
       </aside>

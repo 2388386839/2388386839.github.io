@@ -251,6 +251,37 @@
 
 <div class="post-preview">
 
+    <a href="/2019/07/20/k8s时区问题解决方案/">
+        <h2 class="post-title">
+            k8s时区问题解决方案
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            前几天在使用k8s中的CronJob时发现了一个很奇怪的问题， 按照官方文档的demo跑起来是没有任何问题的，
+但是当我想要设置每天一个固定时间点例如12点20执行一个job的时候，到了时间之后无论如何都不会执行。
+一开始怀疑是cron表达式写的有问题，但是经过多次试验倒是没问题，然后就想到了时区的问题。
+首先我先尝试使用PodPreset来修改所有容器的时区（在pod 创建时,用户可以使用......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-07-20 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Kubernetes" title="Kubernetes">Kubernetes</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/07/19/如何参与一个开源项目/">
         <h2 class="post-title">
             如何参与一个开源项目!
@@ -414,38 +445,6 @@ Pod 是一组紧密关联的容器集合，它们共享 PID、IPC、Network 和 
 
 <div class="post-preview">
 
-    <a href="/2019/07/07/abbitMQ如何实现高可用/">
-        <h2 class="post-title">
-            RabbitMQ如何实现高可用
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            RabbitMQ一共具有三种模式：单机、普通集群、镜像集群
-单机模式
-单机模式，就是我们平常玩的demo，生产上肯定不能用。具体安装部署过程可以参考我的这篇文章：CentsOS原生RabbitMQ安装过程
-普通集群
-普通集群就是在多台机器上启动多个实例。每个队列只会存在其中的一个实例上，然后所有实例同步这些队列的元数据。消费者在进行消费的时候，如果连接的实例上恰好不是队列所在的实例，就会根据......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-07-07 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
     <a href="/2019/07/07/ubernetes是什么东西？/">
         <h2 class="post-title">
             Kubernetes是什么东西？
@@ -471,6 +470,38 @@ k8s是Google开源的容器集群管理系统（思想来源于谷歌内部系�
         <div class="tags">
             
               <a href="/tags/#Kubernetes" title="Kubernetes">Kubernetes</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/07/07/abbitMQ如何实现高可用/">
+        <h2 class="post-title">
+            RabbitMQ如何实现高可用
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            RabbitMQ一共具有三种模式：单机、普通集群、镜像集群
+单机模式
+单机模式，就是我们平常玩的demo，生产上肯定不能用。具体安装部署过程可以参考我的这篇文章：CentsOS原生RabbitMQ安装过程
+普通集群
+普通集群就是在多台机器上启动多个实例。每个队列只会存在其中的一个实例上，然后所有实例同步这些队列的元数据。消费者在进行消费的时候，如果连接的实例上恰好不是队列所在的实例，就会根据......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-07-07 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
             
         </div>
     
@@ -529,43 +560,6 @@ k8s是Google开源的容器集群管理系统（思想来源于谷歌内部系�
 本篇文章以上篇文章《Rabbit的基础概念》为基础，且在上篇文章的前提下又引入了两个新的概念：
 连接( Connection)
 我们知道绝大部分的通信都是基于网络协议的，其中TCP协议就是广为人知的一种协议，在RabbitMQ中，生产者和消费者与RabbitMQ的通信就是基于TCP连接的。不过呢我们知道TCP连接的创建和销毁在高并发场景下对于操作系统来说都是特别昂贵的开销，所以R......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-06-24 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/06/24/Rabbit的基础概念/">
-        <h2 class="post-title">
-            Rabbit的基础概念
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-作为金融级必选的消息中间件，RabbitMQ 凭借其高可靠、易扩展、高可用及丰富的功能等特性受到越来越多企业的青睐，本篇文章简单介绍一下在初次学习RabbitMQ时涉及的一些基础的概念以及名词的解释
-
-首先看一下RabbitMQ的消息流转图：
-
-简单解释一下上方涉及的几个组件
-Producer生产者
-消息发送方，生产者创建消息，然后发布到 RabbitMQ 中
-消息
-一个消息一般是由两部分......
         </div>
     </a>
     
@@ -762,7 +756,7 @@ Producer生产者
 
         
 
-            <a href="/tags/#Kubernetes" title="Kubernetes" rel="1">Kubernetes</a>
+            <a href="/tags/#Kubernetes" title="Kubernetes" rel="2">Kubernetes</a>
 
         
 

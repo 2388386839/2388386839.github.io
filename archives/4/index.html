@@ -251,6 +251,54 @@
 
 <div class="post-preview">
 
+    <a href="/2019/05/14/谈Java类加载器/">
+        <h2 class="post-title">
+             浅谈Java类加载器 
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            JDK 默认提供了3种ClassLoader：
+
+
+Bootstrp Classloader（启动类加载器）
+由C++编写，它主要负责加载Java的核心类库：
+
+
+%JAVA_HOME%/jre/lib
+
+
+-Xbootclasspath参数指定的路径
+
+
+%JAVA_HOME%/jre/classes中的类
+
+
+需要注意的是这个加载器是虚拟机启动时初始化的，Java程序是无法使用的
+
+
+
+......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-05-14 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#JVM" title="JVM">JVM</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/05/08/VM中的内存溢出详解/">
         <h2 class="post-title">
              JVM中的内存溢出详解 
@@ -564,40 +612,6 @@ volatile-lru：......
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/04/25/分布式系统下的哈希一致性算法设计/">
-        <h2 class="post-title">
-            分布式系统下的哈希一致性算法设计
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-本文涉及：普通哈希算法存在的问题，分布式系统的哈希一致性算法，哈希一致性算法中的数据倾斜问题
-
-我们知道，在分布式系统中当数据量无法使用单机进行存储时，最简单粗暴的方法就是水平扩展：加机器，搞集群。
-然而所有的集群模式都会面临一个数据存放的问题：即一个集群有多台机器，我们怎么知道这次的数据应该放在哪个机器上呢？这次的数据放到了一台机器上我下一次读取的时候能保证还来这台机器上找么？
-
-假如当......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-04-25 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#基础算法" title="基础算法">基础算法</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -781,7 +795,7 @@ volatile-lru：......
 
         
 
-            <a href="/tags/#Kubernetes" title="Kubernetes" rel="1">Kubernetes</a>
+            <a href="/tags/#Kubernetes" title="Kubernetes" rel="2">Kubernetes</a>
 
         
 
