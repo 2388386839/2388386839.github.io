@@ -251,6 +251,84 @@
 
 <div class="post-preview">
 
+    <a href="/2019/05/29/MySQL索引失效及使用索引的优缺点/">
+        <h2 class="post-title">
+            MySQL索引失效及使用索引的优缺点
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文所有实验基于MySQL5.7.21，实验将会用到Explain工具，不了解的同学可参考此文章：MySQL性能优化神器Explain详解
+
+联合索引失效
+先创建一个包含三个字段的联合索引，索引顺序如下：
+
+由以下三张图的key_len字段我们可以得出三个索引的长度分别为：title长303，author长122，price长5.
+
+联合索引使用时遵循最左匹配原则，如果不是从最左列开始时，......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-05-29 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/05/28/MySQL性能优化神器Explain/">
+        <h2 class="post-title">
+            MySQL性能优化神器Explain
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文涉及：MySQL性能优化神器Explain的使用
+
+简介
+虽然使用Explain不能够马上调优我们的SQL，它也不能给予我们一些调整建议，但是它能够让我们了解MySQL 优化器是如何执行SQL 语句的
+通过Explain，我们可以分析出以下结果：
+
+表的读取顺序
+数据读取操作的操作类型
+哪些索引可以使用
+哪些索引被实际使用
+表之间的引用
+每张表有多少行被优化器查询
+
+Explain命令......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-05-28 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/05/27/ySQL索引-基础版/">
         <h2 class="post-title">
             MySQL索引-基础版
@@ -545,79 +623,6 @@ JVM本身为我们提供了很多性能监控的工具，其中有基于命令�
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/05/14/Java虚拟机是怎么new的对象？/">
-        <h2 class="post-title">
-             Java虚拟机是怎么new的对象？ 
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-本文涉及：Java中的new命令之后发生的事
-
-类加载检查
-java虚拟机在遇到一条 new 指令时，首先会检查是否能在常量池中定位到这个类的符号引用，并且是否已被加载过、解析和初始化过。如果没有，那必须先执行类加载过程
-类加载的相关知识可参考：JVM的类加载机制
-分配内存
-在类加载检查通过后，接下来虚拟机将为新生对象分配内存。
-分配方式有 指针碰撞 和 空闲列表 两种
-
-
-指针碰撞：Ja......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-05-14 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#JVM" title="JVM">JVM</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/05/14/M常用参数配置/">
-        <h2 class="post-title">
-             JVM常用参数配置 
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-本文涉及：gc、堆、栈、永久区、元数据区的常用参数
-
-GC基本参数
-打印gc简要信息：-XX:+PrintGC
-12[GC (System.gc())  198247K-&gt;197248K(261632K), 0.0178572 secs][Full GC (System.gc())  197248K-&gt;197184K(261632K), 0.0842625 secs]
-上方结果......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-05-14 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#JVM" title="JVM">JVM</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -806,6 +811,10 @@ GC基本参数
         
 
             <a href="/tags/# Spring" title=" Spring" rel="1"> Spring</a>
+
+        
+
+            <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
 
         
     </div>

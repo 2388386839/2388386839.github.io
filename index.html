@@ -251,6 +251,72 @@
 
 <div class="post-preview">
 
+    <a href="/2019/07/24/漫谈性能调优/">
+        <h2 class="post-title">
+            漫谈性能调优
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            作为一名高级工程师，性能调优是必不可少的技能，本篇文章是性能调优系列文章的第一篇
+导致性能瓶颈的几点原因
+
+CPU：如果系统中存在视频分析、3D渲染、大量计算这样的应用时，大量的CPU资源的竞争就会引起性能瓶颈
+内存：一般来说内存不会成为性能瓶颈，为啥人家redis快，就是因为是基于内存的。但是呢内存资源不够用确实是个很致命的问题，就像Java中的OOM大部分都是因为内存资源不够引起的
+磁盘......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-07-24 作
+        </p>
+        <div class="tags">
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/07/24/ava代码中可以优化性能的小细节/">
+        <h2 class="post-title">
+            Java代码中可以优化性能的小细节
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            避免对boolean类型的判定
+反例：
+12if("a".equles("a")==true）`&#123;&#125;
+正例：
+12if(Objects.equles("a","a")）`&#123;&#125;
+**多用条件判断符 **
+反例：
+1234567if(a&lt;0）`&#123;    return 0;&#125;else&#123;    return 1; &#125......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-07-24 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#性能调优" title="性能调优">性能调优</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/07/20/k8s时区问题解决方案/">
         <h2 class="post-title">
             k8s时区问题解决方案
@@ -445,40 +511,6 @@ Pod 是一组紧密关联的容器集合，它们共享 PID、IPC、Network 和 
 
 <div class="post-preview">
 
-    <a href="/2019/07/07/ubernetes是什么东西？/">
-        <h2 class="post-title">
-            Kubernetes是什么东西？
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            Kubernetes一词来源于希腊语，翻译来的意思就是舵手或者船长的意思，而它的logo也是很符合这个词的
-
-至于k8s则是通过将ubernetes这8个字母替换为8而导出的缩写
-Kubernetes是什么？
-k8s是Google开源的容器集群管理系统（思想来源于谷歌内部系统Borg）。在Docker技术的基础上，为容器化的应用提供以下一系列功能来提高大规模容器集群管理的便捷性：
-
-服务发现......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-07-07 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Kubernetes" title="Kubernetes">Kubernetes</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
     <a href="/2019/07/07/abbitMQ如何实现高可用/">
         <h2 class="post-title">
             RabbitMQ如何实现高可用
@@ -511,24 +543,21 @@ k8s是Google开源的容器集群管理系统（思想来源于谷歌内部系�
 
 <div class="post-preview">
 
-    <a href="/2019/07/07/abbitMQ高级面试题/">
+    <a href="/2019/07/07/ubernetes是什么东西？/">
         <h2 class="post-title">
-            RabbitMQ高级面试题
+            Kubernetes是什么东西？
         </h2>
         <h3 class="post-subtitle">
             
         </h3>
         <div class="post-content-preview">
-            
-本文涉及：投递失败的消息怎么处理、如何实现延时队列、如何指定消息的优先级、消息的持久化是如何实现的、如何保证消息不丢失
+            Kubernetes一词来源于希腊语，翻译来的意思就是舵手或者船长的意思，而它的logo也是很符合这个词的
 
-投递失败的消息怎么处理
-首先投递失败存在如下两个情况
+至于k8s则是通过将ubernetes这8个字母替换为8而导出的缩写
+Kubernetes是什么？
+k8s是Google开源的容器集群管理系统（思想来源于谷歌内部系统Borg）。在Docker技术的基础上，为容器化的应用提供以下一系列功能来提高大规模容器集群管理的便捷性：
 
-当交换器无法根据自身的类型和路由键找到符合条件的队列
-如果交换器在将消息路由到队列时发现队列上并不存在任何消费者
-解决方案：
-在生产者投递消息时指定mandatory或者imrnediate参数设为 true 时，......
+服务发现......
         </div>
     </a>
     
@@ -538,38 +567,7 @@ k8s是Google开源的容器集群管理系统（思想来源于谷歌内部系�
         </p>
         <div class="tags">
             
-              <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/06/24/RabbitMQ消息传递流程/">
-        <h2 class="post-title">
-            RabbitMQ消息传递流程
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            两个新名词
-本篇文章以上篇文章《Rabbit的基础概念》为基础，且在上篇文章的前提下又引入了两个新的概念：
-连接( Connection)
-我们知道绝大部分的通信都是基于网络协议的，其中TCP协议就是广为人知的一种协议，在RabbitMQ中，生产者和消费者与RabbitMQ的通信就是基于TCP连接的。不过呢我们知道TCP连接的创建和销毁在高并发场景下对于操作系统来说都是特别昂贵的开销，所以R......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-06-24 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
+              <a href="/tags/#Kubernetes" title="Kubernetes">Kubernetes</a>
             
         </div>
     
@@ -761,6 +759,10 @@ k8s是Google开源的容器集群管理系统（思想来源于谷歌内部系�
         
 
             <a href="/tags/# Spring" title=" Spring" rel="1"> Spring</a>
+
+        
+
+            <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
 
         
     </div>

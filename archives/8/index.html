@@ -251,6 +251,76 @@
 
 <div class="post-preview">
 
+    <a href="/2019/03/26/ava线程池核心原理剖析/">
+        <h2 class="post-title">
+            Java线程池核心原理剖析
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+在系统开发时，我们经常会遇到“池”的概念。使用池一种以空间换时间的做法，通常在内存中事先保存一系列整装待命的对象，以供后期供其他对象随时调用。常见的池有：数据库连接池，socket连接池，线程池等。今天我们就来看一下线程池的概念。
+
+◆
+Executor
+◆
+JDK为我们提供了一套Executor框架来方便我们来管理和使用线程池。
+打开java.util.concurrent.Execut......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-03-26 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#多线程" title="多线程">多线程</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/03/26/Java中的锁：Synchronized、重入锁、读写锁/">
+        <h2 class="post-title">
+            浅谈Java中的锁：Synchronized、重入锁、读写锁
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+Java开发必须要掌握的知识点就包括如何使用锁在多线程的环境下控制对资源的访问限制
+
+◆
+Synchronized
+◆
+首先我们来看一段简单的代码：
+12345678910111213141516171819public class NotSyncDemo &#123;    public static int i=0;    static class ThreadDemo extends......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-03-26 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#多线程" title="多线程">多线程</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/03/22/ello，Thread/">
         <h2 class="post-title">
             Hello，Thread
@@ -519,78 +589,6 @@ Java基础
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2018/12/13/ello-Kubernetes/">
-        <h2 class="post-title">
-            Hello Kubernetes
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-在上一篇文章中我们已经搭建起来了一个k8s集群，在本文中我们主要学习一下k8s中的一些基本概念、术语和常用的配置文件的定义。
-
-在k8s中最常见的就是yaml文件了，通过一个简单的yaml文件我们就可以完成80%的功能，现在我们来编写一个简单的yaml文件nginx.yaml来启动一个nginx服务：
-12345678910apiVersion: v1kind: Podmetadata: ......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2018-12-13 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#kubernetes" title="kubernetes">kubernetes</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2018/12/13/Kubernetes（k8s）1-12-2集群搭建/">
-        <h2 class="post-title">
-            Kubernetes（k8s）1.12.2集群搭建
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-本博客搭建k8s集群1.12.2版本
-
-1. 准备2台以上最低2核4G的服务器
-2. 关闭机器的防火墙
-12systemctl disable firewalldsystemctl stop firewalld
-生产环境下建议不要关闭防火墙，只开放k8s所用的端口
-3. 配置docker和k8s仓库为阿里云镜像仓库
-首先选择一台性能比较好的机器作为主节点
-
-
-
-1wget -O /etc/......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2018-12-13 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#kubernetes" title="kubernetes">kubernetes</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -779,6 +777,10 @@ Java基础
         
 
             <a href="/tags/# Spring" title=" Spring" rel="1"> Spring</a>
+
+        
+
+            <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
 
         
     </div>

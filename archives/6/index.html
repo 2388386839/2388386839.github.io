@@ -251,6 +251,85 @@
 
 <div class="post-preview">
 
+    <a href="/2019/04/14/Linux常用命令速查-网络管理/">
+        <h2 class="post-title">
+            Linux常用命令速查-网络管理
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文涉及：Linux网络管理常用命令：ifconfig、netstat、route、ping、telnet、tcpdump
+
+◆
+修改主机名
+◆
+1234vi /etc/sysconfig/networkNETWORKING=yesHOSTNAME=localhost.localdomain
+◆
+修改DNS配置
+◆
+12345vi /etc/resolv.conf; generated b......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-04-14 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Linux" title="Linux">Linux</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/04/14/Linux常用命令速查-定时任务/">
+        <h2 class="post-title">
+            Linux常用命令速查-定时任务
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文涉及：Linux中使用定时任务的几种方法：anacron、crontab、at、batc
+
+◆
+定时任务：crontab
+◆
+每个用户使用crontab创建的定时任务都在/var/spool/cron/ 目录下存放，每个任务以创建者的名字命名。
+crontab的常用参数：
+
+-e  编辑工作表
+-l  列出工作表里的命令
+-r  删除工作表
+
+首先使用 crontab -e 打开工作表......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-04-14 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Linux" title="Linux">Linux</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/04/11/Linux常用命令速查-文件管理/">
         <h2 class="post-title">
              Linux常用命令速查-文件管理 
@@ -562,84 +641,6 @@ Zipkin全链路监控
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/04/04/Java多线程基础知识汇总/">
-        <h2 class="post-title">
-            多线程面试必备基础知识汇总
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            多线程基本概念
-同步和异步，线程和进程，并发和并行，临界资源，阻塞，死锁，饥饿，活锁，线程的并发级别
-
-多线程内存模型
-JMM的基本概念，主内存与工作内存的数据交互，多线程中的原子性、可见性、有序性，指令重排，volatile关键字
-
-Hello，Thread
-如何创建线程，线程的生命周期，线程的基本状态，线程的基本操作：“sleep、yield、jion，线程停止、线程中断、wait、no......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-04-04 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#汇总" title="汇总">汇总</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/04/04/Java集合-LinkedList源码解析-JDK1-8/">
-        <h2 class="post-title">
-            Java集合-LinkedList源码解析-JDK1.8 
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            ◆
-LinkedList简介
-◆
-LinkedList实际上是通过双向链表去实现的。它继承于AbstractList，实现了List、 RandomAccess、Cloneable、Serializable这些接口。
-
-
-AbstractSequentialList提供了可以被当作堆栈、队列或双端队列的机制
-
-
-List 接口提供了基本的增删改查
-
-
-Deque 接口提供了双端队列机制
-
-
-......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-04-04 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#集合" title="集合">集合</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -828,6 +829,10 @@ Deque 接口提供了双端队列机制
         
 
             <a href="/tags/# Spring" title=" Spring" rel="1"> Spring</a>
+
+        
+
+            <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
 
         
     </div>

@@ -251,6 +251,73 @@
 
 <div class="post-preview">
 
+    <a href="/2018/08/19/IDEA远程Debug/">
+        <h2 class="post-title">
+            IDEA远程Debug
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+进行远程debug是我们排查线上bug的一个最常用的工具，本篇博文就简单介绍一下如何使用IDEA来进行远程debug
+
+1.	修改Tomcat配置文件
+修改bin目录下的catalina.sh文件，在文件的第一行添加下面代码
+JAVA_OPTS=&quot;-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socke......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2018-08-19 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Java小技巧" title="Java小技巧">Java小技巧</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2018/08/19/聊一聊Java如何接入招行一网通支付功能/">
+        <h2 class="post-title">
+            聊一聊Java如何接入招行一网通支付功能
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            1.前提条件
+相比较于支付宝和微信的支付功能接入这一块，银行相对来说更加严格，比如说支付宝，在你签约之前可以进行一些测试。但是银行来说就不是这样了，如果您现在要进行招行的支付功能开发的话，请务必先让相关人员去进行签约
+2. 测试开发必须条件
+进行测试开发之前有几个比较重要的东西是不可避免的，我们来看一下都是有什么：
+
+
+商户号、商户分行号以及商户秘钥（具体明细请参考：http://link.......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2018-08-19 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#支付" title="支付">支付</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2018/08/16/IDEA中使用lombok插件/">
         <h2 class="post-title">
             IDEA中使用lombok插件
@@ -510,68 +577,6 @@ Apollo官方文档https://github.com/ctripcorp/apollo/wiki
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2018/07/26/每天学点SpringCloud（五）：如何使用高可用的Eureka/">
-        <h2 class="post-title">
-            每天学点SpringCloud（五）：如何使用高可用的Eureka
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            前几篇文章我们讲了一下Eureka的基础使用，但是呢有一个很重要的问题，我们讲的都是单机版的情况，如果这个时候Eureka服务挂了的话，那么我们的服务提供者跟服务消费者岂不是都废了？服务提供者和消费者都废了的话那这个程序还有存在的意义么？
-那么今天咱们就讲一讲如何解决这个问题。相信大家都知道，这个问题是我们提供高可用服务必须经历的问题。解决方案就是加集群，那么我们来看一下Eureka怎么实现......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2018-07-26 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#SpringCloud" title="SpringCloud">SpringCloud</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2018/07/26/天学点SpringCloud（四）：Feign的使用及自定义配置/">
-        <h2 class="post-title">
-            每天学点SpringCloud（四）：Feign的使用及自定义配置
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            Feign：SpringCloud的官网对它的定义是这样的：
-是一个声明式的Web服务客户端。它支持Feign本身的注解、JAX-RS注解以及SpringMVC的注解。Spring Cloud集成Ribbon和Eureka以在使用Feign时提供负载均衡的http客户端。
-Feign的使用
-我们先来看一看如何在项目中使用Feign
-
-首先呢 ，我们把原先的cloud-demo-consume......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2018-07-26 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#SpringCloud" title="SpringCloud">SpringCloud</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -760,6 +765,10 @@ Feign的使用
         
 
             <a href="/tags/# Spring" title=" Spring" rel="1"> Spring</a>
+
+        
+
+            <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
 
         
     </div>

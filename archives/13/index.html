@@ -251,6 +251,74 @@
 
 <div class="post-preview">
 
+    <a href="/2018/07/26/观察者模式/">
+        <h2 class="post-title">
+            观察者模式
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            观察者模式：多个观察者对象同时观察一个主题对象，当这个主题对象发生变化时，会通知所有的观察者
+来看一下下方类图
+
+Subject：主题类，所有主题的父类，负责对观察者的管理，有添加观察者，删除观察者，通知所有的方法
+SubjectImpl：主题子类，拥有状态属性，当状态改变时会调用父类的notifyObserver方法通知所有观察者
+Observe：观察者，定义了接受主题变化通知的方法
+Ob......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2018-07-26 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#设计模式" title="设计模式">设计模式</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2018/07/26/模板模式/">
+        <h2 class="post-title">
+            模板模式
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            模板方法：在一个抽象类中定义一部分的实现，其余的定义抽象方法迫使子类实现
+相信看了上方的定义以后大家已经理解了模板模式，我们来看一下类图
+
+抽象类定义了4个方法，其中operation是私有的，在这个方法里调用了其他三个方法，而方法3是自己实现的。方法1和2是强迫子类实现的。
+ClassImpl1，ClassImpl2都继承了抽象类，并分别对方法1和2进行了不同的实现
+我们来看代码
+1234......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2018-07-26 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#设计模式" title="设计模式">设计模式</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2018/07/26/策略模式/">
         <h2 class="post-title">
             策略模式
@@ -516,74 +584,6 @@ Decorator1......
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2018/07/26/工厂模式/">
-        <h2 class="post-title">
-            工厂模式
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            简单工厂：
-入门级的设计模式之一，也是学习工厂模式的的基础。
-需求：假如我们需要去相亲，介绍人跟你说了，我这次给你找了很多个小姑娘，随便挑哦。
-听到这句话你就好奇了，哎呦，你好厉害呀，怎么做到的呢，下面我们就来看看介绍人是怎么做到吧。
-注：不熟悉UML的同学请参考此文章:几分钟几张图教你学会如何使用UML
-
-首先最上方就是所有女孩必须要实现的接口，它定义了一个自我介绍的方法，所有的女孩都要实......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2018-07-26 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#设计模式" title="设计模式">设计模式</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2018/07/26/二分查找法/">
-        <h2 class="post-title">
-            二分查找法
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            二分查找又称折半算法，此算法作为一个经典的查找算法是我们不得不掌握的算法
-这个算法查找的前提是查找的数据是有序的，我们以数组为例，使用二分查找法进行查找的时候我们应该先定义三个字段：
-1.left指向数组第一个数据
-2.right指向数组最后一个元素
-3.mid呢指向（left+right）/2位置的元素，就是他们中间的位置。
-当我们要在一个数组中查找一条数据a时，有这么几个步骤：
-首先我们......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2018-07-26 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#基础算法" title="基础算法">基础算法</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -772,6 +772,10 @@ Decorator1......
         
 
             <a href="/tags/# Spring" title=" Spring" rel="1"> Spring</a>
+
+        
+
+            <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
 
         
     </div>

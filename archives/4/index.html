@@ -251,6 +251,79 @@
 
 <div class="post-preview">
 
+    <a href="/2019/05/14/Java虚拟机是怎么new的对象？/">
+        <h2 class="post-title">
+             Java虚拟机是怎么new的对象？ 
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文涉及：Java中的new命令之后发生的事
+
+类加载检查
+java虚拟机在遇到一条 new 指令时，首先会检查是否能在常量池中定位到这个类的符号引用，并且是否已被加载过、解析和初始化过。如果没有，那必须先执行类加载过程
+类加载的相关知识可参考：JVM的类加载机制
+分配内存
+在类加载检查通过后，接下来虚拟机将为新生对象分配内存。
+分配方式有 指针碰撞 和 空闲列表 两种
+
+
+指针碰撞：Ja......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-05-14 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#JVM" title="JVM">JVM</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/05/14/M常用参数配置/">
+        <h2 class="post-title">
+             JVM常用参数配置 
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文涉及：gc、堆、栈、永久区、元数据区的常用参数
+
+GC基本参数
+打印gc简要信息：-XX:+PrintGC
+12[GC (System.gc())  198247K-&gt;197248K(261632K), 0.0178572 secs][Full GC (System.gc())  197248K-&gt;197184K(261632K), 0.0842625 secs]
+上方结果......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-05-14 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#JVM" title="JVM">JVM</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/05/14/谈Java类加载器/">
         <h2 class="post-title">
              浅谈Java类加载器 
@@ -545,73 +618,6 @@ Redis常用命令、5种数据类型的内部编码实现以及实用场景
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/04/29/缓存淘汰、缓存穿透、缓存击穿、缓存雪崩、数据库缓存双写一致性/">
-        <h2 class="post-title">
-            缓存淘汰、缓存穿透、缓存击穿、缓存雪崩、数据库缓存双写一致性
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            缓存淘汰
-为什么需要缓存淘汰？你需要缓存30G的数据，但是Redis本身只能使用10G的内存，那你就得做个取舍了，毕竟鱼与熊掌不可兼得。为了利益最大化肯定要保留最重要的10个G。
-Redis本身提供了6中缓存淘汰策略，以下属性表示允许使用的最大内存
-1server.maxmemory
-当使用的内存超过限制内存时，Redis会根据配置的以下6中淘汰策略选择数据淘汰
-
-volatile-lru：......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-04-29 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Redis" title="Redis">Redis</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/04/27/Redis最新版本5.0.4配置文件详解/">
-        <h2 class="post-title">
-            Redis最新版本5.0.4配置文件详解
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            #当你需要为某个配置项指定内存大小的时候，必须要带上单位，
-#通常的格式就是 1k 5gb 4m 等：
-#1k  =&gt; 1000 bytes
-#1kb =&gt; 1024 bytes
-#1m  =&gt; 1000000 bytes
-#1mb =&gt; 10241024 bytes
-#1g  =&gt; 1000000000 bytes
-#1gb =&gt; 10241024*10......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-04-27 作
-        </p>
-        <div class="tags">
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -800,6 +806,10 @@ volatile-lru：......
         
 
             <a href="/tags/# Spring" title=" Spring" rel="1"> Spring</a>
+
+        
+
+            <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
 
         
     </div>

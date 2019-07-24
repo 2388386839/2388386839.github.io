@@ -251,6 +251,78 @@
 
 <div class="post-preview">
 
+    <a href="/2018/12/13/ello-Kubernetes/">
+        <h2 class="post-title">
+            Hello Kubernetes
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+在上一篇文章中我们已经搭建起来了一个k8s集群，在本文中我们主要学习一下k8s中的一些基本概念、术语和常用的配置文件的定义。
+
+在k8s中最常见的就是yaml文件了，通过一个简单的yaml文件我们就可以完成80%的功能，现在我们来编写一个简单的yaml文件nginx.yaml来启动一个nginx服务：
+12345678910apiVersion: v1kind: Podmetadata: ......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2018-12-13 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#kubernetes" title="kubernetes">kubernetes</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2018/12/13/Kubernetes（k8s）1-12-2集群搭建/">
+        <h2 class="post-title">
+            Kubernetes（k8s）1.12.2集群搭建
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本博客搭建k8s集群1.12.2版本
+
+1. 准备2台以上最低2核4G的服务器
+2. 关闭机器的防火墙
+12systemctl disable firewalldsystemctl stop firewalld
+生产环境下建议不要关闭防火墙，只开放k8s所用的端口
+3. 配置docker和k8s仓库为阿里云镜像仓库
+首先选择一台性能比较好的机器作为主节点
+
+
+
+1wget -O /etc/......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2018-12-13 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#kubernetes" title="kubernetes">kubernetes</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2018/12/07/学点SpringCloud（十四）：Zipkin使用SpringCloud-Stream以及Elasticsearch/">
         <h2 class="post-title">
             每天学点SpringCloud（十四）：Zipkin使用SpringCloud Stream以及Elasticsearch
@@ -528,82 +600,6 @@ zipkin首页为我们提供了对于调用链路的搜索查询及展示的功�
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2018/11/16/每天学点SpringCloud（十）：SpringCloud监控/">
-        <h2 class="post-title">
-            每天学点SpringCloud（十）：SpringCloud监控
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-今天我们来学习一下actuator这个组件，它不是SpringCloud之后才有的，而是SpringBoot的一个starter，Spring Boot Actuator。我们使用SpringCloud的时候需要使用这个组件对应用程序进行监控与管理
-
-在SpringBoot2.0版本中，actuator可以为我们提供以下端点：
-
-
-
-访问路径
-描述
-
-
-
-
-/actuator/audite......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2018-11-16 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#SpringCloud" title="SpringCloud">SpringCloud</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2018/11/03/JVM内存区域/">
-        <h2 class="post-title">
-            JVM内存区域
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-Java虚拟机在执行Java程序的过程中会把它所管理的内存划分为多个区域，这些区域各有自己的用途以及独特的创建和销毁时间，今天就带着大家来揭开这些不同的数据区域的面纱
-
-先来一张最经典的图：
-
-今天我们来学习一下图片上方的程序计数器、方法区、栈、堆几个部分。
-1.程序计数器
-程序计数器是随着一条线程的启动而创建的，每一个线程独有一个程序计数器，多个线程之间互不影响。（可以理解为Java中的......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2018-11-03 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#JVM" title="JVM">JVM</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -792,6 +788,10 @@ Java虚拟机在执行Java程序的过程中会把它所管理的内存划分为
         
 
             <a href="/tags/# Spring" title=" Spring" rel="1"> Spring</a>
+
+        
+
+            <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
 
         
     </div>

@@ -251,6 +251,74 @@
 
 <div class="post-preview">
 
+    <a href="/2019/07/07/abbitMQ高级面试题/">
+        <h2 class="post-title">
+            RabbitMQ高级面试题
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文涉及：投递失败的消息怎么处理、如何实现延时队列、如何指定消息的优先级、消息的持久化是如何实现的、如何保证消息不丢失
+
+投递失败的消息怎么处理
+首先投递失败存在如下两个情况
+
+当交换器无法根据自身的类型和路由键找到符合条件的队列
+如果交换器在将消息路由到队列时发现队列上并不存在任何消费者
+解决方案：
+在生产者投递消息时指定mandatory或者imrnediate参数设为 true 时，......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-07-07 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/06/24/RabbitMQ消息传递流程/">
+        <h2 class="post-title">
+            RabbitMQ消息传递流程
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            两个新名词
+本篇文章以上篇文章《Rabbit的基础概念》为基础，且在上篇文章的前提下又引入了两个新的概念：
+连接( Connection)
+我们知道绝大部分的通信都是基于网络协议的，其中TCP协议就是广为人知的一种协议，在RabbitMQ中，生产者和消费者与RabbitMQ的通信就是基于TCP连接的。不过呢我们知道TCP连接的创建和销毁在高并发场景下对于操作系统来说都是特别昂贵的开销，所以R......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-06-24 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/06/24/Rabbit的基础概念/">
         <h2 class="post-title">
             Rabbit的基础概念
@@ -552,84 +620,6 @@ Connection Pool：连接池
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/05/29/MySQL索引失效及使用索引的优缺点/">
-        <h2 class="post-title">
-            MySQL索引失效及使用索引的优缺点
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-本文所有实验基于MySQL5.7.21，实验将会用到Explain工具，不了解的同学可参考此文章：MySQL性能优化神器Explain详解
-
-联合索引失效
-先创建一个包含三个字段的联合索引，索引顺序如下：
-
-由以下三张图的key_len字段我们可以得出三个索引的长度分别为：title长303，author长122，price长5.
-
-联合索引使用时遵循最左匹配原则，如果不是从最左列开始时，......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-05-29 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/05/28/MySQL性能优化神器Explain/">
-        <h2 class="post-title">
-            MySQL性能优化神器Explain
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-本文涉及：MySQL性能优化神器Explain的使用
-
-简介
-虽然使用Explain不能够马上调优我们的SQL，它也不能给予我们一些调整建议，但是它能够让我们了解MySQL 优化器是如何执行SQL 语句的
-通过Explain，我们可以分析出以下结果：
-
-表的读取顺序
-数据读取操作的操作类型
-哪些索引可以使用
-哪些索引被实际使用
-表之间的引用
-每张表有多少行被优化器查询
-
-Explain命令......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-05-28 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -818,6 +808,10 @@ Explain命令......
         
 
             <a href="/tags/# Spring" title=" Spring" rel="1"> Spring</a>
+
+        
+
+            <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
 
         
     </div>

@@ -251,6 +251,68 @@
 
 <div class="post-preview">
 
+    <a href="/2018/07/26/每天学点SpringCloud（五）：如何使用高可用的Eureka/">
+        <h2 class="post-title">
+            每天学点SpringCloud（五）：如何使用高可用的Eureka
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            前几篇文章我们讲了一下Eureka的基础使用，但是呢有一个很重要的问题，我们讲的都是单机版的情况，如果这个时候Eureka服务挂了的话，那么我们的服务提供者跟服务消费者岂不是都废了？服务提供者和消费者都废了的话那这个程序还有存在的意义么？
+那么今天咱们就讲一讲如何解决这个问题。相信大家都知道，这个问题是我们提供高可用服务必须经历的问题。解决方案就是加集群，那么我们来看一下Eureka怎么实现......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2018-07-26 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#SpringCloud" title="SpringCloud">SpringCloud</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2018/07/26/天学点SpringCloud（四）：Feign的使用及自定义配置/">
+        <h2 class="post-title">
+            每天学点SpringCloud（四）：Feign的使用及自定义配置
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            Feign：SpringCloud的官网对它的定义是这样的：
+是一个声明式的Web服务客户端。它支持Feign本身的注解、JAX-RS注解以及SpringMVC的注解。Spring Cloud集成Ribbon和Eureka以在使用Feign时提供负载均衡的http客户端。
+Feign的使用
+我们先来看一看如何在项目中使用Feign
+
+首先呢 ，我们把原先的cloud-demo-consume......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2018-07-26 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#SpringCloud" title="SpringCloud">SpringCloud</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2018/07/26/天学点SpringCloud（三）：自定义Eureka集群负载均衡策略/">
         <h2 class="post-title">
             每天学点SpringCloud（三）：自定义Eureka集群负载均衡策略
@@ -509,74 +571,6 @@ Handle：抽象处理者，可理解......
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2018/07/26/观察者模式/">
-        <h2 class="post-title">
-            观察者模式
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            观察者模式：多个观察者对象同时观察一个主题对象，当这个主题对象发生变化时，会通知所有的观察者
-来看一下下方类图
-
-Subject：主题类，所有主题的父类，负责对观察者的管理，有添加观察者，删除观察者，通知所有的方法
-SubjectImpl：主题子类，拥有状态属性，当状态改变时会调用父类的notifyObserver方法通知所有观察者
-Observe：观察者，定义了接受主题变化通知的方法
-Ob......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2018-07-26 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#设计模式" title="设计模式">设计模式</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2018/07/26/模板模式/">
-        <h2 class="post-title">
-            模板模式
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            模板方法：在一个抽象类中定义一部分的实现，其余的定义抽象方法迫使子类实现
-相信看了上方的定义以后大家已经理解了模板模式，我们来看一下类图
-
-抽象类定义了4个方法，其中operation是私有的，在这个方法里调用了其他三个方法，而方法3是自己实现的。方法1和2是强迫子类实现的。
-ClassImpl1，ClassImpl2都继承了抽象类，并分别对方法1和2进行了不同的实现
-我们来看代码
-1234......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2018-07-26 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#设计模式" title="设计模式">设计模式</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -765,6 +759,10 @@ ClassImpl1，ClassImpl2都继承了抽象类，并分别对方法1和2进行了�
         
 
             <a href="/tags/# Spring" title=" Spring" rel="1"> Spring</a>
+
+        
+
+            <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
 
         
     </div>
