@@ -251,6 +251,41 @@
 
 <div class="post-preview">
 
+    <a href="/2019/03/26/的优化/">
+        <h2 class="post-title">
+            锁的优化
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            在前几天的文章：浅谈Java中的锁：Synchronized、重入锁、读写锁 中我们学习了多线程环境下为了保证线程安全需要加各种各样的锁，但是加锁势必会带来性能的损耗，此篇文章就讨论一下如何优化加锁后的程序
+◆
+锁优化策略
+◆
+1. 减少锁持有时间 
+    对一个方法加锁，不如只对需要同步的那几行代码加锁，减少线程持有锁的时间。
+2. 减小锁粒度
+    将大对象，拆成小对象进行加锁。例如......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-03-26 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#多线程" title="多线程">多线程</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/03/26/ava线程池核心原理剖析/">
         <h2 class="post-title">
             Java线程池核心原理剖析
@@ -559,36 +594,6 @@ java初级......
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/03/12/Java学习进阶路线-1/">
-        <h2 class="post-title">
-            Java学习进阶路线
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            相信大部分的同学都碰到过在被面试官虐完以后都会下定决心好好学习，但是刚刚坚持几天后就被各种俗事打扰或者是不知道学什么而放弃。小编在这里整理了一份Java学习清单，打算在2019年把它全部学习完并通过博客记录下来，并把所有的文章同步给大家。同时欢迎有大神指出文章的错误之处、或者有同学愿意一块学习。（由于新开的公众号没有留言功能，欢迎大家加小编微信来撩！）
-Java基础
-入门Java时我们都是学......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-03-12 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Java进阶" title="Java进阶">Java进阶</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -712,7 +717,7 @@ Java基础
 
         
 
-            <a href="/tags/#基础算法" title="基础算法" rel="9">基础算法</a>
+            <a href="/tags/#基础算法" title="基础算法" rel="10">基础算法</a>
 
         
 

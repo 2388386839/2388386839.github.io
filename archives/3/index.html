@@ -251,6 +251,42 @@
 
 <div class="post-preview">
 
+    <a href="/2019/05/30/用索引的注意事项/">
+        <h2 class="post-title">
+            使用索引的注意事项
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+为经常需要搜索的列加索引,可以加快索引的速度
+主键列上可以确保列的唯一性
+在表与表的连接条件上加索引,可以加快连接查询的速度
+在经常需要排序、分组、distinct的列上加索引，可以加快排序查询速度
+在使用包含&lt; &lt;= &gt; &gt;= BETWEEN IN 等查询条件的联合索引时条件判断一定要放在最后
+使用like查询时使用“str%”
+索引键不要包含NULL
+如果你的一......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-05-30 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/05/29/MySQL索引失效及使用索引的优缺点/">
         <h2 class="post-title">
             MySQL索引失效及使用索引的优缺点
@@ -572,57 +608,6 @@ Java虚拟机是怎么new的......
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/05/15/JVM性能分析神器-VisualVM/">
-        <h2 class="post-title">
-             JVM性能分析神器-VisualVM 
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-本文涉及：JVM性能调优内存分析神器VisualVM的介绍与使用
-
-基本概念
-JVM本身为我们提供了很多性能监控的工具，其中有基于命令行的也有基于图形用户界面的，而个人感觉VisualVM就是其中最优秀的一个工具。
-使用VisualVM我们可以做这些事：
-
-
-生成和分析海量数据
-
-
-跟踪内存泄漏
-
-
-监控垃圾回收器
-
-
-执行内存、线程、CPU分析
-
-
-还有很强大的插件库
-
-
-当然，这么牛逼......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-05-15 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#JVM" title="JVM">JVM</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -746,7 +731,7 @@ JVM本身为我们提供了很多性能监控的工具，其中有基于命令�
 
         
 
-            <a href="/tags/#基础算法" title="基础算法" rel="9">基础算法</a>
+            <a href="/tags/#基础算法" title="基础算法" rel="10">基础算法</a>
 
         
 
