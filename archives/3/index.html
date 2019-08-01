@@ -251,6 +251,82 @@
 
 <div class="post-preview">
 
+    <a href="/2019/06/04/窥MySQL性能调优/">
+        <h2 class="post-title">
+            初窥MySQL性能调优
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文涉及：MySQL自带的性能测试工具mysqlslap的使用及几个性能调优的方法
+
+性能测试工具—mysqlslap
+mysqlslap是MySQL自带的一款非常优秀的性能测试工具。使用它可以
+模拟多个客户端并发向服务器发出查询、更新等请求,然后输出简单的报告
+可选参数
+
+–engines：代表要测试的引擎，可以有多个，用分隔符隔开
+–iterations：代表要运行这些测试多少次
+–a......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-06-04 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/05/31/MySQL架构与SQL执行流程/">
+        <h2 class="post-title">
+            MySQL架构与SQL执行流程
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            MySQL架构设计
+下面是一张MySQL的架构图：
+
+上方各个组件的含义如下：
+Connectors
+指的是不同语言中与SQL的交互
+Management Serveices &amp; Utilities：
+系统管理和控制工具
+Connection Pool：连接池
+管理缓冲用户连接，线程处理等需要缓存的需求。
+负责监听对 MySQL Server 的各种请求，接收连接请求，转发所有连接请......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-05-31 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/05/30/用索引的注意事项/">
         <h2 class="post-title">
             使用索引的注意事项
@@ -537,77 +613,6 @@ information_schema是mysql自带的一个信息数据库，其保存着关于mys
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/05/20/微服务监控神器Prometheus的安装部署/">
-        <h2 class="post-title">
-            微服务监控神器Prometheus的安装部署
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-本文涉及：如何在k8s下搭建Prometheus+grafana的监控环境
-
-基本概念
-Prometheus提供了容器和云原生领域数据搜集、存储、处理、可视化和告警一套完整的解决方案，最初时是由SoundCloud公司开发的。自2012年开源以来社区成员就不断递增。如今的Prometheus已经发展到继Kubernetes后第2个正式加入CNCF基金会的项目
-Prometheus的特点？
-......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-05-20 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#微服务" title="微服务">微服务</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/05/20/JVM系列文章汇总/">
-        <h2 class="post-title">
-            JVM系列文章汇总
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            JVM中运行时数据区中的堆、栈、方法区等区域的特性介绍
-Java中class文件的组成结构
-JVM的类加载生命周期介绍
-Java堆、新生代老年代的特点、堆中的内存分配策略
-JVM垃圾收集算法详解
-JVM各个垃圾收集器的简单介绍及常用参数详解
-JVM中的内存溢出\OOM的原因及解决方案
-浅谈Java类加载器ClassLoader以及双亲委派模式
-JVM常用调优参数
-Java虚拟机是怎么new的......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-05-20 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#JVM" title="JVM">JVM</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -783,15 +788,15 @@ Java虚拟机是怎么new的......
 
         
 
-            <a href="/tags/#RabbitMQ" title="RabbitMQ" rel="5">RabbitMQ</a>
+            <a href="/tags/#RabbitMQ" title="RabbitMQ" rel="7">RabbitMQ</a>
 
         
 
-            <a href="/tags/# RabbitMQ" title=" RabbitMQ" rel="2"> RabbitMQ</a>
+            <a href="/tags/# RabbitMQ" title=" RabbitMQ" rel="0"> RabbitMQ</a>
 
         
 
-            <a href="/tags/#Kubernetes" title="Kubernetes" rel="2">Kubernetes</a>
+            <a href="/tags/#Kubernetes" title="Kubernetes" rel="0">Kubernetes</a>
 
         
 
@@ -800,6 +805,14 @@ Java虚拟机是怎么new的......
         
 
             <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
+
+        
+
+            <a href="/tags/#Spring源码解析" title="Spring源码解析" rel="2">Spring源码解析</a>
+
+        
+
+            <a href="/tags/# Kubernetes" title=" Kubernetes" rel="2"> Kubernetes</a>
 
         
     </div>

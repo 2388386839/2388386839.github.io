@@ -251,6 +251,75 @@
 
 <div class="post-preview">
 
+    <a href="/2019/05/08/M的类加载机制/">
+        <h2 class="post-title">
+             JVM的类加载机制 
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+在JVM中一个类的生命周期包括了：加载、验证、准备、解析、初始化、使用、卸载7个阶段，其中验证、准备和解析统称为连接
+
+加载
+加载是第一阶段，因为此时的虚拟机中还没有class的相关信息，必须将class文件加载到虚拟机中才能进行接下来的操作。加载的过程主要分为以下3个步骤：
+
+
+根据类的全限定名取得类的二进制流
+
+
+注意这里指定的是类的二进制流而不是说.class文件，由此可知这是个典型......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-05-08 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#JVM" title="JVM">JVM</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/05/08/va中class文件结构/">
+        <h2 class="post-title">
+             Java中class文件结构 
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            class文件是一组以8位字节为基础单位的二进制流组成的。在这个二进制流中没有任何分隔符，所有的数据项都是一个挨一个紧凑排列的，这就代表着其中每个字节代表什么含义，长度是多少，先后顺序如何，都是固定的
+魔数
+class文件头4个字节即为魔数。
+大部分的文件都会使用魔数来进行文件识别，比如一般我们看到gif、jpeg等格式的文件就知道这是个图片。但是呢，程序识别文件类型却不是根据文件扩展名而是......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-05-08 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#JVM" title="JVM">JVM</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/04/30/么一线大厂面试必问redis，有啥好问的？/">
         <h2 class="post-title">
             为什么一线大厂面试必问redis，有啥好问的？
@@ -543,91 +612,6 @@ bgsave命令：Redis进程执行fork操作创建子进程，......
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/04/18/Linux常用命令速查-汇总篇/">
-        <h2 class="post-title">
-            Linux常用命令速查-汇总篇
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            Linux常用命令速查-用户管理
-Linux常用命令速查-文件管理
-Linux常用命令速查-系统监控
-Linux常用命令速查-网络管理
-Linux常用命令速查-定时任务
-Linux常用命令速查-Vim
-推荐阅读
-
-SpringCloud学习系列汇总
-多线程面试必备基础知识汇总
-Java集合源码分析汇总-JDK1.8
-Linux常用命令速查-汇总篇
-
-博客所有文章首发于公众号《Java学习录》......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-04-18 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Linux" title="Linux">Linux</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/04/16/inux常用命令速查-系统管理/">
-        <h2 class="post-title">
-            Linux常用命令速查-系统监控
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-本文涉及：Linux中进程管理命令：ps、pstree、grep、vmstat、进程树及进程搜索，查看系统负载命令uptime，查看内存信息free命令，常用工具top命令，磁盘监控df、du命令
-
-◆
-进程管理
-◆
-查看进程
-1ps
-常用参数：
-
--A 列出所有的行程
--u 指定用户的进程
--ef 所有进程以及启动命令
--aux 显示所有包含其他使用者的行程
-
-查看进程树
-1pstree......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-04-16 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Linux" title="Linux">Linux</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -803,15 +787,15 @@ Linux常用命令速查-汇总篇
 
         
 
-            <a href="/tags/#RabbitMQ" title="RabbitMQ" rel="5">RabbitMQ</a>
+            <a href="/tags/#RabbitMQ" title="RabbitMQ" rel="7">RabbitMQ</a>
 
         
 
-            <a href="/tags/# RabbitMQ" title=" RabbitMQ" rel="2"> RabbitMQ</a>
+            <a href="/tags/# RabbitMQ" title=" RabbitMQ" rel="0"> RabbitMQ</a>
 
         
 
-            <a href="/tags/#Kubernetes" title="Kubernetes" rel="2">Kubernetes</a>
+            <a href="/tags/#Kubernetes" title="Kubernetes" rel="0">Kubernetes</a>
 
         
 
@@ -820,6 +804,14 @@ Linux常用命令速查-汇总篇
         
 
             <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
+
+        
+
+            <a href="/tags/#Spring源码解析" title="Spring源码解析" rel="2">Spring源码解析</a>
+
+        
+
+            <a href="/tags/# Kubernetes" title=" Kubernetes" rel="2"> Kubernetes</a>
 
         
     </div>

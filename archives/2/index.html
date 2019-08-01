@@ -251,6 +251,67 @@
 
 <div class="post-preview">
 
+    <a href="/2019/07/07/器，到底是什么东西？/">
+        <h2 class="post-title">
+            容器，到底是什么东西？
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            通俗的来说容器其实是一种沙盒技术。顾名思义，沙盒就是能够像一个集装箱一样，把你的应用“装”起来的技术。这样，应用与应用之间，就因为有了边界而不至于相互干扰；而被装进集装箱的应用，也可以被方便地搬来搬去。不过，这两个能力说起来简单，但要用技术手段去实现它们，确并不是很容易。所以，本篇文章就来剖析一下容器的实现方式
+我们知道一个程序被执行起来之后，它就会从磁盘上的二进制文件，变成了计算机内存中的......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-07-07 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Docker" title="Docker">Docker</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/07/07/abbitMQ如何实现高可用/">
+        <h2 class="post-title">
+            RabbitMQ如何实现高可用
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            RabbitMQ一共具有三种模式：单机、普通集群、镜像集群
+单机模式
+单机模式，就是我们平常玩的demo，生产上肯定不能用。具体安装部署过程可以参考我的这篇文章：CentsOS原生RabbitMQ安装过程
+普通集群
+普通集群就是在多台机器上启动多个实例。每个队列只会存在其中的一个实例上，然后所有实例同步这些队列的元数据。消费者在进行消费的时候，如果连接的实例上恰好不是队列所在的实例，就会根据......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-07-07 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/07/07/abbitMQ高级面试题/">
         <h2 class="post-title">
             RabbitMQ高级面试题
@@ -312,7 +373,7 @@ k8s是Google开源的容器集群管理系统（思想来源于谷歌内部系�
         </p>
         <div class="tags">
             
-              <a href="/tags/#Kubernetes" title="Kubernetes">Kubernetes</a>
+              <a href="/tags/# Kubernetes" title=" Kubernetes"> Kubernetes</a>
             
         </div>
     
@@ -418,7 +479,7 @@ Producer生产者
         </p>
         <div class="tags">
             
-              <a href="/tags/# RabbitMQ" title=" RabbitMQ"> RabbitMQ</a>
+              <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
             
         </div>
     
@@ -449,7 +510,7 @@ erlang节点之间通信需要相同的cookie文件，将其中一个......
         </p>
         <div class="tags">
             
-              <a href="/tags/# RabbitMQ" title=" RabbitMQ"> RabbitMQ</a>
+              <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
             
         </div>
     
@@ -531,82 +592,6 @@ SpringCloud学习系列汇总
         <p class="post-meta" style="margin: 10px 0;">
              石玉军 于
             2019-06-05 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/06/04/窥MySQL性能调优/">
-        <h2 class="post-title">
-            初窥MySQL性能调优
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-本文涉及：MySQL自带的性能测试工具mysqlslap的使用及几个性能调优的方法
-
-性能测试工具—mysqlslap
-mysqlslap是MySQL自带的一款非常优秀的性能测试工具。使用它可以
-模拟多个客户端并发向服务器发出查询、更新等请求,然后输出简单的报告
-可选参数
-
-–engines：代表要测试的引擎，可以有多个，用分隔符隔开
-–iterations：代表要运行这些测试多少次
-–a......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-06-04 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/05/31/MySQL架构与SQL执行流程/">
-        <h2 class="post-title">
-            MySQL架构与SQL执行流程
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            MySQL架构设计
-下面是一张MySQL的架构图：
-
-上方各个组件的含义如下：
-Connectors
-指的是不同语言中与SQL的交互
-Management Serveices &amp; Utilities：
-系统管理和控制工具
-Connection Pool：连接池
-管理缓冲用户连接，线程处理等需要缓存的需求。
-负责监听对 MySQL Server 的各种请求，接收连接请求，转发所有连接请......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-05-31 作
         </p>
         <div class="tags">
             
@@ -793,15 +778,15 @@ Connection Pool：连接池
 
         
 
-            <a href="/tags/#RabbitMQ" title="RabbitMQ" rel="5">RabbitMQ</a>
+            <a href="/tags/#RabbitMQ" title="RabbitMQ" rel="7">RabbitMQ</a>
 
         
 
-            <a href="/tags/# RabbitMQ" title=" RabbitMQ" rel="2"> RabbitMQ</a>
+            <a href="/tags/# RabbitMQ" title=" RabbitMQ" rel="0"> RabbitMQ</a>
 
         
 
-            <a href="/tags/#Kubernetes" title="Kubernetes" rel="2">Kubernetes</a>
+            <a href="/tags/#Kubernetes" title="Kubernetes" rel="0">Kubernetes</a>
 
         
 
@@ -810,6 +795,14 @@ Connection Pool：连接池
         
 
             <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
+
+        
+
+            <a href="/tags/#Spring源码解析" title="Spring源码解析" rel="2">Spring源码解析</a>
+
+        
+
+            <a href="/tags/# Kubernetes" title=" Kubernetes" rel="2"> Kubernetes</a>
 
         
     </div>

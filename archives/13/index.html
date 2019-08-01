@@ -251,6 +251,69 @@
 
 <div class="post-preview">
 
+    <a href="/2018/07/26/常见的web攻击手段/">
+        <h2 class="post-title">
+            常见的web攻击手段
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            XSS：跨站脚本攻击
+-典型实例为：
+当用户在表达输入一段数据后，提交给服务端进行持久化。如果此用户输入的是一段脚本语言，而服务端
+用户输入的数据没有经过转码、校验等就存入了数据库，在其他页面需要展示此数据时，就会执行此用户输入的语言。简单来说，JS的强大不用我来解释吧
+-推荐防御措施：
+对用户输入的信息进行转义，例如&lt;&gt;'等等特殊字符。当然，其实很多前端框架也支持这么做，快查一......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2018-07-26 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#web安全" title="web安全">web安全</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2018/07/26/命令模式/">
+        <h2 class="post-title">
+            命令模式
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            命令模式：把命令包装成对象，将命令发送者和命令接受者的耦合降低
+举个例子，皇帝发圣旨招一个大臣入宫。
+这里的皇帝就是客户端，而圣旨就是命令，大臣就是命令接受者。那么命令发送者通常都是某个公公对吧。这里就是一个命令模式的实践，为什么这样说呢？平常我们写代码都是一个方法直接调用另一个方法，这样耦合性太高了，你总不能让皇帝跑到大臣家告诉他找他有点事吧，要是都这样皇帝不就累死了。皇帝要做的就是指定命......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2018-07-26 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#设计模式" title="设计模式">设计模式</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2018/07/26/责任链模式/">
         <h2 class="post-title">
             责任链模式
@@ -512,77 +575,6 @@ Cof......
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2018/07/26/模式/">
-        <h2 class="post-title">
-            合成模式
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            合成模式的职责是将对象组织到树结构中
-
-观察上方类图：
-interface，一个接口定义了一个获得当前对象名字的方法
-leaf：树中的叶子节点，实现了interface
-Branch：树枝节点，不仅实现了getName方法，同样它本身具有添加节点删除节点的方法且本身可以包含多个树枝节点以及叶子节点
-通过上述结论我们可以发现其实合成模式就是树的结构的实现
-来看一下代码：
-12345678910......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2018-07-26 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#设计模式" title="设计模式">设计模式</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2018/07/26/装饰者模式/">
-        <h2 class="post-title">
-            装饰者模式
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            装饰模式：以对客户端透明的方式扩展对象的功能
-装饰模式类图如下：
-
-我们分析一下类图：
-Girl：女孩接口，定义了一个getName（）方法
-XiaoWang：女孩的实现类，她实现了getName方法，
-Decorator：装饰类，当我们想要扩展小王的方法时，又不能改变她的代码，也不推荐使用继承，那么这个时候装饰类就上场了。此装饰类对小王进行了包装，由他来提供小王的方法
-Decorator1......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2018-07-26 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#设计模式" title="设计模式">设计模式</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -758,15 +750,15 @@ Decorator1......
 
         
 
-            <a href="/tags/#RabbitMQ" title="RabbitMQ" rel="5">RabbitMQ</a>
+            <a href="/tags/#RabbitMQ" title="RabbitMQ" rel="7">RabbitMQ</a>
 
         
 
-            <a href="/tags/# RabbitMQ" title=" RabbitMQ" rel="2"> RabbitMQ</a>
+            <a href="/tags/# RabbitMQ" title=" RabbitMQ" rel="0"> RabbitMQ</a>
 
         
 
-            <a href="/tags/#Kubernetes" title="Kubernetes" rel="2">Kubernetes</a>
+            <a href="/tags/#Kubernetes" title="Kubernetes" rel="0">Kubernetes</a>
 
         
 
@@ -775,6 +767,14 @@ Decorator1......
         
 
             <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
+
+        
+
+            <a href="/tags/#Spring源码解析" title="Spring源码解析" rel="2">Spring源码解析</a>
+
+        
+
+            <a href="/tags/# Kubernetes" title=" Kubernetes" rel="2"> Kubernetes</a>
 
         
     </div>

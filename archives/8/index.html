@@ -251,6 +251,71 @@
 
 <div class="post-preview">
 
+    <a href="/2019/03/27/va原子类操作原理剖析/">
+        <h2 class="post-title">
+            Java原子类操作原理剖析
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            ◆
+CAS的概念
+◆
+对于并发控制来说，使用锁是一种悲观的策略。它总是假设每次请求都会产生冲突，如果多个线程请求同一个资源，则使用锁宁可牺牲性能也要保证线程安全。而无锁则是比较乐观的看待这个问题，它会假设每次访问都没有冲突，这样就提高了效率。但是事实难料、这个冲突是避免不了的，无锁也考虑到了肯定会遇到冲突，对于冲突的解决无锁就使用一种比较交换（CAS）的技术来检测冲突。一旦检测到冲突就重试当......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-03-27 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#多线程" title="多线程">多线程</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/03/26/hreadLocal及InheritableThreadLocal的原理剖析/">
+        <h2 class="post-title">
+            ThreadLocal及InheritableThreadLocal的原理剖析
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+我们知道，线程的不安全问题，主要是由于多线程并发读取一个变量而引起的，那么有没有一种办法可以让一个变量是线程独有的呢，这样不就可以解决线程安全问题了么。其实JDK已经为我们提供了ThreadLocal这个东西。
+
+◆
+ThreadLocal基本使用
+◆
+当使用ThreadLocal维护变量时，ThreadLocal为每个使用该变量的线程提供独立的变量副本，所以每一个线程都可以独立地改变自己......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-03-26 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#多线程" title="多线程">多线程</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/03/26/的优化/">
         <h2 class="post-title">
             锁的优化
@@ -526,74 +591,6 @@ IOC
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/03/16/初学Java的那段日子-1/">
-        <h2 class="post-title">
-            初学Java的那段日子
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-最近因为一个朋友想要学习Java，在帮助他找教程的过程中回想到了我自己当年学习Java的那段岁月，故写了此篇文章总结了一下初学Java所必须要掌握的知识点，然后把一部分常见的面试题罗列出来。给予刚刚开始学习Java的同学做一个参考。
-
-程序语言简史
-最初由0,1组成的机器语言变成了简单指令的汇编语言，最后才是高级语言。而高级语言又分为面向过程语言与面向对象语言两种。而Java就是典型的面向......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-03-16 作
-        </p>
-        <div class="tags">
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/03/12/无套路Java学习资源大全/">
-        <h2 class="post-title">
-            无套路Java学习资源大全
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            声明：
-    所有资源在公众号《Java学习录》后台回复资源对应《》中的编码即可领取。
-
-视频资源
-15G的hapood教程《0001》
-20G腾讯课堂课程汇总《0002》
-92天的python 全栈开发-项目实战《0003》
-Angular Vue Easy UI ExtJS前端框架视频教程《0004》
-dubbo系列教程《0005》
-Java8新特性与设计模式《0006》
-java初级......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-03-12 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Java进阶" title="Java进阶">Java进阶</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -769,15 +766,15 @@ java初级......
 
         
 
-            <a href="/tags/#RabbitMQ" title="RabbitMQ" rel="5">RabbitMQ</a>
+            <a href="/tags/#RabbitMQ" title="RabbitMQ" rel="7">RabbitMQ</a>
 
         
 
-            <a href="/tags/# RabbitMQ" title=" RabbitMQ" rel="2"> RabbitMQ</a>
+            <a href="/tags/# RabbitMQ" title=" RabbitMQ" rel="0"> RabbitMQ</a>
 
         
 
-            <a href="/tags/#Kubernetes" title="Kubernetes" rel="2">Kubernetes</a>
+            <a href="/tags/#Kubernetes" title="Kubernetes" rel="0">Kubernetes</a>
 
         
 
@@ -786,6 +783,14 @@ java初级......
         
 
             <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
+
+        
+
+            <a href="/tags/#Spring源码解析" title="Spring源码解析" rel="2">Spring源码解析</a>
+
+        
+
+            <a href="/tags/# Kubernetes" title=" Kubernetes" rel="2"> Kubernetes</a>
 
         
     </div>

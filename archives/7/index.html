@@ -251,6 +251,75 @@
 
 <div class="post-preview">
 
+    <a href="/2019/04/08/ava集合-Vector源码解析-JDK1-8/">
+        <h2 class="post-title">
+            Java集合-Vector源码解析-JDK1.8
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            ◆
+Vector简介
+◆
+与ArrayList不同的是，Vector是线程安全的。
+建议先阅读 ArrayList源码分析 ，再回来看此文会Soeasy哦！
+Vector继承了AbstractList实现了List, RandomAccess, Cloneable, java.io.Serializable这些接口。
+
+AbstractList、List提供了添加、删除、修改、遍历等功能。
+......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-04-08 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#集合" title="集合">集合</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/04/08/Java集合-CopyOnWriteArrayList源码解析-JDK1-8/">
+        <h2 class="post-title">
+            Java集合-CopyOnWriteArrayList源码解析-JDK1.8
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            ◆
+CopyOnWriteArrayList简介
+◆
+CopyOnWriteArrayList和ArrayList一样是一个动态数组。而与ArrayList不同的是，它是线程安全的。
+建议先阅读 ArrayList源码分析 ，再回来看此文会Soeasy哦！
+CopyOnWriteArrayList实现了List, RandomAccess, Cloneable, java.io.Serial......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-04-08 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#集合" title="集合">集合</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/04/04/pringCloud学习系列汇总/">
         <h2 class="post-title">
              SpringCloud学习系列汇总 
@@ -536,71 +605,6 @@ Fork/Join就是是Java7提供的原生多线程并行处理框架，它的基本
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/03/27/va原子类操作原理剖析/">
-        <h2 class="post-title">
-            Java原子类操作原理剖析
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            ◆
-CAS的概念
-◆
-对于并发控制来说，使用锁是一种悲观的策略。它总是假设每次请求都会产生冲突，如果多个线程请求同一个资源，则使用锁宁可牺牲性能也要保证线程安全。而无锁则是比较乐观的看待这个问题，它会假设每次访问都没有冲突，这样就提高了效率。但是事实难料、这个冲突是避免不了的，无锁也考虑到了肯定会遇到冲突，对于冲突的解决无锁就使用一种比较交换（CAS）的技术来检测冲突。一旦检测到冲突就重试当......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-03-27 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#多线程" title="多线程">多线程</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/03/26/hreadLocal及InheritableThreadLocal的原理剖析/">
-        <h2 class="post-title">
-            ThreadLocal及InheritableThreadLocal的原理剖析
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-我们知道，线程的不安全问题，主要是由于多线程并发读取一个变量而引起的，那么有没有一种办法可以让一个变量是线程独有的呢，这样不就可以解决线程安全问题了么。其实JDK已经为我们提供了ThreadLocal这个东西。
-
-◆
-ThreadLocal基本使用
-◆
-当使用ThreadLocal维护变量时，ThreadLocal为每个使用该变量的线程提供独立的变量副本，所以每一个线程都可以独立地改变自己......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-03-26 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#多线程" title="多线程">多线程</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -776,15 +780,15 @@ ThreadLocal基本使用
 
         
 
-            <a href="/tags/#RabbitMQ" title="RabbitMQ" rel="5">RabbitMQ</a>
+            <a href="/tags/#RabbitMQ" title="RabbitMQ" rel="7">RabbitMQ</a>
 
         
 
-            <a href="/tags/# RabbitMQ" title=" RabbitMQ" rel="2"> RabbitMQ</a>
+            <a href="/tags/# RabbitMQ" title=" RabbitMQ" rel="0"> RabbitMQ</a>
 
         
 
-            <a href="/tags/#Kubernetes" title="Kubernetes" rel="2">Kubernetes</a>
+            <a href="/tags/#Kubernetes" title="Kubernetes" rel="0">Kubernetes</a>
 
         
 
@@ -793,6 +797,14 @@ ThreadLocal基本使用
         
 
             <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
+
+        
+
+            <a href="/tags/#Spring源码解析" title="Spring源码解析" rel="2">Spring源码解析</a>
+
+        
+
+            <a href="/tags/# Kubernetes" title=" Kubernetes" rel="2"> Kubernetes</a>
 
         
     </div>
