@@ -251,6 +251,41 @@
 
 <div class="post-preview">
 
+    <a href="/2019/03/16/浅谈事务/">
+        <h2 class="post-title">
+            浅谈数据库事务
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            事务的四大特性（ACID）
+原子性
+原子性是指事务包含的所有操作要么全部成功，要么全部失败。例小王要向小李转账200元。则账要么转账成功小王账户减200元，小李账户加200元，要么执行失败，两者账户都不动。
+一致性
+一致性是指事务执行之前和执行之后都必须处于一致性状态。
+假设转账前小王和小李的余额之和是2000元，那么不管他们之间进行了多少次转账，他们的余额之和肯定还是2000元。
+隔离性
+......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-03-16 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#数据库" title="数据库">数据库</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/03/16/初学Java的那段日子-1/">
         <h2 class="post-title">
             初学Java的那段日子
@@ -559,41 +594,6 @@ docker commit
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2018/11/24/rools规则引擎入门指南（二）/">
-        <h2 class="post-title">
-            Drools规则引擎入门指南（二）
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-本篇博客主要讲解Drools常用的属性以及函数
-
-属性
-首先我们在resources\rules文件夹下创建一个Property.drl，还有一个DroolsApplicationPropertyTests
-1. salience优先级
-salience 属性的值默认为0，它的值越大执行的优先级就越高,看如下代码在执行的时候就会先执行salience2
- 12345678910111213......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2018-11-24 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Drools" title="Drools">Drools</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -789,7 +789,7 @@ salience 属性的值默认为0，它的值越大执行的优先级就越高,看
 
         
 
-            <a href="/tags/#Spring源码解析" title="Spring源码解析" rel="2">Spring源码解析</a>
+            <a href="/tags/#Spring源码解析" title="Spring源码解析" rel="3">Spring源码解析</a>
 
         
 
