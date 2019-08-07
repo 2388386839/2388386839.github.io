@@ -7,29 +7,29 @@
     </url>
     
     <url>
-        <loc>https://shiyujun.cn/about/</loc>
-        <lastmod>2019-03-19T09:45:25.468Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
         <loc>https://shiyujun.cn/tags/</loc>
-        <lastmod>2019-03-19T09:41:57.414Z</lastmod>
+        <lastmod>2019-07-07T07:53:27.248Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
         <loc>https://shiyujun.cn/archive/</loc>
-        <lastmod>2019-03-19T09:41:57.393Z</lastmod>
+        <lastmod>2019-07-07T07:53:26.275Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>https://shiyujun.cn/about/</loc>
+        <lastmod>2019-07-07T07:53:26.273Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
         <loc>https://shiyujun.cn/404.html</loc>
-        <lastmod>2019-03-19T09:19:36.424Z</lastmod>
+        <lastmod>2019-07-07T07:53:24.822Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>

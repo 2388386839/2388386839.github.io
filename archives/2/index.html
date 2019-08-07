@@ -341,6 +341,43 @@ Pod 是一组紧密关联的容器集合，它们共享 PID、IPC、Network 和 
 
 <div class="post-preview">
 
+    <a href="/2019/07/07/abbitMQ高级面试题/">
+        <h2 class="post-title">
+            RabbitMQ高级面试题
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文涉及：投递失败的消息怎么处理、如何实现延时队列、如何指定消息的优先级、消息的持久化是如何实现的、如何保证消息不丢失
+
+投递失败的消息怎么处理
+首先投递失败存在如下两个情况
+
+当交换器无法根据自身的类型和路由键找到符合条件的队列
+如果交换器在将消息路由到队列时发现队列上并不存在任何消费者
+解决方案：
+在生产者投递消息时指定mandatory或者imrnediate参数设为 true 时，......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-07-07 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/07/07/ubernetes是什么东西？/">
         <h2 class="post-title">
             Kubernetes是什么东西？
@@ -407,24 +444,31 @@ k8s是Google开源的容器集群管理系统（思想来源于谷歌内部系�
 
 <div class="post-preview">
 
-    <a href="/2019/07/07/abbitMQ高级面试题/">
+    <a href="/2019/07/07/inux常用命令速查-系统管理/">
         <h2 class="post-title">
-            RabbitMQ高级面试题
+            Linux常用命令速查-系统监控
         </h2>
         <h3 class="post-subtitle">
             
         </h3>
         <div class="post-content-preview">
             
-本文涉及：投递失败的消息怎么处理、如何实现延时队列、如何指定消息的优先级、消息的持久化是如何实现的、如何保证消息不丢失
+本文涉及：Linux中进程管理命令：ps、pstree、grep、vmstat、进程树及进程搜索，查看系统负载命令uptime，查看内存信息free命令，常用工具top命令，磁盘监控df、du命令
 
-投递失败的消息怎么处理
-首先投递失败存在如下两个情况
+◆
+进程管理
+◆
+查看进程
+1ps
+常用参数：
 
-当交换器无法根据自身的类型和路由键找到符合条件的队列
-如果交换器在将消息路由到队列时发现队列上并不存在任何消费者
-解决方案：
-在生产者投递消息时指定mandatory或者imrnediate参数设为 true 时，......
+-A 列出所有的行程
+-u 指定用户的进程
+-ef 所有进程以及启动命令
+-aux 显示所有包含其他使用者的行程
+
+查看进程树
+1pstree......
         </div>
     </a>
     
@@ -434,7 +478,7 @@ k8s是Google开源的容器集群管理系统（思想来源于谷歌内部系�
         </p>
         <div class="tags">
             
-              <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
+              <a href="/tags/#Linux" title="Linux">Linux</a>
             
         </div>
     
@@ -548,37 +592,6 @@ Producer生产者
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/06/18/abbitMQ集群安装/">
-        <h2 class="post-title">
-             RabbitMQ集群安装 
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            首先参考上一篇文章【CentsOS原生RabbitMQ安装过程】在两到三台机器上先安装单独的RabbitMQ节点
-修改一下hostname
-1234[root@rnode1 ~]# vim /etc/hosts172.16.20.110 rnode1172.16.20.111 rnode2172.16.20.112 rnode3
-erlang节点之间通信需要相同的cookie文件，将其中一个......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-06-18 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -626,11 +639,15 @@ erlang节点之间通信需要相同的cookie文件，将其中一个......
     <div class="tags">
         
 
-            <a href="/tags/#JVM" title="JVM" rel="11">JVM</a>
+            <a href="/tags/#RabbitMQ" title="RabbitMQ" rel="7">RabbitMQ</a>
 
         
 
             <a href="/tags/#Java工具类" title="Java工具类" rel="8">Java工具类</a>
+
+        
+
+            <a href="/tags/#JVM" title="JVM" rel="11">JVM</a>
 
         
 
@@ -642,15 +659,15 @@ erlang节点之间通信需要相同的cookie文件，将其中一个......
 
         
 
-            <a href="/tags/#汇总" title="汇总" rel="2">汇总</a>
-
-        
-
             <a href="/tags/#Elasticsearch" title="Elasticsearch" rel="1">Elasticsearch</a>
 
         
 
             <a href="/tags/#Java进阶" title="Java进阶" rel="2">Java进阶</a>
+
+        
+
+            <a href="/tags/#汇总" title="汇总" rel="2">汇总</a>
 
         
 
@@ -666,6 +683,10 @@ erlang节点之间通信需要相同的cookie文件，将其中一个......
 
         
 
+            <a href="/tags/#MySQL" title="MySQL" rel="11">MySQL</a>
+
+        
+
             <a href="/tags/#Redis" title="Redis" rel="8">Redis</a>
 
         
@@ -674,7 +695,15 @@ erlang节点之间通信需要相同的cookie文件，将其中一个......
 
         
 
-            <a href="/tags/#Mybatis" title="Mybatis" rel="1">Mybatis</a>
+            <a href="/tags/#Spring源码解析" title="Spring源码解析" rel="3">Spring源码解析</a>
+
+        
+
+            <a href="/tags/# Spring" title=" Spring" rel="1"> Spring</a>
+
+        
+
+            <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
 
         
 
@@ -682,7 +711,15 @@ erlang节点之间通信需要相同的cookie文件，将其中一个......
 
         
 
+            <a href="/tags/#Mybatis" title="Mybatis" rel="1">Mybatis</a>
+
+        
+
             <a href="/tags/#开发工具" title="开发工具" rel="1">开发工具</a>
+
+        
+
+            <a href="/tags/# Kubernetes" title=" Kubernetes" rel="2"> Kubernetes</a>
 
         
 
@@ -710,11 +747,11 @@ erlang节点之间通信需要相同的cookie文件，将其中一个......
 
         
 
-            <a href="/tags/#Vue" title="Vue" rel="1">Vue</a>
+            <a href="/tags/#开源组件" title="开源组件" rel="3">开源组件</a>
 
         
 
-            <a href="/tags/#开源组件" title="开源组件" rel="3">开源组件</a>
+            <a href="/tags/#Vue" title="Vue" rel="1">Vue</a>
 
         
 
@@ -730,11 +767,11 @@ erlang节点之间通信需要相同的cookie文件，将其中一个......
 
         
 
-            <a href="/tags/#maven" title="maven" rel="1">maven</a>
+            <a href="/tags/#Https" title="Https" rel="1">Https</a>
 
         
 
-            <a href="/tags/#Https" title="Https" rel="1">Https</a>
+            <a href="/tags/#maven" title="maven" rel="1">maven</a>
 
         
 
@@ -742,43 +779,11 @@ erlang节点之间通信需要相同的cookie文件，将其中一个......
 
         
 
-            <a href="/tags/#数据库" title="数据库" rel="1">数据库</a>
-
-        
-
             <a href="/tags/#微服务" title="微服务" rel="1">微服务</a>
 
         
 
-            <a href="/tags/#MySQL" title="MySQL" rel="11">MySQL</a>
-
-        
-
-            <a href="/tags/#RabbitMQ" title="RabbitMQ" rel="7">RabbitMQ</a>
-
-        
-
-            <a href="/tags/# RabbitMQ" title=" RabbitMQ" rel="0"> RabbitMQ</a>
-
-        
-
-            <a href="/tags/#Kubernetes" title="Kubernetes" rel="0">Kubernetes</a>
-
-        
-
-            <a href="/tags/# Spring" title=" Spring" rel="1"> Spring</a>
-
-        
-
-            <a href="/tags/#性能调优" title="性能调优" rel="1">性能调优</a>
-
-        
-
-            <a href="/tags/#Spring源码解析" title="Spring源码解析" rel="3">Spring源码解析</a>
-
-        
-
-            <a href="/tags/# Kubernetes" title=" Kubernetes" rel="2"> Kubernetes</a>
+            <a href="/tags/#数据库" title="数据库" rel="1">数据库</a>
 
         
     </div>
