@@ -251,6 +251,40 @@
 
 <div class="post-preview">
 
+    <a href="/2019/08/11/Prometheus-Operation钉钉报警/">
+        <h2 class="post-title">
+            Prometheus-Operation钉钉报警
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本篇文章基于Prometheus-Operation，收集Redis、MySQL、RabbitMQ的监控信息并报警
+
+Redis钉钉报警
+数据收集
+首先启动一个Redis的信息收集的应用程序
+1docker run -d --name redis_exporter -e REDIS_ADDR="redis://172.16.40.170:6379"  -e REDIS_PASSWORD="......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-08-11 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#微服务" title="微服务">微服务</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/08/07/代理模式/">
         <h2 class="post-title">
             Java中的代理模式
@@ -552,44 +586,6 @@ CPU：如果系统中存在视频分析、3D渲染、大量计算这样的应用
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/07/16/Spring所有注解大揭秘/">
-        <h2 class="post-title">
-             Spring所有注解大揭秘 
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            声明bean的注解
-
-@Component 组件，没有明确的角色
-@Service 在业务逻辑层使用（service层）
-@Repository 在数据访问层使用（dao层）
-@Controller 在展现层使用，控制器的声明
-
-注入bean的注解
-
-@Autowired：由Spring提供，根据类型进行自动装配，如果组合@Qualifier使用将按名称进行装配
-@Inject：由JSR-3......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-07-16 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/# Spring" title=" Spring"> Spring</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -773,7 +769,7 @@ CPU：如果系统中存在视频分析、3D渲染、大量计算这样的应用
 
         
 
-            <a href="/tags/#微服务" title="微服务" rel="1">微服务</a>
+            <a href="/tags/#微服务" title="微服务" rel="2">微服务</a>
 
         
 

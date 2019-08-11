@@ -251,6 +251,38 @@
 
 <div class="post-preview">
 
+    <a href="/2019/04/23/Redis哨兵环境搭建/">
+        <h2 class="post-title">
+             Redis哨兵环境搭建 
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            在昨天的文章&lt;Redis主从复制&gt;中部署了Redis的主从复制，一主两从的架构模式可以保证数据不丢失和读写分离，但是却无法保证主节点挂了之后的应用的高可用，基于主从复制，Redis提供了哨兵模式来监控各个节点的状态，当主节点发生意外down机后，哨兵会通过选举算法在从节点中间在选举一个节点晋升为主节点。
+◆
+如何配置Redis的哨兵
+◆
+首先我们需要一个简单的一主两从架构的red......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-04-23 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Redis" title="Redis">Redis</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/04/23/edis主从复制/">
         <h2 class="post-title">
              Redis主从复制 
@@ -640,41 +672,6 @@ cd /app/logs 进入具体目录
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/04/09/Java集合-TreeMap源码解析-JDK1-8/">
-        <h2 class="post-title">
-            Java集合-TreeMap源码解析-JDK1.8
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            ◆
-TreeMap简介
-◆
-推荐查看此篇文章之前首先查看 HashMap源码分析 效果更佳哦
-TreeMap在jdk 1.8中使用用的是红黑树的结构来进行存储的，一个典型的红黑树就如下图所示：
-
-而这个结构在代码中表现是这样的：
-1234567891011121314151617/**     * 红黑树节点     */    static final class Entry&lt;K,V......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-04-09 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#集合" title="集合">集合</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -862,7 +859,7 @@ TreeMap在jdk 1.8中使用用的是红黑树的结构来进行存储的，一个
 
         
 
-            <a href="/tags/#微服务" title="微服务" rel="1">微服务</a>
+            <a href="/tags/#微服务" title="微服务" rel="2">微服务</a>
 
         
 

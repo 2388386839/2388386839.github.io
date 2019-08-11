@@ -251,6 +251,41 @@
 
 <div class="post-preview">
 
+    <a href="/2019/05/08/VM中的内存溢出详解/">
+        <h2 class="post-title">
+             JVM中的内存溢出详解 
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文涉及：JVM各区域的内存溢出的原因及解决办法。堆溢出、栈溢出、方法区溢出、直接内存溢出
+
+除了程序计数器外，JVM中的其他区域都可能会发生内存溢出
+堆溢出
+1java.lang.OutOfMemoryError: Java heap space
+这个异常是由于堆中存在大量的对象，这些对象无法通过垃圾回收进行收集从而导致的堆内存溢出，堆溢出呢，分为两种情况：
+
+
+内存泄露（大量无用的对象......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-05-08 作
+        </p>
+        <div class="tags">
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/05/08/M垃圾收集器详解/">
         <h2 class="post-title">
              JVM垃圾收集器详解 
@@ -563,38 +598,6 @@ volatile-lru：......
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/04/23/Redis哨兵环境搭建/">
-        <h2 class="post-title">
-             Redis哨兵环境搭建 
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            在昨天的文章&lt;Redis主从复制&gt;中部署了Redis的主从复制，一主两从的架构模式可以保证数据不丢失和读写分离，但是却无法保证主节点挂了之后的应用的高可用，基于主从复制，Redis提供了哨兵模式来监控各个节点的状态，当主节点发生意外down机后，哨兵会通过选举算法在从节点中间在选举一个节点晋升为主节点。
-◆
-如何配置Redis的哨兵
-◆
-首先我们需要一个简单的一主两从架构的red......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-04-23 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Redis" title="Redis">Redis</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -782,7 +785,7 @@ volatile-lru：......
 
         
 
-            <a href="/tags/#微服务" title="微服务" rel="1">微服务</a>
+            <a href="/tags/#微服务" title="微服务" rel="2">微服务</a>
 
         
 

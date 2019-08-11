@@ -251,6 +251,44 @@
 
 <div class="post-preview">
 
+    <a href="/2019/06/24/abbitMQ常用命令/">
+        <h2 class="post-title">
+             RabbitMQ常用命令 
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            服务启动:
+1rabbitmq-server –detached
+服务关闭:
+1rabbitmqctl stop 若单机有多个实例，则在rabbitmqctl后加–n 指定名称
+开启某个插件：
+1rabbitmq-plugins enable xxx
+关闭某个插件：
+1rabbitmq-plugins disablexxx
+注意：重启服务器后生效。
+新建virtual_host:
+1rabb......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+             石玉军 于
+            2019-06-24 作
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#RabbitMQ" title="RabbitMQ">RabbitMQ</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/06/18/abbitMQ集群安装/">
         <h2 class="post-title">
              RabbitMQ集群安装 
@@ -591,41 +629,6 @@ MySQL中的的索引分为单列索引和组合索引
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/05/27/ySQL调优之数据类型选择原则/">
-        <h2 class="post-title">
-            MySQL调优之数据类型选择原则
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-本文涉及：高可用数据库设计时数据类型的选择原则
-
-在进行数据库设计时，如果能够选择最恰当的数据类型就可以为后期的数据库调优打好最坚实的基础
-选择数据类型的原则
-更小的通常更好
-例如存储订单状态字段很多时候使用0、1、2表示使用tinyint类型存储就够了，没必要搞个int、long甚至varchar来。
-越小的数据类型代表着占用越小的磁盘、内存和CPU，也就代表着越快的速度。当然，不要为了......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-             石玉军 于
-            2019-05-27 作
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -813,7 +816,7 @@ MySQL中的的索引分为单列索引和组合索引
 
         
 
-            <a href="/tags/#微服务" title="微服务" rel="1">微服务</a>
+            <a href="/tags/#微服务" title="微服务" rel="2">微服务</a>
 
         
 
