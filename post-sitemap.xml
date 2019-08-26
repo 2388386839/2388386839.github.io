@@ -7,6 +7,62 @@
     </url>
 
     <url>
+        <loc>https://shiyujun.cn/2019/08/26/ringJDBC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+        <lastmod>2019-08-26T14:23:03.719Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/2019/07/07/ubernetes%E6%98%AF%E4%BB%80%E4%B9%88%E4%B8%9C%E8%A5%BF%EF%BC%9F/</loc>
+        <lastmod>2019-08-26T14:11:50.233Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/2019/08/15/%E5%9F%BA%E4%BA%8E%E6%B3%A8%E8%A7%A3%E7%9A%84SpringAOP%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/</loc>
+        <lastmod>2019-08-26T14:11:50.233Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/2019/08/20/%E5%9F%BA%E4%BA%8E%E6%B3%A8%E8%A7%A3%E7%9A%84SpringAOP%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%B8%89%EF%BC%89/</loc>
+        <lastmod>2019-08-26T14:11:50.233Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/2019/08/15/%E5%9F%BA%E4%BA%8E%E6%B3%A8%E8%A7%A3%E7%9A%84SpringAOP%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%BA%8C%EF%BC%89/</loc>
+        <lastmod>2019-08-26T14:11:50.233Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/2019/07/16/Spring%E6%89%80%E6%9C%89%E6%B3%A8%E8%A7%A3%E5%A4%A7%E6%8F%AD%E7%A7%98/</loc>
+        <lastmod>2019-08-26T14:11:50.217Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/2019/07/20/k8s%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</loc>
+        <lastmod>2019-08-26T14:11:50.217Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://shiyujun.cn/2019/08/11/Prometheus-Operation%E9%92%89%E9%92%89%E6%8A%A5%E8%AD%A6/</loc>
         <lastmod>2019-08-11T14:31:04.678Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -25,22 +81,6 @@
     <url>
         <loc>https://shiyujun.cn/2019/08/05/SpringIOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E5%9F%BA%E4%BA%8E%E6%B3%A8%E8%A7%A3%EF%BC%89/</loc>
         <lastmod>2019-08-05T14:23:41.514Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://shiyujun.cn/2019/07/07/ubernetes%E6%98%AF%E4%BB%80%E4%B9%88%E4%B8%9C%E8%A5%BF%EF%BC%9F/</loc>
-        <lastmod>2019-08-01T13:12:59.116Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://shiyujun.cn/2019/07/20/k8s%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</loc>
-        <lastmod>2019-08-01T13:12:17.433Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -105,14 +145,6 @@
     <url>
         <loc>https://shiyujun.cn/2019/07/19/%E5%A6%82%E4%BD%95%E5%8F%82%E4%B8%8E%E4%B8%80%E4%B8%AA%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/</loc>
         <lastmod>2019-07-18T14:50:04.583Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://shiyujun.cn/2019/07/16/Spring%E6%89%80%E6%9C%89%E6%B3%A8%E8%A7%A3%E5%A4%A7%E6%8F%AD%E7%A7%98/</loc>
-        <lastmod>2019-07-15T15:00:00.173Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 

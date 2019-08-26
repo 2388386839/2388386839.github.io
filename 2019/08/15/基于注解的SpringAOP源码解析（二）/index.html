@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spring源码解析," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在上篇文章 中我们搭建了一个阅读源码的demo工程，然后简单介绍了一下@EnableAspectJAutoProxy注解，这个注解最重要的功能就是为向Spring中注入了一个beanAnnotationAwareAspectJAutoProxyCreator,本篇文章就继续来撸AOP的源码 前文已经简单提到了这个类的功能，不过这里还是要先看一下这个类的继承图  观察类图可知，AnnotationA">
+<meta name="keywords" content="Spring源码解析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于注解的SpringAOP源码解析（二）">
+<meta property="og:url" content="https://shiyujun.cn/2019/08/15/基于注解的SpringAOP源码解析（二）/index.html">
+<meta property="og:site_name" content="Java学习录">
+<meta property="og:description" content="在上篇文章 中我们搭建了一个阅读源码的demo工程，然后简单介绍了一下@EnableAspectJAutoProxy注解，这个注解最重要的功能就是为向Spring中注入了一个beanAnnotationAwareAspectJAutoProxyCreator,本篇文章就继续来撸AOP的源码 前文已经简单提到了这个类的功能，不过这里还是要先看一下这个类的继承图  观察类图可知，AnnotationA">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://shiyujun.cn/2019/08/15/基于注解的SpringAOP源码解析（二）/1.png">
+<meta property="og:image" content="https://shiyujun.cn/img/gongzhonghao.jpg">
+<meta property="og:updated_time" content="2019-08-26T14:11:50.233Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于注解的SpringAOP源码解析（二）">
+<meta name="twitter:description" content="在上篇文章 中我们搭建了一个阅读源码的demo工程，然后简单介绍了一下@EnableAspectJAutoProxy注解，这个注解最重要的功能就是为向Spring中注入了一个beanAnnotationAwareAspectJAutoProxyCreator,本篇文章就继续来撸AOP的源码 前文已经简单提到了这个类的功能，不过这里还是要先看一下这个类的继承图  观察类图可知，AnnotationA">
+<meta name="twitter:image" content="https://shiyujun.cn/2019/08/15/基于注解的SpringAOP源码解析（二）/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shiyujun.cn/2019/08/15/基于注解的SpringAOP源码解析（二）/"/>
+
+
+
+
+
+  <title>基于注解的SpringAOP源码解析（二） | Java学习录</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?eb90dcd1823a43971326ae1a2633c8f7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Java学习录</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">专注于Java知识体系学习，Spring、SpringBoot、SpringCloud源码解析</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shiyujun.cn/2019/08/15/基于注解的SpringAOP源码解析（二）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="石玉军">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://shiyujun.cn/img/gongzhonghao.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Java学习录">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">基于注解的SpringAOP源码解析（二）</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-15T20:41:00+08:00">
+                2019-08-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/08/15/基于注解的SpringAOP源码解析（二）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/08/15/基于注解的SpringAOP源码解析（二）/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在<a href="https://mp.weixin.qq.com/s/yMw1MZIRjQ4c504SSuPFaw" target="_blank" rel="noopener">上篇文章</a><br>
+中我们搭建了一个阅读源码的demo工程，然后简单介绍了一下<code>@EnableAspectJAutoProxy</code>注解，这个注解最重要的功能就是为向Spring中注入了一个bean<code>AnnotationAwareAspectJAutoProxyCreator</code>,本篇文章就继续来撸AOP的源码</p>
+<p>前文已经简单提到了这个类的功能，不过这里还是要先看一下这个类的继承图<br>
+<img src="/2019/08/15/基于注解的SpringAOP源码解析（二）/1.png" alt=""><br>
+观察类图可知，AnnotationAwareAspectJAutoProxyCreator这个类间接实现了BeanPostProcessor接口。还记得我们之前在对SpringIOC的源码进行解析时提到过，Spring在实例化Bean的前后会分别调用方法<code>postProcessBeforeInstantiation</code>和<code>postProcessAfterInstantiation</code><br>
+而AOP的整体逻辑就是通过这两个方法来实现的</p>
+<h4><span id="postprocessbeforeinstantiation"><code>postProcessBeforeInstantiation</code></span></h4>
+<p>首先看一下这个<code>postProcessBeforeInstantiation</code>方法，它是在bean实例化之前调用的，主要是针对切面类。这个方法不在AnnotationAwareAspectJAutoProxyCreator这个类中，而是在其父类AbstractAutoProxyCreator中</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Object postProcessBeforeInstantiation(Class&lt;?&gt; beanClass, String beanName) throws BeansException &#123;</span><br><span class="line">		Object cacheKey = getCacheKey(beanClass, beanName);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (!StringUtils.hasLength(beanName) || !<span class="keyword">this</span>.targetSourcedBeans.contains(beanName)) &#123;</span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.advisedBeans.containsKey(cacheKey)) &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">			&#125;</span><br><span class="line">            <span class="comment">//加载所有增强</span></span><br><span class="line">			<span class="keyword">if</span> (isInfrastructureClass(beanClass) || shouldSkip(beanClass, beanName)) &#123;</span><br><span class="line">				<span class="keyword">this</span>.advisedBeans.put(cacheKey, <span class="built_in">Boolean</span>.FALSE);</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		TargetSource targetSource = getCustomTargetSource(beanClass, beanName);</span><br><span class="line">		<span class="keyword">if</span> (targetSource != <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="keyword">if</span> (StringUtils.hasLength(beanName)) &#123;</span><br><span class="line">				<span class="keyword">this</span>.targetSourcedBeans.add(beanName);</span><br><span class="line">			&#125;</span><br><span class="line">			Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(beanClass, beanName, targetSource);</span><br><span class="line">			Object proxy = createProxy(beanClass, beanName, specificInterceptors, targetSource);</span><br><span class="line">			<span class="keyword">this</span>.proxyTypes.put(cacheKey, proxy.getClass());</span><br><span class="line">			<span class="keyword">return</span> proxy;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<h5><span id="加载增强">加载增强</span></h5>
+<p>上方代码中最重要的一个方法就是shouldSkip方法了，这个方法被AspectJAwareAdvisorAutoProxyCreator所重载</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> boolean shouldSkip(Class&lt;?&gt; beanClass, String beanName) &#123;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">//查找所有标识了@Aspect注解的类，这里是重点，接着往下看</span></span><br><span class="line">    List&lt;Advisor&gt; candidateAdvisors = findCandidateAdvisors();</span><br><span class="line">    <span class="keyword">for</span> (Advisor advisor : candidateAdvisors) &#123;</span><br><span class="line">        <span class="keyword">if</span> (advisor instanceof AspectJPointcutAdvisor) &#123;</span><br><span class="line">            <span class="keyword">if</span> (((AbstractAspectJAdvice) advisor.getAdvice()).getAspectName().equals(beanName)) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.shouldSkip(beanClass, beanName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> List&lt;Advisor&gt; findCandidateAdvisors() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.advisorRetrievalHelper.findAdvisorBeans();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">protected</span> List&lt;Advisor&gt; findCandidateAdvisors() &#123;</span><br><span class="line">        List&lt;Advisor&gt; advisors = <span class="keyword">super</span>.findCandidateAdvisors();</span><br><span class="line">        <span class="comment">//buildAspectJAdvisors是重点</span></span><br><span class="line">           advisors.addAll(<span class="keyword">this</span>.aspectJAdvisorsBuilder.buildAspectJAdvisors());</span><br><span class="line">        <span class="keyword">return</span> advisors;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>一个长方法buildAspectJAdvisors</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">public <span class="built_in">List</span>&lt;Advisor&gt; buildAspectJAdvisors() &#123;</span><br><span class="line"><span class="comment">//所有Aspect类的名称集合</span></span><br><span class="line">    <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; aspectNames = <span class="keyword">this</span>.aspectBeanNames;</span><br><span class="line">    <span class="keyword">if</span> (aspectNames == <span class="keyword">null</span>) &#123;</span><br><span class="line">        synchronized (<span class="keyword">this</span>) &#123;</span><br><span class="line">            aspectNames = <span class="keyword">this</span>.aspectBeanNames;</span><br><span class="line">            <span class="comment">//这个双重检查是不是在学习安全的单例模式的时候见过</span></span><br><span class="line">            <span class="keyword">if</span> (aspectNames == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="built_in">List</span>&lt;Advisor&gt; advisors = <span class="keyword">new</span> LinkedList&lt;Advisor&gt;();</span><br><span class="line">                aspectNames = <span class="keyword">new</span> LinkedList&lt;<span class="built_in">String</span>&gt;();</span><br><span class="line">                <span class="comment">//获取所有Bean名称</span></span><br><span class="line">                <span class="built_in">String</span>[] beanNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(</span><br><span class="line">                        <span class="keyword">this</span>.beanFactory, <span class="built_in">Object</span>.<span class="keyword">class</span>, <span class="keyword">true</span>, <span class="keyword">false</span>);</span><br><span class="line">                <span class="keyword">for</span> (<span class="built_in">String</span> beanName : beanNames) &#123;</span><br><span class="line">                    <span class="comment">//判断是否符合条件，比如说有时会排除一些类，不让这些类注入进Spring</span></span><br><span class="line">                    <span class="keyword">if</span> (!isEligibleBean(beanName)) &#123;</span><br><span class="line">                        <span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">           </span><br><span class="line">                    Class&lt;?&gt; beanType = <span class="keyword">this</span>.beanFactory.getType(beanName);</span><br><span class="line">                    <span class="keyword">if</span> (beanType == <span class="keyword">null</span>) &#123;</span><br><span class="line">                        <span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">//判断Bean的Class上是否标识@Aspect注解</span></span><br><span class="line">                    <span class="keyword">if</span> (<span class="keyword">this</span>.advisorFactory.isAspect(beanType)) &#123;</span><br><span class="line">                        aspectNames.add(beanName);</span><br><span class="line">                        AspectMetadata amd = <span class="keyword">new</span> AspectMetadata(beanType, beanName);</span><br><span class="line">                        <span class="keyword">if</span> (amd.getAjType().getPerClause().getKind() == PerClauseKind.SINGLETON) &#123;</span><br><span class="line">                            MetadataAwareAspectInstanceFactory <span class="keyword">factory</span> =</span><br><span class="line">                                    <span class="keyword">new</span> BeanFactoryAspectInstanceFactory(<span class="keyword">this</span>.beanFactory, beanName);</span><br><span class="line">                            <span class="comment">//下一步说，重点的重点</span></span><br><span class="line">                            <span class="built_in">List</span>&lt;Advisor&gt; classAdvisors = <span class="keyword">this</span>.advisorFactory.getAdvisors(<span class="keyword">factory</span>);</span><br><span class="line">                            <span class="keyword">if</span> (<span class="keyword">this</span>.beanFactory.isSingleton(beanName)) &#123;</span><br><span class="line">                                <span class="comment">//将解析的Bean名称及类上的增强缓存起来,每个Bean只解析一次</span></span><br><span class="line">                                <span class="keyword">this</span>.advisorsCache.put(beanName, classAdvisors);</span><br><span class="line">                            &#125;</span><br><span class="line">                            <span class="keyword">else</span> &#123;</span><br><span class="line">                                <span class="keyword">this</span>.aspectFactoryCache.put(beanName, <span class="keyword">factory</span>);</span><br><span class="line">                            &#125;</span><br><span class="line">                            advisors.addAll(classAdvisors);</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">else</span> &#123;</span><br><span class="line">                            <span class="keyword">if</span> (<span class="keyword">this</span>.beanFactory.isSingleton(beanName)) &#123;</span><br><span class="line">                                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Bean with name '"</span> + beanName +</span><br><span class="line">                                        <span class="string">"' is a singleton, but aspect instantiation model is not singleton"</span>);</span><br><span class="line">                            &#125;</span><br><span class="line">                            MetadataAwareAspectInstanceFactory <span class="keyword">factory</span> =</span><br><span class="line">                                    <span class="keyword">new</span> PrototypeAspectInstanceFactory(<span class="keyword">this</span>.beanFactory, beanName);</span><br><span class="line">                            <span class="keyword">this</span>.aspectFactoryCache.put(beanName, <span class="keyword">factory</span>);</span><br><span class="line">                            advisors.addAll(<span class="keyword">this</span>.advisorFactory.getAdvisors(<span class="keyword">factory</span>));</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">this</span>.aspectBeanNames = aspectNames;</span><br><span class="line">                <span class="keyword">return</span> advisors;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (aspectNames.isEmpty()) &#123;</span><br><span class="line">        <span class="keyword">return</span> Collections.emptyList();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">List</span>&lt;Advisor&gt; advisors = <span class="keyword">new</span> LinkedList&lt;Advisor&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">String</span> aspectName : aspectNames) &#123;</span><br><span class="line">        <span class="comment">//从缓存中获取当前Bean的切面实例，如果不为空，则指明当前Bean的Class标识了@Aspect，且有切面方法</span></span><br><span class="line">        <span class="built_in">List</span>&lt;Advisor&gt; cachedAdvisors = <span class="keyword">this</span>.advisorsCache.<span class="keyword">get</span>(aspectName);</span><br><span class="line">        <span class="keyword">if</span> (cachedAdvisors != <span class="keyword">null</span>) &#123;</span><br><span class="line">            advisors.addAll(cachedAdvisors);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            MetadataAwareAspectInstanceFactory <span class="keyword">factory</span> = <span class="keyword">this</span>.aspectFactoryCache.<span class="keyword">get</span>(aspectName);</span><br><span class="line">            advisors.addAll(<span class="keyword">this</span>.advisorFactory.getAdvisors(<span class="keyword">factory</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> advisors;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6><span id="生成增强">生成增强</span></h6>
+<p>advisorFactory.getAdvisors方法会从@Aspect标识的类上获取@Before，@Pointcut等注解的信息及其标识的方法的信息，生成增强</p>
+<figure class="highlight monkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;Advisor&gt; getAdvisors(MetadataAwareAspectInstanceFactory aspectInstanceFactory) &#123;</span><br><span class="line">    <span class="class"><span class="keyword">Class</span>&lt;?&gt; <span class="title">aspectClass</span> = <span class="title">aspectInstanceFactory</span>.<span class="title">getAspectMetadata</span>().<span class="title">getAspectClass</span>();</span></span><br><span class="line">    String aspectName = aspectInstanceFactory.getAspectMetadata().getAspectName();</span><br><span class="line">    //校验类的合法性相关</span><br><span class="line">    validate(aspectClass);</span><br><span class="line"></span><br><span class="line">    MetadataAwareAspectInstanceFactory lazySingletonAspectInstanceFactory =</span><br><span class="line">            <span class="keyword">new</span> LazySingletonAspectInstanceFactoryDecorator(aspectInstanceFactory);</span><br><span class="line"></span><br><span class="line">    List&lt;Advisor&gt; advisors = <span class="keyword">new</span> LinkedList&lt;Advisor&gt;();</span><br><span class="line">    //获取这个类所有的增强方法</span><br><span class="line">    <span class="keyword">for</span> (<span class="function"><span class="keyword">Method</span> <span class="title">method</span> :</span> getAdvisorMethods(aspectClass)) &#123;</span><br><span class="line">        //生成增强实例</span><br><span class="line">        Advisor advisor = getAdvisor(<span class="function"><span class="keyword">method</span>, <span class="title">lazySingletonAspectInstanceFactory</span>, <span class="title">advisors</span>.<span class="title">size</span>(</span>), aspectName);</span><br><span class="line">        <span class="keyword">if</span> (advisor != <span class="literal">null</span>) &#123;</span><br><span class="line">            advisors.add(advisor);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!advisors.isEmpty() &amp;&amp; lazySingletonAspectInstanceFactory.getAspectMetadata().isLazilyInstantiated()) &#123;</span><br><span class="line">        Advisor instantiationAdvisor = <span class="keyword">new</span> SyntheticInstantiationAdvisor(lazySingletonAspectInstanceFactory);</span><br><span class="line">        advisors.add(<span class="number">0</span>, instantiationAdvisor);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">Field</span> <span class="keyword">field</span> : aspectClass.getDeclaredFields()) &#123;</span><br><span class="line">        Advisor advisor = getDeclareParentsAdvisor(<span class="keyword">field</span>);</span><br><span class="line">        <span class="keyword">if</span> (advisor != <span class="literal">null</span>) &#123;</span><br><span class="line">            advisors.add(advisor);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> advisors;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//获取类的的方法</span><br><span class="line"><span class="keyword">private</span> List&lt;<span class="function"><span class="keyword">Method</span>&gt; <span class="title">getAdvisorMethods</span>(</span><span class="class"><span class="keyword">Class</span>&lt;?&gt; <span class="title">aspectClass</span>) &#123;</span></span><br><span class="line">    <span class="keyword">final</span> List&lt;<span class="function"><span class="keyword">Method</span>&gt; <span class="title">methods</span> =</span> <span class="keyword">new</span> LinkedList&lt;<span class="function"><span class="keyword">Method</span>&gt;(</span>);</span><br><span class="line">    ReflectionUtils.doWithMethods(aspectClass, <span class="keyword">new</span> ReflectionUtils.MethodCallback() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        <span class="keyword">public</span> void doWith(<span class="function"><span class="keyword">Method</span> <span class="title">method</span>) <span class="title">throws</span> <span class="title">IllegalArgumentException</span> &#123;</span></span><br><span class="line">                //在@Aspect标识的类内部排除@Pointcut标识之外的所有方法，得到的方法集合包括继承自父类的方法，包括继承自Object的方法</span><br><span class="line">            <span class="keyword">if</span> (AnnotationUtils.getAnnotation(<span class="function"><span class="keyword">method</span>, <span class="title">Pointcut</span>.<span class="title">class</span>) =</span>= <span class="literal">null</span>) &#123;</span><br><span class="line">                methods.add(<span class="function"><span class="keyword">method</span>);</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    //对得到的所有方法排序，</span><br><span class="line">    //如果方法标识了切面注解，则按@Around, @Before, @After, @AfterReturning, @AfterThrowing的顺序排序</span><br><span class="line">    //如果没有标识这些注解，则按方法名称的字符串排序,</span><br><span class="line">    //有注解的方法排在无注解的方法之前</span><br><span class="line">    //最后的排序应该是这样的Around.class, Before.class, After.class, AfterReturning.class, AfterThrowing.class。。。</span><br><span class="line">    Collections.sort(methods, METHOD_COMPARATOR);</span><br><span class="line">    <span class="keyword">return</span> methods;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用生成增强实例的方法</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> Advisor getAdvisor(Method candidateAdviceMethod, MetadataAwareAspectInstanceFactory aspectInstanceFactory,</span><br><span class="line">        int declarationOrderInAspect, <span class="keyword">String</span> aspectName) &#123;</span><br><span class="line">    <span class="comment">//再次校验类的合法性</span></span><br><span class="line">    validate(aspectInstanceFactory.getAspectMetadata().getAspectClass());</span><br><span class="line">    <span class="comment">//切点表达式的包装类里面包含这些东西：execution(public * cn.shiyujun.service.IOCService.hollo(..))</span></span><br><span class="line">    AspectJExpressionPointcut expressionPointcut = getPointcut(</span><br><span class="line">            candidateAdviceMethod, aspectInstanceFactory.getAspectMetadata().getAspectClass());</span><br><span class="line">    <span class="keyword">if</span> (expressionPointcut == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//根据方法、切点、AOP实例工厂、类名、序号生成切面实例，详细代码往下看</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">InstantiationModelAwarePointcutAdvisorImpl</span>(expressionPointcut, candidateAdviceMethod,</span><br><span class="line">            <span class="built_in">this</span>, aspectInstanceFactory, declarationOrderInAspect, aspectName);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> AspectJExpressionPointcut getPointcut(Method candidateAdviceMethod, Class&lt;?&gt; candidateAspectClass) &#123;</span><br><span class="line">    <span class="comment">//查询方法上的切面注解，根据注解生成相应类型的AspectJAnnotation,在调用AspectJAnnotation的构造函数的同时</span></span><br><span class="line">    <span class="comment">//根据注解value或pointcut属性得到切点表达式，有argNames则设置参数名称</span></span><br><span class="line">    AspectJAnnotation&lt;?&gt; aspectJAnnotation =</span><br><span class="line">            AbstractAspectJAdvisorFactory.findAspectJAnnotationOnMethod(candidateAdviceMethod);</span><br><span class="line">    <span class="comment">//过滤那些不含@Before, @Around, @After, @AfterReturning, @AfterThrowing注解的方法</span></span><br><span class="line">    <span class="keyword">if</span> (aspectJAnnotation == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//生成带表达式的切面切入点，设置其切入点表达式</span></span><br><span class="line">    AspectJExpressionPointcut ajexp =</span><br><span class="line">            <span class="keyword">new</span> <span class="type">AspectJExpressionPointcut</span>(candidateAspectClass, <span class="keyword">new</span> <span class="type">String</span>[<span class="number">0</span>], <span class="keyword">new</span> <span class="type">Class</span>&lt;?&gt;[<span class="number">0</span>]);</span><br><span class="line">    ajexp.setExpression(aspectJAnnotation.getPointcutExpression());</span><br><span class="line">    ajexp.setBeanFactory(<span class="built_in">this</span>.beanFactory);</span><br><span class="line">    <span class="keyword">return</span> ajexp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>InstantiationModelAwarePointcutAdvisorImpl的构造方法</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> InstantiationModelAwarePointcutAdvisorImpl(AspectJExpressionPointcut declaredPointcut,</span><br><span class="line">			Method aspectJAdviceMethod, AspectJAdvisorFactory aspectJAdvisorFactory,</span><br><span class="line">			MetadataAwareAspectInstanceFactory aspectInstanceFactory, int declarationOrder, String aspectName) &#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">this</span>.declaredPointcut = declaredPointcut;</span><br><span class="line">		<span class="keyword">this</span>.declaringClass = aspectJAdviceMethod.getDeclaringClass();</span><br><span class="line">		<span class="keyword">this</span>.methodName = aspectJAdviceMethod.getName();</span><br><span class="line">		<span class="keyword">this</span>.parameterTypes = aspectJAdviceMethod.getParameterTypes();</span><br><span class="line">		<span class="keyword">this</span>.aspectJAdviceMethod = aspectJAdviceMethod;</span><br><span class="line">		<span class="keyword">this</span>.aspectJAdvisorFactory = aspectJAdvisorFactory;</span><br><span class="line">		<span class="keyword">this</span>.aspectInstanceFactory = aspectInstanceFactory;</span><br><span class="line">		<span class="keyword">this</span>.declarationOrder = declarationOrder;</span><br><span class="line">		<span class="keyword">this</span>.aspectName = aspectName;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (aspectInstanceFactory.getAspectMetadata().isLazilyInstantiated()) &#123;</span><br><span class="line">			Pointcut preInstantiationPointcut = Pointcuts.union(</span><br><span class="line">					aspectInstanceFactory.getAspectMetadata().getPerClausePointcut(), <span class="keyword">this</span>.declaredPointcut);</span><br><span class="line"></span><br><span class="line">			<span class="keyword">this</span>.pointcut = new PerTargetInstantiationModelPointcut(</span><br><span class="line">					<span class="keyword">this</span>.declaredPointcut, preInstantiationPointcut, aspectInstanceFactory);</span><br><span class="line">			<span class="keyword">this</span>.lazy = <span class="literal">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">this</span>.pointcut = <span class="keyword">this</span>.declaredPointcut;</span><br><span class="line">			<span class="keyword">this</span>.lazy = <span class="literal">false</span>;</span><br><span class="line">            <span class="comment">//重点在这里</span></span><br><span class="line">			<span class="keyword">this</span>.instantiatedAdvice = instantiateAdvice(<span class="keyword">this</span>.declaredPointcut);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> Advice instantiateAdvice(AspectJExpressionPointcut pointcut) &#123;</span><br><span class="line">    <span class="comment">//再往下看</span></span><br><span class="line">		Advice advice = <span class="keyword">this</span>.aspectJAdvisorFactory.getAdvice(<span class="keyword">this</span>.aspectJAdviceMethod, pointcut,</span><br><span class="line">				<span class="keyword">this</span>.aspectInstanceFactory, <span class="keyword">this</span>.declarationOrder, <span class="keyword">this</span>.aspectName);</span><br><span class="line">		<span class="keyword">return</span> (advice != <span class="literal">null</span> ? advice : EMPTY_ADVICE);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>生成增强</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReflectiveAspectJAdvisorFactory</span> <span class="keyword"><span class="keyword">extends</span> <span class="type">AbstractAspectJAdvisorFactory</span></span> <span class="keyword"><span class="keyword">implements</span> <span class="type">Serializable</span></span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Advice getAdvice(Method candidateAdviceMethod, AspectJExpressionPointcut expressionPointcut,</span><br><span class="line">            MetadataAwareAspectInstanceFactory aspectInstanceFactory, int declarationOrder, <span class="keyword">String</span> aspectName) &#123;</span><br><span class="line"></span><br><span class="line">        Class&lt;?&gt; candidateAspectClass = aspectInstanceFactory.getAspectMetadata().getAspectClass();</span><br><span class="line">        <span class="comment">//又是一次校验</span></span><br><span class="line">        validate(candidateAspectClass);</span><br><span class="line"></span><br><span class="line">        AspectJAnnotation&lt;?&gt; aspectJAnnotation =</span><br><span class="line">                AbstractAspectJAdvisorFactory.findAspectJAnnotationOnMethod(candidateAdviceMethod);</span><br><span class="line">        <span class="keyword">if</span> (aspectJAnnotation == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!isAspect(candidateAspectClass)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">AopConfigException</span>(<span class="string">"Advice must be declared inside an aspect type: "</span> +</span><br><span class="line">                    <span class="string">"Offending method '"</span> + candidateAdviceMethod + <span class="string">"' in class ["</span> +</span><br><span class="line">                    candidateAspectClass.getName() + <span class="string">"]"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">            logger.debug(<span class="string">"Found AspectJ method: "</span> + candidateAdviceMethod);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        AbstractAspectJAdvice springAdvice;</span><br><span class="line">        <span class="comment">//根据注解类型生成不同的通知实例</span></span><br><span class="line">        <span class="keyword">switch</span> (aspectJAnnotation.getAnnotationType()) &#123;</span><br><span class="line">            <span class="keyword">case</span> AtBefore:<span class="type"></span></span><br><span class="line"><span class="type">                springAdvice </span>= <span class="keyword">new</span> <span class="type">AspectJMethodBeforeAdvice</span>(</span><br><span class="line">                        candidateAdviceMethod, expressionPointcut, aspectInstanceFactory);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> AtAfter:<span class="type"></span></span><br><span class="line"><span class="type">                springAdvice </span>= <span class="keyword">new</span> <span class="type">AspectJAfterAdvice</span>(</span><br><span class="line">                        candidateAdviceMethod, expressionPointcut, aspectInstanceFactory);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> AtAfterReturning:<span class="type"></span></span><br><span class="line"><span class="type">                springAdvice </span>= <span class="keyword">new</span> <span class="type">AspectJAfterReturningAdvice</span>(</span><br><span class="line">                        candidateAdviceMethod, expressionPointcut, aspectInstanceFactory);</span><br><span class="line">                AfterReturning afterReturningAnnotation = (AfterReturning) aspectJAnnotation.getAnnotation();</span><br><span class="line">                <span class="keyword">if</span> (StringUtils.hasText(afterReturningAnnotation.returning())) &#123;</span><br><span class="line">                    springAdvice.setReturningName(afterReturningAnnotation.returning());</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> AtAfterThrowing:<span class="type"></span></span><br><span class="line"><span class="type">                springAdvice </span>= <span class="keyword">new</span> <span class="type">AspectJAfterThrowingAdvice</span>(</span><br><span class="line">                        candidateAdviceMethod, expressionPointcut, aspectInstanceFactory);</span><br><span class="line">                AfterThrowing afterThrowingAnnotation = (AfterThrowing) aspectJAnnotation.getAnnotation();</span><br><span class="line">                <span class="keyword">if</span> (StringUtils.hasText(afterThrowingAnnotation.throwing())) &#123;</span><br><span class="line">                    springAdvice.setThrowingName(afterThrowingAnnotation.throwing());</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> AtAround:<span class="type"></span></span><br><span class="line"><span class="type">                springAdvice </span>= <span class="keyword">new</span> <span class="type">AspectJAroundAdvice</span>(</span><br><span class="line">                        candidateAdviceMethod, expressionPointcut, aspectInstanceFactory);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> AtPointcut:<span class="type"></span></span><br><span class="line"><span class="type">                if </span>(logger.isDebugEnabled()) &#123;</span><br><span class="line">                    logger.debug(<span class="string">"Processing pointcut '"</span> + candidateAdviceMethod.getName() + <span class="string">"'"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">            <span class="keyword">default</span>:<span class="type"></span></span><br><span class="line"><span class="type">                throw new UnsupportedOperationException</span>(</span><br><span class="line">                        <span class="string">"Unsupported advice type on method: "</span> + candidateAdviceMethod);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//设置通知方法所属的类</span></span><br><span class="line">        springAdvice.setAspectName(aspectName);</span><br><span class="line">        <span class="comment">//设置通知的序号,同一个类中有多个切面注解标识的方法时,按上方说的排序规则来排序，</span></span><br><span class="line">        <span class="comment">//其序号就是此方法在列表中的序号，第一个就是0</span></span><br><span class="line">        springAdvice.setDeclarationOrder(declarationOrder);</span><br><span class="line">        <span class="comment">//获取通知方法的所有参数</span></span><br><span class="line">        <span class="keyword">String</span>[] argNames = <span class="built_in">this</span>.parameterNameDiscoverer.getParameterNames(candidateAdviceMethod);</span><br><span class="line">        <span class="comment">//将通知方法上的参数设置到通知中</span></span><br><span class="line">        <span class="keyword">if</span> (argNames != <span class="literal">null</span>) &#123;</span><br><span class="line">            springAdvice.setArgumentNamesFromStringArray(argNames);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//计算参数绑定工作，此方法详解请接着往下看</span></span><br><span class="line">        springAdvice.calculateArgumentBindings();</span><br><span class="line">        <span class="keyword">return</span> springAdvice;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>校验方法参数并绑定</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> synchronized <span class="keyword">final</span> void calculateArgumentBindings() &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.argumentsIntrospected || <span class="keyword">this</span>.parameterTypes.length == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int numUnboundArgs = <span class="keyword">this</span>.parameterTypes.length;</span><br><span class="line">    Class&lt;?&gt;[] parameterTypes = <span class="keyword">this</span>.aspectJAdviceMethod.getParameterTypes();</span><br><span class="line">    <span class="comment">//切面注解标识的方法第一个参数要求是JoinPoint,或StaticPart，若是@Around注解则也可以是ProceedingJoinPoint</span></span><br><span class="line">    <span class="keyword">if</span> (maybeBindJoinPoint(parameterTypes[<span class="number">0</span>]) || maybeBindProceedingJoinPoint(parameterTypes[<span class="number">0</span>])) &#123;</span><br><span class="line">        numUnboundArgs--;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (maybeBindJoinPointStaticPart(parameterTypes[<span class="number">0</span>])) &#123;</span><br><span class="line">        numUnboundArgs--;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (numUnboundArgs &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="comment">//绑定属性</span></span><br><span class="line">        bindArgumentsByName(numUnboundArgs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.argumentsIntrospected = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> void bindArgumentsByName(int numArgumentsExpectingToBind) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.argumentNames == <span class="literal">null</span>) &#123; <span class="comment">//获取方法参数的名称</span></span><br><span class="line">        <span class="keyword">this</span>.argumentNames = createParameterNameDiscoverer().getParameterNames(<span class="keyword">this</span>.aspectJAdviceMethod);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.argumentNames != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 往下看</span></span><br><span class="line">        bindExplicitArguments(numArgumentsExpectingToBind);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> new IllegalStateException(<span class="string">"Advice method ["</span> + <span class="keyword">this</span>.aspectJAdviceMethod.getName() + <span class="string">"] "</span> +</span><br><span class="line">                <span class="string">"requires "</span> + numArgumentsExpectingToBind + <span class="string">" arguments to be bound by name, but "</span> +</span><br><span class="line">                <span class="string">"the argument names were not specified and could not be discovered."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> void bindExplicitArguments(int numArgumentsLeftToBind) &#123;</span><br><span class="line">    <span class="comment">//此属性用来存储方法未绑定的参数名称，及参数的序号</span></span><br><span class="line">    <span class="keyword">this</span>.argumentBindings = new HashMap&lt;String, Integer&gt;();</span><br><span class="line"></span><br><span class="line">    int numExpectedArgumentNames = <span class="keyword">this</span>.aspectJAdviceMethod.getParameterTypes().length;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.argumentNames.length != numExpectedArgumentNames) &#123;</span><br><span class="line">        <span class="keyword">throw</span> new IllegalStateException(<span class="string">"Expecting to find "</span> + numExpectedArgumentNames +</span><br><span class="line">                <span class="string">" arguments to bind by name in advice, but actually found "</span> +</span><br><span class="line">                <span class="keyword">this</span>.argumentNames.length + <span class="string">" arguments."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// So we match in number...,argumentIndexOffset代表第一个未绑定参数的顺序 </span></span><br><span class="line">    int argumentIndexOffset = <span class="keyword">this</span>.parameterTypes.length - numArgumentsLeftToBind;</span><br><span class="line">    <span class="keyword">for</span> (int i = argumentIndexOffset; i &lt; <span class="keyword">this</span>.argumentNames.length; i++) &#123;</span><br><span class="line">        <span class="comment">//存储未绑定的参数名称及其顺序的映射关系</span></span><br><span class="line">        <span class="keyword">this</span>.argumentBindings.put(<span class="keyword">this</span>.argumentNames[i], i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check that returning and throwing were in the argument names list if</span></span><br><span class="line">    <span class="comment">// specified, and find the discovered argument types.</span></span><br><span class="line">    <span class="comment">//如果是@AfterReturning注解的returningName 有值，验证，解析，同时得到定义返回值的类型</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.returningName != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.argumentBindings.containsKey(<span class="keyword">this</span>.returningName)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> new IllegalStateException(<span class="string">"Returning argument name '"</span> + <span class="keyword">this</span>.returningName +</span><br><span class="line">                    <span class="string">"' was not bound in advice arguments"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            Integer index = <span class="keyword">this</span>.argumentBindings.<span class="keyword">get</span>(<span class="keyword">this</span>.returningName);</span><br><span class="line">            <span class="keyword">this</span>.discoveredReturningType = <span class="keyword">this</span>.aspectJAdviceMethod.getParameterTypes()[index];</span><br><span class="line">            <span class="keyword">this</span>.discoveredReturningGenericType = <span class="keyword">this</span>.aspectJAdviceMethod.getGenericParameterTypes()[index];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//如果是@AfterThrowing注解的throwingName 有值，验证，解析，同时得到抛出异常的类型</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.throwingName != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.argumentBindings.containsKey(<span class="keyword">this</span>.throwingName)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> new IllegalStateException(<span class="string">"Throwing argument name '"</span> + <span class="keyword">this</span>.throwingName +</span><br><span class="line">                    <span class="string">"' was not bound in advice arguments"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            Integer index = <span class="keyword">this</span>.argumentBindings.<span class="keyword">get</span>(<span class="keyword">this</span>.throwingName);</span><br><span class="line">            <span class="keyword">this</span>.discoveredThrowingType = <span class="keyword">this</span>.aspectJAdviceMethod.getParameterTypes()[index];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// configure the pointcut expression accordingly.</span></span><br><span class="line">    configurePointcutParameters(argumentIndexOffset);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> void configurePointcutParameters(int argumentIndexOffset) &#123;</span><br><span class="line">    int numParametersToRemove = argumentIndexOffset;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.returningName != <span class="literal">null</span>) &#123;</span><br><span class="line">        numParametersToRemove++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.throwingName != <span class="literal">null</span>) &#123;</span><br><span class="line">        numParametersToRemove++;</span><br><span class="line">    &#125;</span><br><span class="line">    String[] pointcutParameterNames = new String[<span class="keyword">this</span>.argumentNames.length - numParametersToRemove];</span><br><span class="line">    Class&lt;?&gt;[] pointcutParameterTypes = new Class&lt;?&gt;[pointcutParameterNames.length];</span><br><span class="line">    Class&lt;?&gt;[] methodParameterTypes = <span class="keyword">this</span>.aspectJAdviceMethod.getParameterTypes();</span><br><span class="line"></span><br><span class="line">    int index = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.argumentNames.length; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i &lt; argumentIndexOffset) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.argumentNames[i].equals(<span class="keyword">this</span>.returningName) ||</span><br><span class="line">            <span class="keyword">this</span>.argumentNames[i].equals(<span class="keyword">this</span>.throwingName)) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        pointcutParameterNames[index] = <span class="keyword">this</span>.argumentNames[i];</span><br><span class="line">        pointcutParameterTypes[index] = methodParameterTypes[i];</span><br><span class="line">        index++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//剩余的未绑定的参数会赋值给AspectJExpressionPointcut(表达式形式的切入点)的属性，以备后续使用</span></span><br><span class="line">    <span class="keyword">this</span>.pointcut.setParameterNames(pointcutParameterNames);</span><br><span class="line">    <span class="keyword">this</span>.pointcut.setParameterTypes(pointcutParameterTypes);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>未完待续<br>
+限于平台字数限制，本篇文章就到这里</p>
+<p></p><h4 style="color:red"><span id="推荐阅读">推荐阅读</span></h4><p></p>
+<ol>
+<li><a href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A" target="_blank" rel="noopener">SpringCloud学习系列汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg" target="_blank" rel="noopener">为什么一线大厂面试必问redis，有啥好问的？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q" target="_blank" rel="noopener">多线程面试必备基础知识汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ" target="_blank" rel="noopener">Java集合源码分析汇总-JDK1.8</a></li>
+<li><a href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA" target="_blank" rel="noopener">Linux常用命令速查-汇总篇</a></li>
+<li><a href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw" target="_blank" rel="noopener">JVM系列文章汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA" target="_blank" rel="noopener">MySQL系列文章汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw" target="_blank" rel="noopener">RabbitMQ系列文章汇总</a></li>
+</ol>
+<p></p><h4 style="color:red"><span id="博客所有文章首发于公众号java学习录转载请保留扫码关注公众号即可领取2000gjava学习资源">博客所有文章首发于公众号《Java学习录》转载请保留<br>
+扫码关注公众号即可领取2000GJava学习资源 </span></h4><p></p>
+<p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring源码解析/" rel="tag"># Spring源码解析</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/15/基于注解的SpringAOP源码解析（一）/" rel="next" title="基于注解的SpringAOP源码解析（一）">
+                <i class="fa fa-chevron-left"></i> 基于注解的SpringAOP源码解析（一）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/20/基于注解的SpringAOP源码解析（三）/" rel="prev" title="基于注解的SpringAOP源码解析（三）">
+                基于注解的SpringAOP源码解析（三） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first">
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle">
+      <span class="sidebar-toggle-line sidebar-toggle-line-last">
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+
+
+
+
+
+
+
+<h5>微信公众号</h5>
+
+
+<img src="https://shiyujun.cn/img/gongzhonghao.jpg" width="200px" height="200px">
+
+ <h5 >
+    推荐阅读
+    </h5>
+
+           <h6><a  target="_blank" href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A">SpringCloud学习系列汇总</a></h6>
+           <h6><a  target="_blank" href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg">为什么一线大厂面试必问redis，有啥好问的？</a></h6>
+           <h6><a  target="_blank" href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q">多线程面试必备基础知识汇总</a></h6>
+           <h6><a  target="_blank" href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ">Java集合源码分析汇总-JDK1.8</a></h6>
+           <h6><a  target="_blank" href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA">Linux常用命令速查-汇总篇</a></h6>
+           <h6><a  target="_blank" href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw">JVM系列文章汇总</a></h6>
+           <h6><a  target="_blank" href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA">MySQL系列文章汇总</a></h6>
+			<h6><a  target="_blank" href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw">RabbitMQ系列文章汇总</a></h6>
+
+    <h5 >
+    github
+    </h5>
+
+
+                <iframe src="https://ghbtns.com/github-btn.html?user=shiyujun&type=follow&count=true" frameborder="0" scrolling="0" width="200px" height="30px"></iframe>
+
+
+
+
+
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">石玉军</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: 'CTwhbj5tF7oh31nUjHQvN0yM-gzGzoHsz',
+        appKey: 'PQBQIOjP7wrUJELjrIQ8J6Dx',
+        placeholder: '说点什么呢',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

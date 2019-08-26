@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spring源码解析," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="读完本篇文章需要很长很长时间。。。。  传统JDBC 相信大家对传统的jdbc已经很熟悉了，无非就是下面这个流程 1234567891011//1.加载驱动程序Class.forName(&quot;com.mysql.jdbc.Driver&quot;);//2. 获得数据库连接Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);/">
+<meta name="keywords" content="Spring源码解析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringJDBC源码解析">
+<meta property="og:url" content="https://shiyujun.cn/2019/08/26/ringJDBC源码解析/index.html">
+<meta property="og:site_name" content="Java学习录">
+<meta property="og:description" content="读完本篇文章需要很长很长时间。。。。  传统JDBC 相信大家对传统的jdbc已经很熟悉了，无非就是下面这个流程 1234567891011//1.加载驱动程序Class.forName(&quot;com.mysql.jdbc.Driver&quot;);//2. 获得数据库连接Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);/">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://shiyujun.cn/img/gongzhonghao.jpg">
+<meta property="og:updated_time" content="2019-08-26T14:23:03.719Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SpringJDBC源码解析">
+<meta name="twitter:description" content="读完本篇文章需要很长很长时间。。。。  传统JDBC 相信大家对传统的jdbc已经很熟悉了，无非就是下面这个流程 1234567891011//1.加载驱动程序Class.forName(&quot;com.mysql.jdbc.Driver&quot;);//2. 获得数据库连接Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);/">
+<meta name="twitter:image" content="https://shiyujun.cn/img/gongzhonghao.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shiyujun.cn/2019/08/26/ringJDBC源码解析/"/>
+
+
+
+
+
+  <title>SpringJDBC源码解析 | Java学习录</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?eb90dcd1823a43971326ae1a2633c8f7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Java学习录</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">专注于Java知识体系学习，Spring、SpringBoot、SpringCloud源码解析</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shiyujun.cn/2019/08/26/ringJDBC源码解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="石玉军">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://shiyujun.cn/img/gongzhonghao.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Java学习录">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">SpringJDBC源码解析</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-26T22:15:00+08:00">
+                2019-08-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/08/26/ringJDBC源码解析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/08/26/ringJDBC源码解析/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>读完本篇文章需要很长很长时间。。。。</p>
+</blockquote>
+<h4><span id="传统jdbc">传统JDBC</span></h4>
+<p>相信大家对传统的jdbc已经很熟悉了，无非就是下面这个流程</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1.加载驱动程序</span></span><br><span class="line"><span class="keyword">Class</span>.forName(<span class="string">"com.mysql.jdbc.Driver"</span>);</span><br><span class="line"><span class="comment">//2. 获得数据库连接</span></span><br><span class="line">Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);</span><br><span class="line"><span class="comment">//3.操作数据库</span></span><br><span class="line">Statement stmt = conn.createStatement();</span><br><span class="line">ResultSet rs = stmt.executeQuery(<span class="string">"SELECT name, age from user"</span>);</span><br><span class="line"><span class="comment">//4.处理返回值</span></span><br><span class="line"><span class="keyword">while</span>(rs.<span class="keyword">next</span>())&#123;</span><br><span class="line">    System.out.<span class="keyword">println</span>(<span class="string">"名字:"</span>+rs.getString(<span class="string">"name"</span>)+<span class="string">" 年龄:"</span>+rs.getInt(<span class="string">"age"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4><span id="使用springjdbc">使用SpringJDBC</span></h4>
+<p>引入maven依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-jdbc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.0.0.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.45<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>druid<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.18<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>实体类</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> &#123;</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">    <span class="comment">//getter、setter省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回值处理类</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class UserRowMapper implements RowMapper &#123;</span><br><span class="line">    @Nullable</span><br><span class="line">    public Object mapRow(ResultSet resultSet, int i) throws SQLException &#123;</span><br><span class="line">       <span class="built_in"> User </span><span class="attribute">user</span>=new User();</span><br><span class="line">        user.setId(resultSet.getInt(<span class="string">"id"</span>));</span><br><span class="line">        user.setName(resultSet.getString(<span class="string">"name"</span>));</span><br><span class="line">        user.setAge(resultSet.getInt(<span class="string">"age"</span>));</span><br><span class="line">        return user;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>业务处理类</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">JDBCService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">queryById</span>(<span class="params"><span class="keyword">int</span> id</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateNameById</span>(<span class="params"><span class="keyword">int</span> id,String name</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">JDBCServiceImpl</span> <span class="title">implements</span> <span class="title">JDBCService</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> JdbcTemplate jdbcTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">JDBCServiceImpl</span>(<span class="params">JdbcTemplate jdbcTemplate</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.jdbcTemplate = jdbcTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">queryById</span>(<span class="params"><span class="keyword">int</span> id</span>) </span>&#123;</span><br><span class="line">        List&lt;User&gt; list = jdbcTemplate.query(<span class="string">"select id,name,age from user where id=?"</span>, <span class="keyword">new</span> Object[]&#123;id&#125;, <span class="keyword">new</span> UserRowMapper());</span><br><span class="line">        <span class="keyword">if</span> (list.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            System.<span class="keyword">out</span>.println(<span class="string">"id 为"</span> + id + <span class="string">"的用户名为："</span> + list.<span class="keyword">get</span>(<span class="number">0</span>).getName());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateNameById</span>(<span class="params"><span class="keyword">int</span> id, String name</span>) </span>&#123;</span><br><span class="line">        jdbcTemplate.update(<span class="string">"update user set name=? where id=?"</span>, <span class="keyword">new</span> Object[]&#123;name, id&#125;, <span class="keyword">new</span> UserRowMapper());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置类</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">public class <span class="keyword">JDBCConfig </span>&#123;</span><br><span class="line">    @<span class="keyword">Bean</span></span><br><span class="line"><span class="keyword"> </span>   public DruidDataSource druidDataSource()&#123;</span><br><span class="line">        DruidDataSource druidDataSource=new DruidDataSource()<span class="comment">;</span></span><br><span class="line">        druidDataSource.setUsername(<span class="string">"root"</span>)<span class="comment">;</span></span><br><span class="line">        druidDataSource.setPassword(<span class="string">"123456"</span>)<span class="comment">;</span></span><br><span class="line">        druidDataSource.setDriverClassName(<span class="string">"com.mysql.jdbc.Driver"</span>)<span class="comment">;</span></span><br><span class="line">        druidDataSource.setUrl(<span class="string">"jdbc:mysql://172.16.40.159:3306/cfkk?characterEncoding=utf-8&amp;useSSL=false"</span>)<span class="comment">;</span></span><br><span class="line">        return druidDataSource<span class="comment">;</span></span><br><span class="line">    &#125;</span><br><span class="line">    @<span class="keyword">Bean</span></span><br><span class="line"><span class="keyword"> </span>   public <span class="keyword">JDBCService </span><span class="keyword">jdbcService(DruidDataSource </span>druidDataSource)&#123;</span><br><span class="line">        <span class="keyword">JdbcTemplate </span><span class="keyword">jdbcTemplate=new </span><span class="keyword">JdbcTemplate(druidDataSource);</span></span><br><span class="line"><span class="keyword"> </span>       <span class="keyword">JDBCService </span><span class="keyword">jdbcService=new </span><span class="keyword">JDBCServiceImpl(jdbcTemplate);</span></span><br><span class="line"><span class="keyword"> </span>       return <span class="keyword">jdbcService;</span></span><br><span class="line"><span class="keyword"> </span>   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>启动类</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JDBCDemo</span> &#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span> <span class="params">(String args[])</span></span>&#123;</span><br><span class="line">        ApplicationContext context = <span class="keyword">new</span> AnnotationConfigApplicationContext(<span class="string">"cn.shiyujun.config"</span>);</span><br><span class="line">        JDBCService jdbcService=  context.getBean(JDBCService.class);</span><br><span class="line">        jdbcService.updateNameById(<span class="number">1</span>,<span class="string">"李四"</span>);</span><br><span class="line">        jdbcService.queryById(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>至此Deno工程搭建完毕，有需要源码的同学可以从下方地址获取<br>
+<a href="https://github.com/shiyujun/spring-framework" target="_blank" rel="noopener">https://github.com/shiyujun/spring-framework</a></p>
+<h4><span id="update">update</span></h4>
+<p>我们首先来分析一下update方法的实现</p>
+<h6><span id="参数封装">参数封装</span></h6>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">public</span> <span class="selector-tag">int</span> <span class="selector-tag">update</span>(String sql, <span class="variable">@Nullable</span> Object... args) <span class="selector-tag">throws</span> <span class="selector-tag">DataAccessException</span> &#123;</span><br><span class="line">		<span class="selector-tag">return</span> <span class="selector-tag">update</span>(sql, newArgPreparedStatementSetter(args));</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line"><span class="selector-tag">public</span> <span class="selector-tag">int</span> <span class="selector-tag">update</span>(String sql, <span class="variable">@Nullable</span> PreparedStatementSetter pss) <span class="selector-tag">throws</span> <span class="selector-tag">DataAccessException</span> &#123;</span><br><span class="line">		<span class="selector-tag">return</span> <span class="selector-tag">update</span>(new SimplePreparedStatementCreator(sql), pss);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，首先使用了ArgPreparedStatementSetter对参数进行了一层封装，然后又使用了SimplePreparedStatementCreator对SQL进行了封装</p>
+<h6><span id="核心逻辑">核心逻辑</span></h6>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">int</span> update(<span class="keyword">final</span> PreparedStatementCreator psc, <span class="meta">@Nullable</span> <span class="keyword">final</span> PreparedStatementSetter pss)</span><br><span class="line">			<span class="keyword">throws</span> DataAccessException &#123;</span><br><span class="line"></span><br><span class="line">		logger.debug(<span class="string">"Executing prepared SQL update"</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> updateCount(execute(psc, ps -&gt; &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="keyword">if</span> (pss != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">//设置所需的全部参数</span></span><br><span class="line">					pss.setValues(ps);</span><br><span class="line">				&#125;</span><br><span class="line">                <span class="comment">//调用jdbc的更新方法</span></span><br><span class="line">				<span class="keyword">int</span> rows = ps.executeUpdate();</span><br><span class="line">				<span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">					logger.debug(<span class="string">"SQL update affected "</span> + rows + <span class="string">" rows"</span>);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">return</span> rows;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">finally</span> &#123;</span><br><span class="line">				<span class="keyword">if</span> (pss <span class="keyword">instanceof</span> ParameterDisposer) &#123;</span><br><span class="line">					((ParameterDisposer) pss).cleanupParameters();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;));</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>上方这个方法是update的核心逻辑了，这里面的代码不是太多，主要涉及几个核心的逻辑</p>
+<h6><span id="获取更新条数updatecount">获取更新条数<code>updateCount</code></span></h6>
+<p>进入方法以后可以看到这个方法是对<code>execute</code>方法的integer返回值的一个封装，也就是此次修改的行数</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">private</span> <span class="selector-tag">static</span> <span class="selector-tag">int</span> <span class="selector-tag">updateCount</span>(<span class="variable">@Nullable</span> Integer result) &#123; </span><br><span class="line">    <span class="selector-tag">Assert</span><span class="selector-class">.state</span>(result != null, <span class="string">"No update count"</span>); </span><br><span class="line">    <span class="selector-tag">return</span> <span class="selector-tag">result</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h6><span id="前置方法execute">前置方法<code>execute</code></span></h6>
+<p>这里完成了传统JDBC的前两步加载驱动和获取连接，</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; T execute(PreparedStatementCreator psc, PreparedStatementCallback&lt;T&gt; action)</span><br><span class="line">			<span class="keyword">throws</span> DataAccessException &#123;</span><br><span class="line"></span><br><span class="line">		Assert.notNull(psc, <span class="string">"PreparedStatementCreator must not be null"</span>);</span><br><span class="line">		Assert.notNull(action, <span class="string">"Callback object must not be null"</span>);</span><br><span class="line">		<span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">			<span class="keyword">String</span> sql = getSql(psc);</span><br><span class="line">			logger.debug(<span class="string">"Executing prepared SQL statement"</span> + (sql != <span class="keyword">null</span> ? <span class="string">" ["</span> + sql + <span class="string">"]"</span> : <span class="string">""</span>));</span><br><span class="line">		&#125;</span><br><span class="line">        <span class="comment">//根据具体的连接池组件获取数据库连接，这里就不深入研究了，放到以后的连接池源码解析里</span></span><br><span class="line">		Connection con = DataSourceUtils.getConnection(obtainDataSource());</span><br><span class="line">		PreparedStatement ps = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">//应该对这个PreparedStatement印象很深刻了</span></span><br><span class="line">			ps = psc.createPreparedStatement(con);</span><br><span class="line">			applyStatementSettings(ps);</span><br><span class="line">            <span class="comment">//调用回调函数也就是update方法中execute的lambda表达式里的逻辑</span></span><br><span class="line">			T result = action.doInPreparedStatement(ps);</span><br><span class="line">            <span class="comment">//警告处理</span></span><br><span class="line">			handleWarnings(ps);</span><br><span class="line">			<span class="keyword">return</span> result;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (SQLException ex) &#123;</span><br><span class="line">			<span class="keyword">if</span> (psc <span class="keyword">instanceof</span> ParameterDisposer) &#123;</span><br><span class="line">				((ParameterDisposer) psc).cleanupParameters();</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">String</span> sql = getSql(psc);</span><br><span class="line">            		<span class="comment">// 释放资源</span></span><br><span class="line">			JdbcUtils.closeStatement(ps);</span><br><span class="line">			ps = <span class="keyword">null</span>;</span><br><span class="line">			DataSourceUtils.releaseConnection(con, getDataSource());</span><br><span class="line">			con = <span class="keyword">null</span>;</span><br><span class="line">			<span class="keyword">throw</span> translateException(<span class="string">"PreparedStatementCallback"</span>, sql, ex);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> (psc <span class="keyword">instanceof</span> ParameterDisposer) &#123;</span><br><span class="line">				((ParameterDisposer) psc).cleanupParameters();</span><br><span class="line">			&#125;</span><br><span class="line">			JdbcUtils.closeStatement(ps);</span><br><span class="line">			DataSourceUtils.releaseConnection(con, getDataSource());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<h6><span id="执行更新">执行更新</span></h6>
+<p>现在就进入了最后的逻辑了</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">int</span> update(<span class="keyword">final</span> PreparedStatementCreator psc, <span class="meta">@Nullable</span> <span class="keyword">final</span> PreparedStatementSetter pss)</span><br><span class="line">			<span class="keyword">throws</span> DataAccessException &#123;</span><br><span class="line"></span><br><span class="line">		logger.debug(<span class="string">"Executing prepared SQL update"</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> updateCount(execute(psc, ps -&gt; &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="keyword">if</span> (pss != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="comment">//  往下看</span></span><br><span class="line">					pss.setValues(ps);</span><br><span class="line">				&#125;</span><br><span class="line">                <span class="comment">//调用jdbc的方法执行更新</span></span><br><span class="line">				<span class="keyword">int</span> rows = ps.executeUpdate();</span><br><span class="line">				<span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">					logger.debug(<span class="string">"SQL update affected "</span> + rows + <span class="string">" rows"</span>);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">return</span> rows;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">finally</span> &#123;</span><br><span class="line">				<span class="keyword">if</span> (pss <span class="keyword">instanceof</span> ParameterDisposer) &#123;</span><br><span class="line">					((ParameterDisposer) pss).cleanupParameters();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;));</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<h6><span id="请求参数设置">请求参数设置</span></h6>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> setValues(PreparedStatement ps) <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">		<span class="built_in">int</span> parameterPosition = <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.args != <span class="keyword">null</span> &amp;&amp; <span class="keyword">this</span>.argTypes != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">//遍历参数</span></span><br><span class="line">			<span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.args.length; i++) &#123;</span><br><span class="line">				<span class="keyword">Object</span> arg = <span class="keyword">this</span>.args[i];</span><br><span class="line">                <span class="comment">//如果是集合的话则递归处理</span></span><br><span class="line">				<span class="keyword">if</span> (arg <span class="keyword">instanceof</span> Collection &amp;&amp; <span class="keyword">this</span>.argTypes[i] != Types.ARRAY) &#123;</span><br><span class="line">					Collection&lt;?&gt; entries = (Collection&lt;?&gt;) arg;</span><br><span class="line">					<span class="keyword">for</span> (<span class="keyword">Object</span> entry : entries) &#123;</span><br><span class="line">						<span class="keyword">if</span> (entry <span class="keyword">instanceof</span> <span class="keyword">Object</span>[]) &#123;</span><br><span class="line">							<span class="keyword">Object</span>[] valueArray = ((<span class="keyword">Object</span>[]) entry);</span><br><span class="line">							<span class="keyword">for</span> (<span class="keyword">Object</span> argValue : valueArray) &#123;</span><br><span class="line">								doSetValue(ps, parameterPosition, <span class="keyword">this</span>.argTypes[i], argValue);</span><br><span class="line">								parameterPosition++;</span><br><span class="line">							&#125;</span><br><span class="line">						&#125;</span><br><span class="line">						<span class="keyword">else</span> &#123;</span><br><span class="line">							doSetValue(ps, parameterPosition, <span class="keyword">this</span>.argTypes[i], entry);</span><br><span class="line">							parameterPosition++;</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//核心方法</span></span><br><span class="line">					doSetValue(ps, parameterPosition, <span class="keyword">this</span>.argTypes[i], arg);</span><br><span class="line">					parameterPosition++;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> doSetValue(PreparedStatement ps, <span class="built_in">int</span> parameterPosition, <span class="built_in">int</span> argType, <span class="keyword">Object</span> argValue)</span><br><span class="line">			<span class="keyword">throws</span> SQLException &#123;</span><br><span class="line"></span><br><span class="line">		StatementCreatorUtils.setParameterValue(ps, parameterPosition, argType, argValue);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> setParameterValue(PreparedStatement ps, <span class="built_in">int</span> paramIndex, <span class="built_in">int</span> sqlType,</span><br><span class="line">			@Nullable <span class="keyword">Object</span> inValue) <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line"></span><br><span class="line">		setParameterValueInternal(ps, paramIndex, sqlType, <span class="keyword">null</span>, <span class="keyword">null</span>, inValue);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> setParameterValueInternal(PreparedStatement ps, <span class="built_in">int</span> paramIndex, <span class="built_in">int</span> sqlType,</span><br><span class="line">			@Nullable <span class="keyword">String</span> typeName, @Nullable Integer <span class="built_in">scale</span>, @Nullable <span class="keyword">Object</span> inValue) <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">String</span> typeNameToUse = typeName;</span><br><span class="line">		<span class="built_in">int</span> sqlTypeToUse = sqlType;</span><br><span class="line">		<span class="keyword">Object</span> inValueToUse = inValue;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// override type info?</span></span><br><span class="line">		<span class="keyword">if</span> (inValue <span class="keyword">instanceof</span> SqlParameterValue) &#123;</span><br><span class="line">			SqlParameterValue parameterValue = (SqlParameterValue) inValue;</span><br><span class="line">			<span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">				logger.debug(<span class="string">"Overriding type info with runtime info from SqlParameterValue: column index "</span> + paramIndex +</span><br><span class="line">						<span class="string">", SQL type "</span> + parameterValue.getSqlType() + <span class="string">", type name "</span> + parameterValue.getTypeName());</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (parameterValue.getSqlType() != SqlTypeValue.TYPE_UNKNOWN) &#123;</span><br><span class="line">				sqlTypeToUse = parameterValue.getSqlType();</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (parameterValue.getTypeName() != <span class="keyword">null</span>) &#123;</span><br><span class="line">				typeNameToUse = parameterValue.getTypeName();</span><br><span class="line">			&#125;</span><br><span class="line">			inValueToUse = parameterValue.getValue();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">			logger.trace(<span class="string">"Setting SQL statement parameter value: column index "</span> + paramIndex +</span><br><span class="line">					<span class="string">", parameter value ["</span> + inValueToUse +</span><br><span class="line">					<span class="string">"], value class ["</span> + (inValueToUse != <span class="keyword">null</span> ? inValueToUse.getClass().getName() : <span class="string">"null"</span>) +</span><br><span class="line">					<span class="string">"], SQL type "</span> + (sqlTypeToUse == SqlTypeValue.TYPE_UNKNOWN ? <span class="string">"unknown"</span> : Integer.toString(sqlTypeToUse)));</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (inValueToUse == <span class="keyword">null</span>) &#123;</span><br><span class="line">			setNull(ps, paramIndex, sqlTypeToUse, typeNameToUse);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="comment">//往下看</span></span><br><span class="line">			setValue(ps, paramIndex, sqlTypeToUse, typeNameToUse, <span class="built_in">scale</span>, inValueToUse);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> setValue(PreparedStatement ps, <span class="built_in">int</span> paramIndex, <span class="built_in">int</span> sqlType,</span><br><span class="line">			@Nullable <span class="keyword">String</span> typeName, @Nullable Integer <span class="built_in">scale</span>, <span class="keyword">Object</span> inValue) <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (inValue <span class="keyword">instanceof</span> SqlTypeValue) &#123;</span><br><span class="line">			((SqlTypeValue) inValue).setTypeValue(ps, paramIndex, sqlType, typeName);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (inValue <span class="keyword">instanceof</span> SqlValue) &#123;</span><br><span class="line">			((SqlValue) inValue).setValue(ps, paramIndex);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (sqlType == Types.VARCHAR || sqlType == Types.NVARCHAR ||</span><br><span class="line">				sqlType == Types.LONGVARCHAR || sqlType == Types.LONGNVARCHAR) &#123;</span><br><span class="line">			ps.setString(paramIndex, inValue.toString());</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> ((sqlType == Types.CLOB || sqlType == Types.NCLOB) &amp;&amp; isStringValue(inValue.getClass())) &#123;</span><br><span class="line">			<span class="keyword">String</span> strVal = inValue.toString();</span><br><span class="line">			<span class="keyword">if</span> (strVal.length() &gt; <span class="number">4000</span>) &#123;</span><br><span class="line">				<span class="comment">// Necessary for older Oracle drivers, in particular when running against an Oracle 10 database.</span></span><br><span class="line">				<span class="comment">// Should also work fine against other drivers/databases since it uses standard JDBC 4.0 API.</span></span><br><span class="line">				<span class="keyword">if</span> (sqlType == Types.NCLOB) &#123;</span><br><span class="line">					ps.setNClob(paramIndex, <span class="keyword">new</span> StringReader(strVal), strVal.length());</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span> &#123;</span><br><span class="line">					ps.setClob(paramIndex, <span class="keyword">new</span> StringReader(strVal), strVal.length());</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">return</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">// Fallback: regular setString binding</span></span><br><span class="line">			ps.setString(paramIndex, strVal);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (sqlType == Types.DECIMAL || sqlType == Types.NUMERIC) &#123;</span><br><span class="line">			<span class="keyword">if</span> (inValue <span class="keyword">instanceof</span> BigDecimal) &#123;</span><br><span class="line">				ps.setBigDecimal(paramIndex, (BigDecimal) inValue);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">scale</span> != <span class="keyword">null</span>) &#123;</span><br><span class="line">				ps.setObject(paramIndex, inValue, sqlType, <span class="built_in">scale</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> &#123;</span><br><span class="line">				ps.setObject(paramIndex, inValue, sqlType);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (sqlType == Types.BOOLEAN) &#123;</span><br><span class="line">			<span class="keyword">if</span> (inValue <span class="keyword">instanceof</span> Boolean) &#123;</span><br><span class="line">				ps.setBoolean(paramIndex, (Boolean) inValue);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> &#123;</span><br><span class="line">				ps.setObject(paramIndex, inValue, Types.BOOLEAN);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (sqlType == Types.DATE) &#123;</span><br><span class="line">			<span class="keyword">if</span> (inValue <span class="keyword">instanceof</span> java.util.Date) &#123;</span><br><span class="line">				<span class="keyword">if</span> (inValue <span class="keyword">instanceof</span> java.sql.Date) &#123;</span><br><span class="line">					ps.setDate(paramIndex, (java.sql.Date) inValue);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span> &#123;</span><br><span class="line">					ps.setDate(paramIndex, <span class="keyword">new</span> java.sql.Date(((java.util.Date) inValue).getTime()));</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (inValue <span class="keyword">instanceof</span> Calendar) &#123;</span><br><span class="line">				Calendar cal = (Calendar) inValue;</span><br><span class="line">				ps.setDate(paramIndex, <span class="keyword">new</span> java.sql.Date(cal.getTime().getTime()), cal);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> &#123;</span><br><span class="line">				ps.setObject(paramIndex, inValue, Types.DATE);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (sqlType == Types.TIME) &#123;</span><br><span class="line">			<span class="keyword">if</span> (inValue <span class="keyword">instanceof</span> java.util.Date) &#123;</span><br><span class="line">				<span class="keyword">if</span> (inValue <span class="keyword">instanceof</span> java.sql.Time) &#123;</span><br><span class="line">					ps.setTime(paramIndex, (java.sql.Time) inValue);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span> &#123;</span><br><span class="line">					ps.setTime(paramIndex, <span class="keyword">new</span> java.sql.Time(((java.util.Date) inValue).getTime()));</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (inValue <span class="keyword">instanceof</span> Calendar) &#123;</span><br><span class="line">				Calendar cal = (Calendar) inValue;</span><br><span class="line">				ps.setTime(paramIndex, <span class="keyword">new</span> java.sql.Time(cal.getTime().getTime()), cal);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> &#123;</span><br><span class="line">				ps.setObject(paramIndex, inValue, Types.TIME);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (sqlType == Types.TIMESTAMP) &#123;</span><br><span class="line">			<span class="keyword">if</span> (inValue <span class="keyword">instanceof</span> java.util.Date) &#123;</span><br><span class="line">				<span class="keyword">if</span> (inValue <span class="keyword">instanceof</span> java.sql.Timestamp) &#123;</span><br><span class="line">					ps.setTimestamp(paramIndex, (java.sql.Timestamp) inValue);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span> &#123;</span><br><span class="line">					ps.setTimestamp(paramIndex, <span class="keyword">new</span> java.sql.Timestamp(((java.util.Date) inValue).getTime()));</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (inValue <span class="keyword">instanceof</span> Calendar) &#123;</span><br><span class="line">				Calendar cal = (Calendar) inValue;</span><br><span class="line">				ps.setTimestamp(paramIndex, <span class="keyword">new</span> java.sql.Timestamp(cal.getTime().getTime()), cal);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> &#123;</span><br><span class="line">				ps.setObject(paramIndex, inValue, Types.TIMESTAMP);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (sqlType == SqlTypeValue.TYPE_UNKNOWN || (sqlType == Types.OTHER &amp;&amp;</span><br><span class="line">				<span class="string">"Oracle"</span>.equals(ps.getConnection().getMetaData().getDatabaseProductName()))) &#123;</span><br><span class="line">			<span class="keyword">if</span> (isStringValue(inValue.getClass())) &#123;</span><br><span class="line">				ps.setString(paramIndex, inValue.toString());</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (isDateValue(inValue.getClass())) &#123;</span><br><span class="line">				ps.setTimestamp(paramIndex, <span class="keyword">new</span> java.sql.Timestamp(((java.util.Date) inValue).getTime()));</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (inValue <span class="keyword">instanceof</span> Calendar) &#123;</span><br><span class="line">				Calendar cal = (Calendar) inValue;</span><br><span class="line">				ps.setTimestamp(paramIndex, <span class="keyword">new</span> java.sql.Timestamp(cal.getTime().getTime()), cal);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="comment">// Fall back to generic setObject call without SQL type specified.</span></span><br><span class="line">				ps.setObject(paramIndex, inValue);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="comment">// Fall back to generic setObject call with SQL type specified.</span></span><br><span class="line">			ps.setObject(paramIndex, inValue, sqlType);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>至此update方法更新分析完毕</p>
+<h4><span id="query">query</span></h4>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public &lt;T&gt; <span class="built_in">List</span>&lt;T&gt; query(<span class="built_in">String</span> sql, <span class="meta">@Nullable</span> <span class="built_in">Object</span>[] args, </span><br><span class="line">RowMapper&lt;T&gt; rowMapper) throws DataAccessException &#123;</span><br><span class="line">        <span class="keyword">return</span> result(query(sql, args, <span class="keyword">new</span> </span><br><span class="line">RowMapperResultSetExtractor&lt;&gt;(rowMapper)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先最外层的result方法没有什么特别的，就是对返回值的处理</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">private <span class="keyword">static</span> &lt;T&gt; T <span class="literal">result</span>(@<span class="type">Nullable</span> T <span class="literal">result</span>) &#123;</span><br><span class="line">		<span class="type">Assert</span>.state(<span class="literal">result</span> != null, <span class="string">"No result"</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">result</span>;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<h6><span id="参数封装">参数封装</span></h6>
+<p>接着同样是封装请求参数</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; T query(<span class="keyword">String</span> sql, @Nullable Object[] args, ResultSetExtractor&lt;T&gt; rse) throws DataAccessException &#123;</span><br><span class="line">		<span class="keyword">return</span> query(sql, <span class="keyword">new</span><span class="type">ArgPreparedStatementSetter</span>(args), rse);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">public</span> &lt;T&gt; T query(<span class="keyword">String</span> sql, @Nullable PreparedStatementSetter pss, ResultSetExtractor&lt;T&gt; rse) throws DataAccessException &#123;</span><br><span class="line">		<span class="keyword">return</span> query(<span class="keyword">new</span> <span class="type">SimplePreparedStatementCreator</span>(sql), pss, rse);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<h6><span id="核心查询">核心查询</span></h6>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; T query(</span><br><span class="line">			PreparedStatementCreator psc, <span class="meta">@Nullable</span> <span class="keyword">final</span> PreparedStatementSetter pss, <span class="keyword">final</span> ResultSetExtractor&lt;T&gt; rse)</span><br><span class="line">			<span class="keyword">throws</span> DataAccessException &#123;</span><br><span class="line"></span><br><span class="line">		Assert.notNull(rse, <span class="string">"ResultSetExtractor must not be null"</span>);</span><br><span class="line">		logger.debug(<span class="string">"Executing prepared SQL query"</span>);</span><br><span class="line">        <span class="comment">//这里的execute的逻辑与update是一样的</span></span><br><span class="line">		<span class="function"><span class="keyword">return</span> <span class="title">execute</span><span class="params">(psc, <span class="keyword">new</span> PreparedStatementCallback&lt;T&gt;()</span> </span>&#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="meta">@Nullable</span></span><br><span class="line">			<span class="keyword">public</span> <span class="function">T <span class="title">doInPreparedStatement</span><span class="params">(PreparedStatement ps)</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">				ResultSet rs = <span class="keyword">null</span>;</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					<span class="keyword">if</span> (pss != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="comment">//  同上</span></span><br><span class="line">						pss.setValues(ps);</span><br><span class="line">					&#125;</span><br><span class="line">					rs = ps.executeQuery();</span><br><span class="line">                    <span class="comment">//这里是重点</span></span><br><span class="line">					<span class="function"><span class="keyword">return</span> rse.<span class="title">extractData</span><span class="params">(rs)</span></span>;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">finally</span> &#123;</span><br><span class="line">					JdbcUtils.closeResultSet(rs);</span><br><span class="line">					<span class="keyword">if</span> (pss <span class="keyword">instanceof</span> ParameterDisposer) &#123;</span><br><span class="line">						((ParameterDisposer) pss).cleanupParameters();</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<h6><span id="处理返回值">处理返回值</span></h6>
+<p>因为修改的时候只需要返回一个int值修改的条数就ok了，但是查询的时候各种查询的类型什么的就不一样了。所以在这需要单独处理一下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">extractData</span><span class="params">(ResultSet rs)</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">		List&lt;T&gt; results = (<span class="keyword">this</span>.rowsExpected &gt; <span class="number">0</span> ? <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="keyword">this</span>.rowsExpected) : <span class="keyword">new</span> ArrayList&lt;&gt;());</span><br><span class="line">		<span class="keyword">int</span> rowNum = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">            <span class="comment">//在这里就是调用的我们一开始定义的UserRowMapper的mapRow方法</span></span><br><span class="line">			results.add(<span class="keyword">this</span>.rowMapper.mapRow(rs, rowNum++));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> results;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p></p><h4 style="color:red"><span id="推荐阅读">推荐阅读</span></h4><p></p>
+<ol>
+<li><a href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A" target="_blank" rel="noopener">SpringCloud学习系列汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg" target="_blank" rel="noopener">为什么一线大厂面试必问redis，有啥好问的？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q" target="_blank" rel="noopener">多线程面试必备基础知识汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ" target="_blank" rel="noopener">Java集合源码分析汇总-JDK1.8</a></li>
+<li><a href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA" target="_blank" rel="noopener">Linux常用命令速查-汇总篇</a></li>
+<li><a href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw" target="_blank" rel="noopener">JVM系列文章汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA" target="_blank" rel="noopener">MySQL系列文章汇总</a></li>
+<li><a href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw" target="_blank" rel="noopener">RabbitMQ系列文章汇总</a></li>
+</ol>
+<p></p><h4 style="color:red"><span id="博客所有文章首发于公众号java学习录转载请保留扫码关注公众号即可领取2000gjava学习资源">博客所有文章首发于公众号《Java学习录》转载请保留<br>
+扫码关注公众号即可领取2000GJava学习资源 </span></h4><p></p>
+<p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring源码解析/" rel="tag"># Spring源码解析</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/20/基于注解的SpringAOP源码解析（三）/" rel="next" title="基于注解的SpringAOP源码解析（三）">
+                <i class="fa fa-chevron-left"></i> 基于注解的SpringAOP源码解析（三）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first">
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle">
+      <span class="sidebar-toggle-line sidebar-toggle-line-last">
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+
+
+
+
+
+
+
+<h5>微信公众号</h5>
+
+
+<img src="https://shiyujun.cn/img/gongzhonghao.jpg" width="200px" height="200px">
+
+ <h5 >
+    推荐阅读
+    </h5>
+
+           <h6><a  target="_blank" href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A">SpringCloud学习系列汇总</a></h6>
+           <h6><a  target="_blank" href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg">为什么一线大厂面试必问redis，有啥好问的？</a></h6>
+           <h6><a  target="_blank" href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q">多线程面试必备基础知识汇总</a></h6>
+           <h6><a  target="_blank" href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ">Java集合源码分析汇总-JDK1.8</a></h6>
+           <h6><a  target="_blank" href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA">Linux常用命令速查-汇总篇</a></h6>
+           <h6><a  target="_blank" href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw">JVM系列文章汇总</a></h6>
+           <h6><a  target="_blank" href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA">MySQL系列文章汇总</a></h6>
+			<h6><a  target="_blank" href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw">RabbitMQ系列文章汇总</a></h6>
+
+    <h5 >
+    github
+    </h5>
+
+
+                <iframe src="https://ghbtns.com/github-btn.html?user=shiyujun&type=follow&count=true" frameborder="0" scrolling="0" width="200px" height="30px"></iframe>
+
+
+
+
+
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">石玉军</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: 'CTwhbj5tF7oh31nUjHQvN0yM-gzGzoHsz',
+        appKey: 'PQBQIOjP7wrUJELjrIQ8J6Dx',
+        placeholder: '说点什么呢',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
