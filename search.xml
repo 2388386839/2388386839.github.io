@@ -340,25 +340,6 @@
     
     
     <entry>
-      <title>RabbitMQ如何实现高可用</title>
-      <link href="/2019/07/07/abbitMQ%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E9%AB%98%E5%8F%AF%E7%94%A8/"/>
-      <url>/2019/07/07/abbitMQ%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E9%AB%98%E5%8F%AF%E7%94%A8/</url>
-      
-        <content type="html"><![CDATA[<p>RabbitMQ一共具有三种模式：单机、普通集群、镜像集群</p><h4><span id="单机模式">单机模式</span></h4><p>单机模式，就是我们平常玩的demo，生产上肯定不能用。具体安装部署过程可以参考我的这篇文章：<a href="">CentsOS原生RabbitMQ安装过程</a></p><h4><span id="普通集群">普通集群</span></h4><p>普通集群就是在多台机器上启动多个实例。每个队列只会存在其中的一个实例上，然后所有实例同步这些队列的元数据。消费者在进行消费的时候，如果连接的实例上恰好不是队列所在的实例，就会根据队列的元数据去队列所在实例上拉取数据</p><p>由此可知，集群模式并没做到分布式，如果队列所在的实例宕机了，会导致接下来其他实例就无法从那个实例拉取消息</p><p>所以集群主要是提高吞吐量的</p><p>关于集群模式的安装部署过程可以参考我的这篇文章：RabbitMQ集群安装</p><h4><span id="镜像集群">镜像集群</span></h4><p>跟普通集群模式不一样的是，在镜像集群模式下，无论队列中的元数据还是消息都会存在于多个实例上，就是说，每个 RabbitMQ 节点都有这个 队列的一个完整镜像。然后每次写消息到队列的时候，都会自动把消息同步到多个实例上</p><p>如何开启镜像集群</p><p>首先镜像集群是在普通集群的基础上的，所以你要先搭建一个普通集群，然后在随意一个实例上执行如下命令创建一个策略即可开启<br>rabbitmqctl set_policy -p vhostName name  “^xxqueue” '{“ha-mode”:“all”}'<br>name是策略的名字</p><p>xxqueue是需要匹配的队列名称，如果要匹配所有的话使用^</p><p></p><h4 style="color:red"><span id="推荐阅读">推荐阅读</span></h4><p></p><ol><li><a href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A" target="_blank" rel="noopener">SpringCloud学习系列汇总</a></li><li><a href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg" target="_blank" rel="noopener">为什么一线大厂面试必问redis，有啥好问的？</a></li><li><a href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q/" target="_blank" rel="noopener">多线程面试必备基础知识汇总</a></li><li><a href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ" target="_blank" rel="noopener">Java集合源码分析汇总-JDK1.8</a></li><li><a href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA" target="_blank" rel="noopener">Linux常用命令速查-汇总篇</a></li><li><a href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw" target="_blank" rel="noopener">JVM系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA" target="_blank" rel="noopener">MySQL系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw" target="_blank" rel="noopener">RabbitMQ系列文章汇总</a></li></ol><p></p><h4 style="color:red"><span id="博客所有文章首发于公众号java学习录转载请保留扫码关注公众号即可领取2000gjava学习资源">博客所有文章首发于公众号《Java学习录》转载请保留<br>扫码关注公众号即可领取2000GJava学习资源 </span></h4><p></p><p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> RabbitMQ </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>RabbitMQ高级面试题</title>
       <link href="/2019/07/07/abbitMQ%E9%AB%98%E7%BA%A7%E9%9D%A2%E8%AF%95%E9%A2%98/"/>
       <url>/2019/07/07/abbitMQ%E9%AB%98%E7%BA%A7%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
@@ -389,6 +370,25 @@
         <tags>
             
             <tag> kubernetes </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>RabbitMQ如何实现高可用</title>
+      <link href="/2019/07/07/abbitMQ%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E9%AB%98%E5%8F%AF%E7%94%A8/"/>
+      <url>/2019/07/07/abbitMQ%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E9%AB%98%E5%8F%AF%E7%94%A8/</url>
+      
+        <content type="html"><![CDATA[<p>RabbitMQ一共具有三种模式：单机、普通集群、镜像集群</p><h4><span id="单机模式">单机模式</span></h4><p>单机模式，就是我们平常玩的demo，生产上肯定不能用。具体安装部署过程可以参考我的这篇文章：<a href="">CentsOS原生RabbitMQ安装过程</a></p><h4><span id="普通集群">普通集群</span></h4><p>普通集群就是在多台机器上启动多个实例。每个队列只会存在其中的一个实例上，然后所有实例同步这些队列的元数据。消费者在进行消费的时候，如果连接的实例上恰好不是队列所在的实例，就会根据队列的元数据去队列所在实例上拉取数据</p><p>由此可知，集群模式并没做到分布式，如果队列所在的实例宕机了，会导致接下来其他实例就无法从那个实例拉取消息</p><p>所以集群主要是提高吞吐量的</p><p>关于集群模式的安装部署过程可以参考我的这篇文章：RabbitMQ集群安装</p><h4><span id="镜像集群">镜像集群</span></h4><p>跟普通集群模式不一样的是，在镜像集群模式下，无论队列中的元数据还是消息都会存在于多个实例上，就是说，每个 RabbitMQ 节点都有这个 队列的一个完整镜像。然后每次写消息到队列的时候，都会自动把消息同步到多个实例上</p><p>如何开启镜像集群</p><p>首先镜像集群是在普通集群的基础上的，所以你要先搭建一个普通集群，然后在随意一个实例上执行如下命令创建一个策略即可开启<br>rabbitmqctl set_policy -p vhostName name  “^xxqueue” '{“ha-mode”:“all”}'<br>name是策略的名字</p><p>xxqueue是需要匹配的队列名称，如果要匹配所有的话使用^</p><p></p><h4 style="color:red"><span id="推荐阅读">推荐阅读</span></h4><p></p><ol><li><a href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A" target="_blank" rel="noopener">SpringCloud学习系列汇总</a></li><li><a href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg" target="_blank" rel="noopener">为什么一线大厂面试必问redis，有啥好问的？</a></li><li><a href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q/" target="_blank" rel="noopener">多线程面试必备基础知识汇总</a></li><li><a href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ" target="_blank" rel="noopener">Java集合源码分析汇总-JDK1.8</a></li><li><a href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA" target="_blank" rel="noopener">Linux常用命令速查-汇总篇</a></li><li><a href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw" target="_blank" rel="noopener">JVM系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA" target="_blank" rel="noopener">MySQL系列文章汇总</a></li><li><a href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw" target="_blank" rel="noopener">RabbitMQ系列文章汇总</a></li></ol><p></p><h4 style="color:red"><span id="博客所有文章首发于公众号java学习录转载请保留扫码关注公众号即可领取2000gjava学习资源">博客所有文章首发于公众号《Java学习录》转载请保留<br>扫码关注公众号即可领取2000GJava学习资源 </span></h4><p></p><p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> RabbitMQ </tag>
             
         </tags>
       
