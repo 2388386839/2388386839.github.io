@@ -226,13 +226,6 @@
     </url>
 
     <url>
-        <loc>https://shiyujun.cn/tags/Spring/</loc>
-        <lastmod>2019-08-26T14:11:50.217Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>https://shiyujun.cn/tags/kubernetes/</loc>
         <lastmod>2019-08-26T14:11:50.233Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -240,8 +233,15 @@
     </url>
 
     <url>
+        <loc>https://shiyujun.cn/tags/Spring/</loc>
+        <lastmod>2019-08-27T14:44:45.116Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://shiyujun.cn/tags/Spring%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
-        <lastmod>2019-08-26T14:23:03.719Z</lastmod>
+        <lastmod>2019-08-28T14:57:05.410Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
