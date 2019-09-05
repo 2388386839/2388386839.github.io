@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+
+
+  <meta name="keywords" content="Java,Spring,SpringBoot,SpringCloud,源码解析,架构,后端,技术博客,服务端" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="相信我，你会收藏这篇文章的  本篇文章是这段时间撸出来的Spring源码解析系列文章的汇总，总共包含以下专题。喜欢的同学可以收藏起来以备不时之需 SpringIOC源码解析(上)  本篇文章搭建了IOC源码解析的demo环境，启动这个环境即可开启阅读Spring源码的第一步 开始源码阅读时介绍了Spring容器中最经典的容器ClassPathXmlApplicationContext,这个容器是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring源码解析系列汇总">
+<meta property="og:url" content="https://shiyujun.cn/2019/09/05/pring源码解析系列汇总/index.html">
+<meta property="og:site_name" content="Java学习录">
+<meta property="og:description" content="相信我，你会收藏这篇文章的  本篇文章是这段时间撸出来的Spring源码解析系列文章的汇总，总共包含以下专题。喜欢的同学可以收藏起来以备不时之需 SpringIOC源码解析(上)  本篇文章搭建了IOC源码解析的demo环境，启动这个环境即可开启阅读Spring源码的第一步 开始源码阅读时介绍了Spring容器中最经典的容器ClassPathXmlApplicationContext,这个容器是">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://shiyujun.cn/2019/09/05/pring源码解析系列汇总/1.jpg">
+<meta property="og:image" content="https://shiyujun.cn/img/gongzhonghao.jpg">
+<meta property="og:updated_time" content="2019-09-05T15:31:38.047Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring源码解析系列汇总">
+<meta name="twitter:description" content="相信我，你会收藏这篇文章的  本篇文章是这段时间撸出来的Spring源码解析系列文章的汇总，总共包含以下专题。喜欢的同学可以收藏起来以备不时之需 SpringIOC源码解析(上)  本篇文章搭建了IOC源码解析的demo环境，启动这个环境即可开启阅读Spring源码的第一步 开始源码阅读时介绍了Spring容器中最经典的容器ClassPathXmlApplicationContext,这个容器是">
+<meta name="twitter:image" content="https://shiyujun.cn/2019/09/05/pring源码解析系列汇总/1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shiyujun.cn/2019/09/05/pring源码解析系列汇总/"/>
+
+
+
+
+
+  <title>Spring源码解析系列汇总 | Java学习录</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?eb90dcd1823a43971326ae1a2633c8f7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Java学习录</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">专注于Java知识体系学习，Spring、SpringBoot、SpringCloud源码解析</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shiyujun.cn/2019/09/05/pring源码解析系列汇总/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="石玉军">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://shiyujun.cn/img/qrcode.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Java学习录">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Spring源码解析系列汇总</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-05T22:26:59+08:00">
+                2019-09-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/09/05/pring源码解析系列汇总/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/09/05/pring源码解析系列汇总/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>相信我，你会收藏这篇文章的</p>
+</blockquote>
+<p>本篇文章是这段时间撸出来的Spring源码解析系列文章的汇总，总共包含以下专题。喜欢的同学可以收藏起来以备不时之需</p>
+<p><a href="https://mp.weixin.qq.com/s/0zDCy0eQycdM8M9eHGuLEQ" target="_blank" rel="noopener">SpringIOC源码解析(上)</a></p>
+<ol>
+<li>本篇文章搭建了IOC源码解析的demo环境，启动这个环境即可开启阅读Spring源码的第一步</li>
+<li>开始源码阅读时介绍了Spring容器中最经典的容器<code>ClassPathXmlApplicationContext</code>,这个容器是我们在学习Spring的时候最先接触的一个容器，它负责加载当前环境下的xml配置文件</li>
+<li>紧接着介绍了bean工厂<code>BeanFactory</code>以及容器中bean的包装类<code>BeanDefinition</code></li>
+<li>然后就是Spring对xml配置文件的加载和解析</li>
+<li>当解析的<code>beans</code>标签中各个<code>bean</code>中时将会把这个东东使用<code>BeanDefinition</code>包装后注册到容器中</li>
+<li>当<code>bean</code>注册完成后会有一些Spring对<code>BeanFactory</code>的扩展点的处理</li>
+<li>当然除了扩展点还有国际化、监听器等操作</li>
+</ol>
+<p><a href="https://mp.weixin.qq.com/s/z-DZxBWOSSaFfQXlA0TSKw" target="_blank" rel="noopener">SpringIOC源码解析(下)</a></p>
+<ol>
+<li>开篇先介绍了<code>conversionService</code>和<code>EmbeddedValueResolver</code>两个比较有意思的东东</li>
+<li>然后就是重点的<code>bean</code>的初始化</li>
+<li>初始化过程中涉及到了<code>singleton</code> 和 <code>prototype</code>两个Scope的<code>bean</code>的处理</li>
+<li>当然，还有令人头疼的循环依赖问题</li>
+<li>创建bean的过程中还有我们熟悉的<code>@Autowired</code>注解注入属性的方式</li>
+<li>接着就是一些清除缓存的操作</li>
+</ol>
+<p><a href="https://mp.weixin.qq.com/s/xqDPttr53rxLBi8t8kIQDg" target="_blank" rel="noopener">SpringIOC源码解析(基于注解)</a><br>
+阅读本篇文章之前建议您首先查看上方两篇文章，因为本篇主要是描述了基于注解的方式和基于xml配置文件方式的异同点</p>
+<ol>
+<li>源码阅读环境的搭建</li>
+<li>首先简单描述了<code>bean</code>容器<code>AnnotationConfigApplicationContext</code></li>
+<li>然后源码执行的第一步就是关于包扫描一块的东西，也就是我们比较熟悉的注解<code>@ComponentScan</code></li>
+<li>扫描到了各个带有注解的类之后就是读取类呀、反射呀什么的来加载类</li>
+<li>当<code>bean</code>已经加载完后就是<code>bean</code>的注册逻辑了<br>
+相比较与之前两篇文章的长篇大论，这篇文章的篇幅要少很多，这主要得益于Spring的设计精妙和代码之优雅</li>
+</ol>
+<p><a href="https://mp.weixin.qq.com/s/yMw1MZIRjQ4c504SSuPFaw" target="_blank" rel="noopener">基于注解的SpringAOP源码解析（一）</a></p>
+<ol>
+<li>源码阅读环境的搭建</li>
+<li><code>@EnableAspectJAutoProxy</code>注解的原理</li>
+<li><code>@EnableAspectJAutoProxy</code>注解又使用到了<code>@Import</code>注解，关于<code>@Import</code>注解的文章下面有地址</li>
+</ol>
+<p><a href="https://mp.weixin.qq.com/s/kxbdat_T0io6xEnD48HK-g" target="_blank" rel="noopener">基于注解的SpringAOP源码解析（二）</a></p>
+<ol>
+<li>首先提到了SpringAOP是基于<code>postProcessBeforeInstantiation</code>和<code>postProcessAfterInstantiation</code>两个方法实现的，这篇文章主讲<code>postProcessBeforeInstantiation</code></li>
+<li>加载增强</li>
+<li>获取所有的增强又对增强进行了一系列的封装</li>
+</ol>
+<p><a href="https://mp.weixin.qq.com/s/TORZGi2AX8hV1gNf1qNZUA" target="_blank" rel="noopener">基于注解的SpringAOP源码解析（三）</a></p>
+<ol>
+<li>以<code>postProcessAfterInstantiation</code>开篇</li>
+<li>所有的bean在初始化之后都会调用这个方法</li>
+<li>在这里获取到之前加载到的所有的增强，和类的所有方法一一匹配</li>
+<li>当类具有匹配增强的时候就可以为这个类生成具体的代理了</li>
+</ol>
+<p><a href="https://mp.weixin.qq.com/s/cmdlQ2LUi-7IDC6rCKqWOg" target="_blank" rel="noopener">SpringJDBC源码解析</a></p>
+<ol>
+<li>传统JDBC的使用</li>
+<li>源码阅读环境的搭建</li>
+<li>使用JdbcTemplate以update方法切入</li>
+<li>获取连接加载驱动等方法的封装</li>
+<li>请求参数的封装</li>
+<li>调用驱动提供的方法</li>
+<li>query方法的分析，与update仅有返回结果的处理不同其他完全相同</li>
+</ol>
+<p><a href="https://mp.weixin.qq.com/s/dNOBwMPHKdccmeJFWzzTOg" target="_blank" rel="noopener">Spring @Import注解源码解析</a></p>
+<ol>
+<li>三种使用方式</li>
+<li>加载时机</li>
+<li>对不同使用方式的处理方式</li>
+</ol>
+<p><a href="https://mp.weixin.qq.com/s/FU3hznLFspCcHYJs-x8h2Q" target="_blank" rel="noopener">Spring事务源码解析（一)</a></p>
+<ol>
+<li>源码阅读环境的搭建</li>
+<li><code>@EnableTransactionManagement</code>注解的原理解析</li>
+</ol>
+<p><a href="https://mp.weixin.qq.com/s/5tTrdl5GuD9WAyuHNUvW8w" target="_blank" rel="noopener">Spring事务源码解析（二）获取增强</a><br>
+读到这里的朋友希望您最好对AOP的源码有一定的了解</p>
+<ol>
+<li>增强的获取</li>
+<li><code>@Transactional</code>注解属性的解析</li>
+</ol>
+<p><a href="https://mp.weixin.qq.com/s/H933x4Upa8Vgl1EkuTZBtQ" target="_blank" rel="noopener">Spring事务源码解析（三）</a></p>
+<ol>
+<li>创建事务信息(包含事务隔离级别的处理等)</li>
+<li>调用执行链</li>
+<li>异常回滚</li>
+<li>清除事务信息</li>
+<li>提交事务</li>
+</ol>
+<p><a href="https://mp.weixin.qq.com/s/V8iwW-rpaQsISiis7hF0aw" target="_blank" rel="noopener">SpringMVC源码解析（一）</a></p>
+<ol>
+<li>源码阅读环境的搭建</li>
+<li>SpringBoot中SpringMVC自动配置原理</li>
+<li><code>DispatcherServlet</code>的初始化逻辑</li>
+<li>web容器的初始化</li>
+</ol>
+<p><a href="https://mp.weixin.qq.com/s/d7Ne8EI-e3VyGddEh9BvMA" target="_blank" rel="noopener">SpringMVC源码解析（二）</a></p>
+<ol>
+<li>获取对应的handler</li>
+<li>获取对应的handlerAdapter</li>
+<li>调用handle</li>
+<li>执行拦截器</li>
+<li>处理返回结果</li>
+</ol>
+<p>源码阅读环境</p>
+<p>您可能注意到上方文章中包含了很多源码阅读环境的搭建，当真正自己要去阅读时搭建起来还是比较浪费时间的。所以我把这些工作都替您做好了，您可以直接访问下方链接获取<br>
+<a href="https://github.com/shiyujun/spring-framework" target="_blank" rel="noopener">https://github.com/shiyujun/spring-framework</a></p>
+<p>后续规划</p>
+<ol>
+<li>Spring常用扩展点的应用场景</li>
+<li>SpringBoot源码解析</li>
+<li>SpringCloud常用组件源码解析</li>
+<li>MyBatis、druid源码解析</li>
+<li>阿里开源Nacos、Sentinel、Seata源码解析</li>
+<li>K8S、Istio源码解析<br>
+7.等等</li>
+</ol>
+<p>交流群<br>
+为了方便大家的交流学习，特意搞了个技术交流群，有兴趣的同学可以扫描下方二维码进群。如二维码过期可在公众号添加小编的微信发送暗号进群<br>
+<img src="/2019/09/05/pring源码解析系列汇总/1.jpg" alt="1"></p>
+<p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/05/SpringMVC源码解析(二)/" rel="next" title="SpringMVC源码解析(二)">
+                <i class="fa fa-chevron-left"></i> SpringMVC源码解析(二)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first">
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle">
+      <span class="sidebar-toggle-line sidebar-toggle-line-last">
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+
+
+
+
+
+
+
+<h5>微信公众号</h5>
+
+
+<img src="https://shiyujun.cn/img/qrcode.jpg" width="200px" height="200px">
+
+ <h5 >
+    推荐阅读
+    </h5>
+
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A">SpringCloud系列文章汇总</a>
+           <br>
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg">Redis系列文章汇总</a>
+            <br>
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA">Linux常用命令速查-汇总篇</a>
+            <br>
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw">JVM系列文章汇总</a>
+            <br>
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA">MySQL系列文章汇总</a>
+            <br>
+			     <a  target="_blank" href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw">RabbitMQ系列文章汇总</a>
+			      <br>
+            <a  target="_blank" href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q">多线程系列文章汇总</a>
+            <br>
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ">Java集合源码分析系列文章汇总</a>
+
+    <h5 >
+    github
+    </h5>
+
+
+                <iframe src="https://ghbtns.com/github-btn.html?user=shiyujun&type=follow&count=true" frameborder="0" scrolling="0" width="200px" height="30px"></iframe>
+
+
+
+
+
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">石玉军</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+            <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: 'CTwhbj5tF7oh31nUjHQvN0yM-gzGzoHsz',
+        appKey: 'PQBQIOjP7wrUJELjrIQ8J6Dx',
+        placeholder: '说点什么呢',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

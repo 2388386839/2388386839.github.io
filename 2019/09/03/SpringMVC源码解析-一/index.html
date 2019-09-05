@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+
+
+  <meta name="keywords" content="Spring源码解析," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="注意，读完本篇文章需要很长很长时间  源码阅读环境搭建 为了简单起见，再一个就是现在这个年代也没有啥项目使用JSP了。所以本次分析使用SpringBoot结合thymeleaf来搞 首先pom文件依赖 12345678910111213   &amp;lt;parent&amp;gt;       &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;">
+<meta name="keywords" content="Spring源码解析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringMVC源码解析(一)">
+<meta property="og:url" content="https://shiyujun.cn/2019/09/03/SpringMVC源码解析-一/index.html">
+<meta property="og:site_name" content="Java学习录">
+<meta property="og:description" content="注意，读完本篇文章需要很长很长时间  源码阅读环境搭建 为了简单起见，再一个就是现在这个年代也没有啥项目使用JSP了。所以本次分析使用SpringBoot结合thymeleaf来搞 首先pom文件依赖 12345678910111213   &amp;lt;parent&amp;gt;       &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://shiyujun.cn/img/gongzhonghao.jpg">
+<meta property="og:updated_time" content="2019-09-03T15:04:05.052Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SpringMVC源码解析(一)">
+<meta name="twitter:description" content="注意，读完本篇文章需要很长很长时间  源码阅读环境搭建 为了简单起见，再一个就是现在这个年代也没有啥项目使用JSP了。所以本次分析使用SpringBoot结合thymeleaf来搞 首先pom文件依赖 12345678910111213   &amp;lt;parent&amp;gt;       &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;">
+<meta name="twitter:image" content="https://shiyujun.cn/img/gongzhonghao.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shiyujun.cn/2019/09/03/SpringMVC源码解析-一/"/>
+
+
+
+
+
+  <title>SpringMVC源码解析(一) | Java学习录</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?eb90dcd1823a43971326ae1a2633c8f7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Java学习录</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">专注于Java知识体系学习，Spring、SpringBoot、SpringCloud源码解析</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shiyujun.cn/2019/09/03/SpringMVC源码解析-一/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="石玉军">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://shiyujun.cn/img/qrcode.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Java学习录">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">SpringMVC源码解析(一)</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-03T08:59:00+08:00">
+                2019-09-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/09/03/SpringMVC源码解析-一/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/09/03/SpringMVC源码解析-一/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>注意，读完本篇文章需要很长很长时间</p>
+</blockquote>
+<h4><span id="源码阅读环境搭建">源码阅读环境搭建</span></h4>
+<p>为了简单起见，再一个就是现在这个年代也没有啥项目使用JSP了。所以本次分析使用SpringBoot结合thymeleaf来搞</p>
+<p>首先pom文件依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">   <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.0.0.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-thymeleaf<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>application.properties</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">spring<span class="selector-class">.thymeleaf</span><span class="selector-class">.prefix</span>=classpath:/templates/</span><br><span class="line">spring<span class="selector-class">.thymeleaf</span><span class="selector-class">.suffix</span>=.html</span><br><span class="line">spring<span class="selector-class">.thymeleaf</span><span class="selector-class">.mode</span>=LEGACYHTML5</span><br><span class="line">spring<span class="selector-class">.thymeleaf</span><span class="selector-class">.encoding</span>=UTF-<span class="number">8</span></span><br><span class="line">spring<span class="selector-class">.thymeleaf</span><span class="selector-class">.content-type</span>=text/html</span><br><span class="line">spring<span class="selector-class">.thymeleaf</span><span class="selector-class">.cache</span>=false</span><br></pre></td></tr></table></figure>
+<p>test.html</p>
+<figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"><span class="meta">&lt;!DOCTYPE HTML&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">"http://www.w3.org/1999/xhtml"</span> <span class="attr">xmlns:th</span>=<span class="string">"http://www.thymeleaf.org"</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">content</span>=<span class="string">"text/html;charset=UTF-8"</span>/&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">"'用户名：'+$</span></span></span><span class="template-variable">&#123;name&#125;</span><span class="xml"><span class="tag"><span class="string">+',年龄：'+$</span></span></span><span class="template-variable">&#123;age&#125;</span><span class="xml"><span class="tag"><span class="string">"</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>Controller</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MVCDemoController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(value = <span class="meta-string">"/testMVC"</span>,method = RequestMethod.GET )</span></span><br><span class="line">    <span class="keyword">public</span> String testMVC(Model model)&#123;</span><br><span class="line">        model.addAttribute(<span class="string">"name"</span>,<span class="string">"张三"</span>);</span><br><span class="line">        model.addAttribute(<span class="string">"age"</span>,<span class="string">"18"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"test"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>启动demo</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@SpringBootApplication</span>(scanBasePackages=<span class="string">"cn.shiyujun.controller"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MVCDemo</span> &#123;</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main (String args[])&#123;</span><br><span class="line">        SpringApplication.run(MVCDemo.<span class="keyword">class</span>, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>至此Deno工程搭建完毕，有需要源码的同学可以从下方地址获取<br>
+<a href="https://github.com/shiyujun/spring-framework" target="_blank" rel="noopener">https://github.com/shiyujun/spring-framework</a></p>
+<h4><span id="源码分析">源码分析</span></h4>
+<h5><span id="springmvc自动配置">SpringMVC自动配置</span></h5>
+<p>我们知道在SpringBoot中使用SpringMVC的时候是不需要像传统Spring中配置web.xml和配置文件等等的。那么大家知道这是为什么吗</p>
+<p>答案就在这个类<code>WebMvcAutoConfiguration</code>里面</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ConditionalOnWebApplication</span>(type = Type.SERVLET)</span><br><span class="line"><span class="meta">@ConditionalOnClass</span>(&#123; Servlet.<span class="keyword">class</span>, DispatcherServlet.<span class="keyword">class</span>, WebMvcConfigurer.<span class="keyword">class</span> &#125;)</span><br><span class="line"><span class="meta">@ConditionalOnMissingBean</span>(WebMvcConfigurationSupport.<span class="keyword">class</span>)</span><br><span class="line"><span class="meta">@AutoConfigureOrder</span>(Ordered.HIGHEST_PRECEDENCE + <span class="number">10</span>)</span><br><span class="line"><span class="meta">@AutoConfigureAfter</span>(&#123; DispatcherServletAutoConfiguration.<span class="keyword">class</span>,</span><br><span class="line">		ValidationAutoConfiguration.<span class="keyword">class</span> &#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebMvcAutoConfiguration</span> &#123;</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String DEFAULT_PREFIX = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String DEFAULT_SUFFIX = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] SERVLET_LOCATIONS = &#123; <span class="string">"/"</span> &#125;;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="meta">@ConditionalOnMissingBean</span>(HiddenHttpMethodFilter.<span class="keyword">class</span>)</span><br><span class="line">	<span class="keyword">public</span> OrderedHiddenHttpMethodFilter hiddenHttpMethodFilter() &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> OrderedHiddenHttpMethodFilter();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="meta">@ConditionalOnMissingBean</span>(HttpPutFormContentFilter.<span class="keyword">class</span>)</span><br><span class="line">	<span class="meta">@ConditionalOnProperty</span>(prefix = <span class="string">"spring.mvc.formcontent.putfilter"</span>, name = <span class="string">"enabled"</span>, matchIfMissing = <span class="literal">true</span>)</span><br><span class="line">	<span class="keyword">public</span> OrderedHttpPutFormContentFilter httpPutFormContentFilter() &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> OrderedHttpPutFormContentFilter();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Configuration</span></span><br><span class="line">	<span class="meta">@Import</span>(EnableWebMvcConfiguration.<span class="keyword">class</span>)</span><br><span class="line">	<span class="meta">@EnableConfigurationProperties</span>(&#123; WebMvcProperties.<span class="keyword">class</span>, ResourceProperties.<span class="keyword">class</span> &#125;)</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">WebMvcAutoConfigurationAdapter</span></span></span><br><span class="line"><span class="class">			<span class="keyword">implements</span> <span class="title">WebMvcConfigurer</span>, <span class="title">ResourceLoaderAware</span> &#123;</span></span><br><span class="line"></span><br><span class="line">		<span class="meta">@Bean</span></span><br><span class="line">		<span class="meta">@ConditionalOnMissingBean</span></span><br><span class="line">		<span class="keyword">public</span> InternalResourceViewResolver defaultViewResolver() &#123;</span><br><span class="line">			InternalResourceViewResolver resolver = <span class="keyword">new</span> InternalResourceViewResolver();</span><br><span class="line">			resolver.setPrefix(<span class="keyword">this</span>.mvcProperties.getView().getPrefix());</span><br><span class="line">			resolver.setSuffix(<span class="keyword">this</span>.mvcProperties.getView().getSuffix());</span><br><span class="line">			<span class="keyword">return</span> resolver;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Bean</span></span><br><span class="line">		<span class="meta">@ConditionalOnBean</span>(View.<span class="keyword">class</span>)</span><br><span class="line">		<span class="meta">@ConditionalOnMissingBean</span></span><br><span class="line">		<span class="keyword">public</span> BeanNameViewResolver beanNameViewResolver() &#123;</span><br><span class="line">			BeanNameViewResolver resolver = <span class="keyword">new</span> BeanNameViewResolver();</span><br><span class="line">			resolver.setOrder(Ordered.LOWEST_PRECEDENCE - <span class="number">10</span>);</span><br><span class="line">			<span class="keyword">return</span> resolver;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Bean</span></span><br><span class="line">		<span class="meta">@ConditionalOnBean</span>(ViewResolver.<span class="keyword">class</span>)</span><br><span class="line">		<span class="meta">@ConditionalOnMissingBean</span>(name = <span class="string">"viewResolver"</span>, value = ContentNegotiatingViewResolver.<span class="keyword">class</span>)</span><br><span class="line">		<span class="keyword">public</span> ContentNegotiatingViewResolver viewResolver(BeanFactory beanFactory) &#123;</span><br><span class="line">			ContentNegotiatingViewResolver resolver = <span class="keyword">new</span> ContentNegotiatingViewResolver();</span><br><span class="line">			resolver.setContentNegotiationManager(</span><br><span class="line">					beanFactory.getBean(ContentNegotiationManager.<span class="keyword">class</span>));</span><br><span class="line">			<span class="comment">// ContentNegotiatingViewResolver uses all the other view resolvers to locate</span></span><br><span class="line">			<span class="comment">// a view so it should have a high precedence</span></span><br><span class="line">			resolver.setOrder(Ordered.HIGHEST_PRECEDENCE);</span><br><span class="line">			<span class="keyword">return</span> resolver;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Bean</span></span><br><span class="line">		<span class="meta">@ConditionalOnMissingBean</span></span><br><span class="line">		<span class="meta">@ConditionalOnProperty</span>(prefix = <span class="string">"spring.mvc"</span>, name = <span class="string">"locale"</span>)</span><br><span class="line">		<span class="keyword">public</span> LocaleResolver localeResolver() &#123;</span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.mvcProperties</span><br><span class="line">					.getLocaleResolver() == WebMvcProperties.LocaleResolver.FIXED) &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">new</span> FixedLocaleResolver(<span class="keyword">this</span>.mvcProperties.getLocale());</span><br><span class="line">			&#125;</span><br><span class="line">			AcceptHeaderLocaleResolver localeResolver = <span class="keyword">new</span> AcceptHeaderLocaleResolver();</span><br><span class="line">			localeResolver.setDefaultLocale(<span class="keyword">this</span>.mvcProperties.getLocale());</span><br><span class="line">			<span class="keyword">return</span> localeResolver;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Bean</span></span><br><span class="line">		<span class="keyword">public</span> WelcomePageHandlerMapping welcomePageHandlerMapping(</span><br><span class="line">				ApplicationContext applicationContext) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">new</span> WelcomePageHandlerMapping(</span><br><span class="line">					<span class="keyword">new</span> TemplateAvailabilityProviders(applicationContext),</span><br><span class="line">					applicationContext, getWelcomePage(),</span><br><span class="line">					<span class="keyword">this</span>.mvcProperties.getStaticPathPattern());</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Bean</span></span><br><span class="line">		<span class="meta">@ConditionalOnMissingBean</span>(&#123; RequestContextListener.<span class="keyword">class</span>,</span><br><span class="line">				RequestContextFilter.<span class="keyword">class</span> &#125;)</span><br><span class="line">		<span class="keyword">public</span> <span class="keyword">static</span> RequestContextFilter requestContextFilter() &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">new</span> OrderedRequestContextFilter();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Configuration</span></span><br><span class="line">		<span class="meta">@ConditionalOnProperty</span>(value = <span class="string">"spring.mvc.favicon.enabled"</span>, matchIfMissing = <span class="literal">true</span>)</span><br><span class="line">		<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">FaviconConfiguration</span> <span class="keyword">implements</span> <span class="title">ResourceLoaderAware</span> &#123;</span></span><br><span class="line"></span><br><span class="line">			<span class="meta">@Bean</span></span><br><span class="line">			<span class="keyword">public</span> SimpleUrlHandlerMapping faviconHandlerMapping() &#123;</span><br><span class="line">				SimpleUrlHandlerMapping mapping = <span class="keyword">new</span> SimpleUrlHandlerMapping();</span><br><span class="line">				mapping.setOrder(Ordered.HIGHEST_PRECEDENCE + <span class="number">1</span>);</span><br><span class="line">				mapping.setUrlMap(Collections.singletonMap(<span class="string">"**/favicon.ico"</span>,</span><br><span class="line">						faviconRequestHandler()));</span><br><span class="line">				<span class="keyword">return</span> mapping;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Bean</span></span><br><span class="line">			<span class="keyword">public</span> ResourceHttpRequestHandler faviconRequestHandler() &#123;</span><br><span class="line">				ResourceHttpRequestHandler requestHandler = <span class="keyword">new</span> ResourceHttpRequestHandler();</span><br><span class="line">				requestHandler.setLocations(resolveFaviconLocations());</span><br><span class="line">				<span class="keyword">return</span> requestHandler;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Configuration equivalent to &#123;<span class="doctag">@code</span> <span class="doctag">@EnableWebMvc</span>&#125;.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Configuration</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">EnableWebMvcConfiguration</span> <span class="keyword">extends</span> <span class="title">DelegatingWebMvcConfiguration</span> &#123;</span></span><br><span class="line"></span><br><span class="line">		<span class="meta">@Bean</span></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="keyword">public</span> RequestMappingHandlerAdapter requestMappingHandlerAdapter() &#123;</span><br><span class="line">			RequestMappingHandlerAdapter adapter = <span class="keyword">super</span>.requestMappingHandlerAdapter();</span><br><span class="line">			adapter.setIgnoreDefaultModelOnRedirect(<span class="keyword">this</span>.mvcProperties == <span class="literal">null</span></span><br><span class="line">					|| <span class="keyword">this</span>.mvcProperties.isIgnoreDefaultModelOnRedirect());</span><br><span class="line">			<span class="keyword">return</span> adapter;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Bean</span></span><br><span class="line">		<span class="meta">@Primary</span></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="keyword">public</span> RequestMappingHandlerMapping requestMappingHandlerMapping() &#123;</span><br><span class="line">			<span class="comment">// Must be @Primary for MvcUriComponentsBuilder to work</span></span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">super</span>.requestMappingHandlerMapping();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Bean</span></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="keyword">public</span> FormattingConversionService mvcConversionService() &#123;</span><br><span class="line">			WebConversionService conversionService = <span class="keyword">new</span> WebConversionService(</span><br><span class="line">					<span class="keyword">this</span>.mvcProperties.getDateFormat());</span><br><span class="line">			addFormatters(conversionService);</span><br><span class="line">			<span class="keyword">return</span> conversionService;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Bean</span></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="keyword">public</span> Validator mvcValidator() &#123;</span><br><span class="line">			<span class="keyword">if</span> (!ClassUtils.isPresent(<span class="string">"javax.validation.Validator"</span>,</span><br><span class="line">					getClass().getClassLoader())) &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">super</span>.mvcValidator();</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> ValidatorAdapter.get(getApplicationContext(), getValidator());</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Bean</span></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="keyword">public</span> ContentNegotiationManager mvcContentNegotiationManager() &#123;</span><br><span class="line">			ContentNegotiationManager manager = <span class="keyword">super</span>.mvcContentNegotiationManager();</span><br><span class="line">			List&lt;ContentNegotiationStrategy&gt; strategies = manager.getStrategies();</span><br><span class="line">			ListIterator&lt;ContentNegotiationStrategy&gt; iterator = strategies.listIterator();</span><br><span class="line">			<span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">				ContentNegotiationStrategy strategy = iterator.next();</span><br><span class="line">				<span class="keyword">if</span> (strategy <span class="keyword">instanceof</span> PathExtensionContentNegotiationStrategy) &#123;</span><br><span class="line">					iterator.set(<span class="keyword">new</span> OptionalPathExtensionContentNegotiationStrategy(</span><br><span class="line">							strategy));</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> manager;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Configuration</span></span><br><span class="line">	<span class="meta">@ConditionalOnEnabledResourceChain</span></span><br><span class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ResourceChainCustomizerConfiguration</span> &#123;</span></span><br><span class="line"></span><br><span class="line">		<span class="meta">@Bean</span></span><br><span class="line">		<span class="keyword">public</span> ResourceChainResourceHandlerRegistrationCustomizer resourceHandlerRegistrationCustomizer() &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">new</span> ResourceChainResourceHandlerRegistrationCustomizer();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>仔细看这个类，你就会发现这些自动注入的一些类都是之前需要我们在xml文件中配置的，只不过是SpringBoot帮我们做了这个操作。只有当我们需要自定义一些东西的才有必要去关心这些配置，平常使用的时候拿来就用即可。这就是大名鼎鼎的约定大于配置</p>
+<h5><span id="初始化dispatcherservlet">初始化<code>DispatcherServlet</code></span></h5>
+<p><code>DispatcherServlet</code>是一个实现了<code>Servlet</code>接口的类，<code>Servlet</code>的初始化阶段会调用它的<code>init()</code>方法，而<code>DispatcherServlet</code>的方法是继承自父类<code>HttpServletBean</code>的</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">			logger.debug(<span class="string">"Initializing servlet '"</span> + getServletName() + <span class="string">"'"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">  		<span class="comment">//处理init-param参数，但是SpringBoot中默认是没有的</span></span><br><span class="line">		PropertyValues pvs = <span class="keyword">new</span> ServletConfigPropertyValues(getServletConfig(), <span class="keyword">this</span>.requiredProperties);</span><br><span class="line">		<span class="keyword">if</span> (!pvs.isEmpty()) &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(<span class="keyword">this</span>);</span><br><span class="line">				ResourceLoader resourceLoader = <span class="keyword">new</span> ServletContextResourceLoader(getServletContext());</span><br><span class="line">				bw.registerCustomEditor(Resource.class, <span class="keyword">new</span> ResourceEditor(resourceLoader, getEnvironment()));</span><br><span class="line">				initBeanWrapper(bw);</span><br><span class="line">				bw.setPropertyValues(pvs, <span class="keyword">true</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">catch</span> (BeansException ex) &#123;</span><br><span class="line">				<span class="keyword">if</span> (logger.isErrorEnabled()) &#123;</span><br><span class="line">					logger.<span class="keyword">error</span>(<span class="string">"Failed to set bean properties on servlet '"</span> + getServletName() + <span class="string">"'"</span>, ex);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">throw</span> ex;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 初始化Servlet，往下看</span></span><br><span class="line">		initServletBean();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">			logger.debug(<span class="string">"Servlet '"</span> + getServletName() + <span class="string">"' configured successfully"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="function"><span class="keyword">void</span> <span class="title">initServletBean</span><span class="params">()</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">		getServletContext().log(<span class="string">"Initializing Spring FrameworkServlet '"</span> + getServletName() + <span class="string">"'"</span>);</span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.logger.isInfoEnabled()) &#123;</span><br><span class="line">			<span class="keyword">this</span>.logger.info(<span class="string">"FrameworkServlet '"</span> + getServletName() + <span class="string">"': initialization started"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">long</span> startTime = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">		  	<span class="comment">//初始化web容器</span></span><br><span class="line">			<span class="keyword">this</span>.webApplicationContext = initWebApplicationContext();</span><br><span class="line">		  	<span class="comment">//扩展点</span></span><br><span class="line">			initFrameworkServlet();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (ServletException ex) &#123;</span><br><span class="line">			<span class="keyword">this</span>.logger.<span class="keyword">error</span>(<span class="string">"Context initialization failed"</span>, ex);</span><br><span class="line">			<span class="keyword">throw</span> ex;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (RuntimeException ex) &#123;</span><br><span class="line">			<span class="keyword">this</span>.logger.<span class="keyword">error</span>(<span class="string">"Context initialization failed"</span>, ex);</span><br><span class="line">			<span class="keyword">throw</span> ex;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.logger.isInfoEnabled()) &#123;</span><br><span class="line">			<span class="keyword">long</span> elapsedTime = System.currentTimeMillis() - startTime;</span><br><span class="line">			<span class="keyword">this</span>.logger.info(<span class="string">"FrameworkServlet '"</span> + getServletName() + <span class="string">"': initialization completed in "</span> +</span><br><span class="line">					elapsedTime + <span class="string">" ms"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>初始化web容器</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> WebApplicationContext initWebApplicationContext() &#123;</span><br><span class="line">  		<span class="comment">//获取AnnotationConfigServletWebServerApplicationContext类型的web容器</span></span><br><span class="line">		WebApplicationContext rootContext =</span><br><span class="line">				WebApplicationContextUtils.getWebApplicationContext(getServletContext());</span><br><span class="line">		WebApplicationContext wac = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.webApplicationContext != <span class="literal">null</span>) &#123;</span><br><span class="line">			wac = <span class="keyword">this</span>.webApplicationContext;</span><br><span class="line">			<span class="keyword">if</span> (wac instanceof ConfigurableWebApplicationContext) &#123;</span><br><span class="line">				ConfigurableWebApplicationContext cwac = (ConfigurableWebApplicationContext) wac;</span><br><span class="line">				<span class="keyword">if</span> (!cwac.isActive()) &#123;</span><br><span class="line">					<span class="keyword">if</span> (cwac.getParent() == <span class="literal">null</span>) &#123;</span><br><span class="line">						cwac.setParent(rootContext);</span><br><span class="line">					&#125;</span><br><span class="line">					configureAndRefreshWebApplicationContext(cwac);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (wac == <span class="literal">null</span>) &#123;</span><br><span class="line">			wac = findWebApplicationContext();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (wac == <span class="literal">null</span>) &#123;</span><br><span class="line">			wac = createWebApplicationContext(rootContext);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (!<span class="keyword">this</span>.refreshEventReceived) &#123;</span><br><span class="line">			<span class="comment">// 刷新应用上下文，这里是重点，接着往下看</span></span><br><span class="line">			onRefresh(wac);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.publishContext) &#123;</span><br><span class="line">			<span class="comment">// 推送事件通知</span></span><br><span class="line">			String attrName = getServletContextAttributeName();</span><br><span class="line">			getServletContext().setAttribute(attrName, wac);</span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.logger.isDebugEnabled()) &#123;</span><br><span class="line">				<span class="keyword">this</span>.logger.debug(<span class="string">"Published WebApplicationContext of servlet '"</span> + getServletName() +</span><br><span class="line">						<span class="string">"' as ServletContext attribute with name ["</span> + attrName + <span class="string">"]"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> wac;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>下面会看到一些熟悉的东西</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">	protected void onRefresh(ApplicationContext <span class="built_in">context</span>) &#123;</span><br><span class="line">		initStrategies(<span class="built_in">context</span>)<span class="comment">;</span></span><br><span class="line">	&#125;</span><br><span class="line">protected void initStrategies(ApplicationContext <span class="built_in">context</span>) &#123;</span><br><span class="line">		initMultipartResolver(<span class="built_in">context</span>)<span class="comment">;</span></span><br><span class="line">		initLocaleResolver(<span class="built_in">context</span>)<span class="comment">;</span></span><br><span class="line">		initThemeResolver(<span class="built_in">context</span>)<span class="comment">;</span></span><br><span class="line">		initHandlerMappings(<span class="built_in">context</span>)<span class="comment">;</span></span><br><span class="line">		initHandlerAdapters(<span class="built_in">context</span>)<span class="comment">;</span></span><br><span class="line">		initHandlerExceptionResolvers(<span class="built_in">context</span>)<span class="comment">;</span></span><br><span class="line">		initRequestToViewNameTranslator(<span class="built_in">context</span>)<span class="comment">;</span></span><br><span class="line">		initViewResolvers(<span class="built_in">context</span>)<span class="comment">;</span></span><br><span class="line">		initFlashMapManager(<span class="built_in">context</span>)<span class="comment">;</span></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到上方这一块代码都是一些常用组件的初始化，初始化的逻辑都比较简单，下面随意挑取2个看一下</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">	<span class="keyword">private</span> void initMultipartResolver(ApplicationContext context) &#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">this</span>.multipartResolver = context.getBean(MULTIPART_RESOLVER_BEAN_NAME, MultipartResolver.<span class="keyword">class</span>);</span><br><span class="line">			<span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">				logger.debug(<span class="string">"Using MultipartResolver ["</span> + <span class="keyword">this</span>.multipartResolver + <span class="string">"]"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (NoSuchBeanDefinitionException ex) &#123;</span><br><span class="line">			<span class="comment">// Default is no multipart resolver.</span></span><br><span class="line">			<span class="keyword">this</span>.multipartResolver = <span class="literal">null</span>;</span><br><span class="line">			<span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">				logger.debug(<span class="string">"Unable to locate MultipartResolver with name '"</span> + MULTIPART_RESOLVER_BEAN_NAME +</span><br><span class="line">						<span class="string">"': no multipart request handling provided"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span> void initHandlerMappings(ApplicationContext context) &#123;</span><br><span class="line">		<span class="keyword">this</span>.handlerMappings = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.detectAllHandlerMappings) &#123;</span><br><span class="line">			<span class="comment">// 加载所有实现HandlerMapping接口的bean</span></span><br><span class="line">			Map&lt;String, HandlerMapping&gt; matchingBeans =</span><br><span class="line">					BeanFactoryUtils.beansOfTypeIncludingAncestors(context, HandlerMapping.<span class="keyword">class</span>, <span class="literal">true</span>, <span class="literal">false</span>);</span><br><span class="line">			<span class="keyword">if</span> (!matchingBeans.isEmpty()) &#123;</span><br><span class="line">				<span class="keyword">this</span>.handlerMappings = new ArrayList&lt;&gt;(matchingBeans.values());</span><br><span class="line">				<span class="comment">// 排序，Spring处理请求就是根据这个排序的结果进行处理，如果当前handlerMapping不可以处理则抛给下一个</span></span><br><span class="line">				AnnotationAwareOrderComparator.sort(<span class="keyword">this</span>.handlerMappings);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				HandlerMapping hm = context.getBean(HANDLER_MAPPING_BEAN_NAME, HandlerMapping.<span class="keyword">class</span>);</span><br><span class="line">				<span class="keyword">this</span>.handlerMappings = Collections.singletonList(hm);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">catch</span> (NoSuchBeanDefinitionException ex) &#123;</span><br><span class="line">				<span class="comment">// Ignore, we'll add a default HandlerMapping later.</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Ensure we have at least one HandlerMapping, by registering</span></span><br><span class="line">		<span class="comment">// a default HandlerMapping if no other mappings are found.</span></span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.handlerMappings == <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="keyword">this</span>.handlerMappings = getDefaultStrategies(context, HandlerMapping.<span class="keyword">class</span>);</span><br><span class="line">			<span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">				logger.debug(<span class="string">"No HandlerMappings found in servlet '"</span> + getServletName() + <span class="string">"': using default"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>至此，<code>DispatcherServlet</code>的初始化就完成了</p>
+<p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring源码解析/" rel="tag"># Spring源码解析</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/02/pring事务源码解析（三）/" rel="next" title="Spring事务源码解析（三）">
+                <i class="fa fa-chevron-left"></i> Spring事务源码解析（三）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/05/SpringMVC源码解析(二)/" rel="prev" title="SpringMVC源码解析(二)">
+                SpringMVC源码解析(二) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first">
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle">
+      <span class="sidebar-toggle-line sidebar-toggle-line-last">
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+
+
+
+
+
+
+
+<h5>微信公众号</h5>
+
+
+<img src="https://shiyujun.cn/img/qrcode.jpg" width="200px" height="200px">
+
+ <h5 >
+    推荐阅读
+    </h5>
+
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A">SpringCloud系列文章汇总</a>
+           <br>
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg">Redis系列文章汇总</a>
+            <br>
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA">Linux常用命令速查-汇总篇</a>
+            <br>
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw">JVM系列文章汇总</a>
+            <br>
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA">MySQL系列文章汇总</a>
+            <br>
+			     <a  target="_blank" href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw">RabbitMQ系列文章汇总</a>
+			      <br>
+            <a  target="_blank" href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q">多线程系列文章汇总</a>
+            <br>
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ">Java集合源码分析系列文章汇总</a>
+
+    <h5 >
+    github
+    </h5>
+
+
+                <iframe src="https://ghbtns.com/github-btn.html?user=shiyujun&type=follow&count=true" frameborder="0" scrolling="0" width="200px" height="30px"></iframe>
+
+
+
+
+
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">石玉军</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+            <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: 'CTwhbj5tF7oh31nUjHQvN0yM-gzGzoHsz',
+        appKey: 'PQBQIOjP7wrUJELjrIQ8J6Dx',
+        placeholder: '说点什么呢',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
