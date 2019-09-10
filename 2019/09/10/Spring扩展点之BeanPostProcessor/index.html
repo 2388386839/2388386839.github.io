@@ -67,7 +67,7 @@
 
 
 
-  <meta name="keywords" content="Docker," />
+  <meta name="keywords" content="Spring扩展点," />
 
 
 
@@ -78,20 +78,22 @@
 
 
 
-<meta name="description" content="通俗的来说容器其实是一种沙盒技术。顾名思义，沙盒就是能够像一个集装箱一样，把你的应用“装”起来的技术。这样，应用与应用之间，就因为有了边界而不至于相互干扰；而被装进集装箱的应用，也可以被方便地搬来搬去。不过，这两个能力说起来简单，但要用技术手段去实现它们，确并不是很容易。所以，本篇文章就来剖析一下容器的实现方式 我们知道一个程序被执行起来之后，它就会从磁盘上的二进制文件，变成了计算机内存中的数据、">
-<meta name="keywords" content="Docker">
+<meta name="description" content="前言 BeanPostProcessor接口是Spring中一个非常重要的接口，它的接口定义如下 123456public interface BeanPostProcessor &amp;#123;    Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException;        O">
+<meta name="keywords" content="Spring扩展点">
 <meta property="og:type" content="article">
-<meta property="og:title" content="容器，到底是什么东西？">
-<meta property="og:url" content="https://shiyujun.cn/2019/07/07/器，到底是什么东西？/index.html">
+<meta property="og:title" content="Spring扩展点之BeanPostProcessor">
+<meta property="og:url" content="https://shiyujun.cn/2019/09/10/Spring扩展点之BeanPostProcessor/index.html">
 <meta property="og:site_name" content="Java学习录">
-<meta property="og:description" content="通俗的来说容器其实是一种沙盒技术。顾名思义，沙盒就是能够像一个集装箱一样，把你的应用“装”起来的技术。这样，应用与应用之间，就因为有了边界而不至于相互干扰；而被装进集装箱的应用，也可以被方便地搬来搬去。不过，这两个能力说起来简单，但要用技术手段去实现它们，确并不是很容易。所以，本篇文章就来剖析一下容器的实现方式 我们知道一个程序被执行起来之后，它就会从磁盘上的二进制文件，变成了计算机内存中的数据、">
+<meta property="og:description" content="前言 BeanPostProcessor接口是Spring中一个非常重要的接口，它的接口定义如下 123456public interface BeanPostProcessor &amp;#123;    Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException;        O">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://shiyujun.cn/2019/09/10/Spring扩展点之BeanPostProcessor/21.png">
+<meta property="og:image" content="https://shiyujun.cn/2019/09/10/Spring扩展点之BeanPostProcessor/22.png">
 <meta property="og:image" content="https://shiyujun.cn/img/gongzhonghao.jpg">
-<meta property="og:updated_time" content="2019-07-07T08:56:55.824Z">
+<meta property="og:updated_time" content="2019-09-10T14:01:16.549Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="容器，到底是什么东西？">
-<meta name="twitter:description" content="通俗的来说容器其实是一种沙盒技术。顾名思义，沙盒就是能够像一个集装箱一样，把你的应用“装”起来的技术。这样，应用与应用之间，就因为有了边界而不至于相互干扰；而被装进集装箱的应用，也可以被方便地搬来搬去。不过，这两个能力说起来简单，但要用技术手段去实现它们，确并不是很容易。所以，本篇文章就来剖析一下容器的实现方式 我们知道一个程序被执行起来之后，它就会从磁盘上的二进制文件，变成了计算机内存中的数据、">
-<meta name="twitter:image" content="https://shiyujun.cn/img/gongzhonghao.jpg">
+<meta name="twitter:title" content="Spring扩展点之BeanPostProcessor">
+<meta name="twitter:description" content="前言 BeanPostProcessor接口是Spring中一个非常重要的接口，它的接口定义如下 123456public interface BeanPostProcessor &amp;#123;    Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException;        O">
+<meta name="twitter:image" content="https://shiyujun.cn/2019/09/10/Spring扩展点之BeanPostProcessor/21.png">
 
 
 
@@ -121,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="https://shiyujun.cn/2019/07/07/器，到底是什么东西？/"/>
+  <link rel="canonical" href="https://shiyujun.cn/2019/09/10/Spring扩展点之BeanPostProcessor/"/>
 
 
 
 
 
-  <title>容器，到底是什么东西？ | Java学习录</title>
+  <title>Spring扩展点之BeanPostProcessor | Java学习录</title>
   
 
 
@@ -288,7 +290,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://shiyujun.cn/2019/07/07/器，到底是什么东西？/">
+    <link itemprop="mainEntityOfPage" href="https://shiyujun.cn/2019/09/10/Spring扩展点之BeanPostProcessor/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="石玉军">
@@ -305,7 +307,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">容器，到底是什么东西？</h2>
+          <h2 class="post-title" itemprop="name headline">Spring扩展点之BeanPostProcessor</h2>
         
 
         <div class="post-meta">
@@ -317,8 +319,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-07T16:20:00+08:00">
-                2019-07-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-10T21:59:00+08:00">
+                2019-09-10
               </time>
             
 
@@ -336,8 +338,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/07/07/器，到底是什么东西？/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2019/07/07/器，到底是什么东西？/" itemprop="commentCount"></span>
+                <a href="/2019/09/10/Spring扩展点之BeanPostProcessor/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/09/10/Spring扩展点之BeanPostProcessor/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -370,78 +372,27 @@
       
 
       
-        <p>通俗的来说容器其实是一种沙盒技术。顾名思义，沙盒就是能够像一个集装箱一样，把你的应用“装”起来的技术。这样，应用与应用之间，就因为有了边界而不至于相互干扰；而被装进集装箱的应用，也可以被方便地搬来搬去。不过，这两个能力说起来简单，但要用技术手段去实现它们，确并不是很容易。所以，本篇文章就来剖析一下容器的实现方式</p>
-<p>我们知道一个程序被执行起来之后，它就会从磁盘上的二进制文件，变成了计算机内存中的数据、寄存器里的值、堆栈中的指令、被打开的文件，以及各种设备的状态信息的一个集合也就是一个进程</p>
-<p>所以，对于进程来说，它的静态表现就是程序，平常都安安静静地待在磁盘上；而一旦运行起来，它就变成了计算机里的数据和状态的总和，这就是它的动态表现。<br>
-而容器技术的核心功能，就是通过约束和修改进程的动态表现，从而为其创造出一个“边界”。正是因为这个边界才会让容器里面的程序看不到宿主机上其他的程序从而给程序一种它就是在一个独立的操作系统上的假象</p>
-<p>对于 Docker 等大多数 Linux 容器来说，Cgroups和Namespace 技术就是它们实现的关键</p>
-<p>接下来的内容是以你已经初步了解docker的使用为基础的</p>
-<h5><span id="namespace">Namespace</span></h5>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">run</span> -<span class="keyword">it</span> holloword /bin/sh</span><br></pre></td></tr></table></figure>
-<p>我们知道使用如上命令就可以直接启动一个holloword容器<br>
-如果这个时候我们在容器里执行一下 ps 指令，就会发现一些比较有趣的事情：</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">PID <span class="built_in"> USER </span>  TIME COMMANDine  </span><br><span class="line">1 root   0:00 /bin/sh </span><br><span class="line">10 root   0:00 ps</span><br></pre></td></tr></table></figure>
-<p>可以看到，我们在 Docker 里最开始执行的 /bin/sh，就是这个容器内部的第 1 号进程（PID=1），而这个容器里一共只有两个进程在运行。这就意味着，<br>
-前面执行的 /bin/sh，以及我们刚刚执行的 ps，已经被 Docker 隔离在了一个跟宿主机完全不同的世界当中</p>
-<p>本来，每当我们在宿主机上运行了一个 /bin/sh 程序，操作系统都会给它分配一个进程编号，比如 PID=100。这个编号是进程的唯一标识，就像员工的工牌一样。所以 PID=100，可以粗略地理解为这个 /bin/sh 是我们公司里的第 100 号员工，而第 1 号员工就自然是比尔 · 盖茨这样统领全局的人物</p>
-<p>而现在，我们要通过 Docker 把这个 /bin/sh 程序运行在一个容器当中。这时候，Docker 就会在这个第 100 号员工入职时给他施一个“障眼法”，让他永远看不到前面的其他 99 个员工，更看不到比尔 · 盖茨。这样，他就会错误地以为自己就是公司里的第 1 号员工</p>
-<p>这种机制，其实就是对被隔离应用的进程空间做了手脚，使得这些进程只能看到重新计算过的进程编号，比如 PID=1。可实际上，他们在宿主机的操作系统里，还是原来的第 100 号进程</p>
-<p>这种技术，就是 Linux 里面的 Namespace 机制。而 Namespace 的使用方式也非常有意思：它其实只是 Linux 创建新进程的一个可选参数。我们知道，<br>
-在 Linux 系统中创建线程的系统调用是 clone()，比如：</p>
-<figure class="highlight zephir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> pid = <span class="keyword">clone</span>(main_function, stack_size, SIGCHLD, <span class="keyword">NULL</span>);</span><br></pre></td></tr></table></figure>
-<p>这个系统调用就会为我们创建一个新的进程，并且返回它的进程号 pid。<br>
-而当我们用 clone() 系统调用创建一个新进程时，就可以在参数中指定 CLONE_NEWPID 参数，比如：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> pid = clone(main_function, stack_size, <span class="built_in">CLONE_NEWPID</span> | SIGCHLD, <span class="literal">NULL</span>);</span><br></pre></td></tr></table></figure>
-<p>这时，新创建的这个进程将会“看到”一个全新的进程空间，在这个进程空间里，它的 PID 是 1。之所以说“看到”，是因为这只是一个“障眼法”，<br>
-在宿主机真实的进程空间里，这个进程的 PID 还是真实的数值，比如 100。<br>
-当然，我们还可以多次执行上面的 clone() 调用，这样就会创建多个 PID Namespace，而每个 Namespace 里的应用进程，都会认为自己是当前容器里的<br>
-第 1 号进程，它们既看不到宿主机里真正的进程空间，也看不到其他 PID Namespace 里的具体情况</p>
-<p>而除了我们刚刚用到的 PID Namespace，<br>
-Linux 操作系统还提供了 Mount、UTS、IPC、Network 和 User 这些 Namespace，用来对各种不同的进程上下文进行“障眼法”操作</p>
-<p>比如:</p>
-<ul>
-<li>Mount Namespace，用于让被隔离进程只看到当前 Namespace 里的挂载点信息；</li>
-<li>Network Namespace，用于让被隔离进程看到当前 Namespace 里的网络设备和配置。<br>
-这，就是 Linux 容器实现的第一个机制了</li>
-</ul>
-<p>所以，Docker 容器这个听起来玄而又玄的概念，实际上是在创建容器进程时，指定了这个进程所需要启用的一组 Namespace 参数。这样，容器就只能“看”到当前 Namespace 所限定的资源、文件、设备、状态，或者配置。而对于宿主机以及其他不相关的程序，它就完全看不到了</p>
-<p>说到这里，其实你就明白了，跟真实存在的虚拟机不同，在使用 Docker 的时候，并没有一个真正的“Docker 容器”运行在宿主机里面。Docker 项目帮助用户启动的，还是原来的应用进程，只不过在创建这些进程时，Docker 为它们加上了各种各样的 Namespace 参数。</p>
-<p>这时，这些进程就会觉得自己是各自 PID Namespace 里的第 1 号进程，只能看到各自 Mount Namespace 里挂载的目录和文件，只能访问到各自 Network Namespace 里的网络设备，就仿佛运行在一个个“容器”里面，与世隔绝</p>
-<h5><span id="cgroups">Cgroups</span></h5>
-<p>实际上只是使用Namespace隔离了进程还不能称之为容器，例如：</p>
-<p>虽然容器内的第 1 号进程在“障眼法”的干扰下只能看到容器里的情况，但是宿主机上，它作为第 100 号进程与其他所有进程之间依然是平等的竞争关系。<br>
-这就意味着，虽然第 100 号进程表面上被隔离了起来，<br>
-但是它所能够使用到的资源（比如 CPU、内存），却是可以随时被宿主机上的其他进程（或者其他容器）占用的。<br>
-当然，这个 100 号进程自己也可能把所有资源吃光。这些情况，显然都不是一个“沙盒”应该表现出来的合理行为。</p>
-<p>而Linux Cgroups 就是 Linux 内核中用来为进程设置资源限制的一个重要功能它最主要的作用是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽以及对进程进行优先级设置、审计，以及将进程挂起和恢复等操作</p>
-<p>除 CPU 子系统外，Cgroups 的每一项子系统都有其独有的资源限制能力，比如：</p>
-<ul>
-<li>blkio，为块设备设定I/O 限制，一般用于磁盘等设备</li>
-<li>cpuset，为进程分配单独的 CPU 核和对应的内存节点</li>
-<li>memory，为进程设定内存使用的限制</li>
-</ul>
-<p>Linux Cgroups 的设计还是比较易用的，简单粗暴地理解呢，它就是一个子系统目录加上一组资源限制文件的组合。<br>
-而对于 Docker 等 Linux 容器项目来说，它们只需要在每个子系统下面，为每个容器创建一个控制组（即创建一个新目录），然后在启动容器进程之后，把这个进程的 PID 填写到对应控制组的 tasks 文件中就可以了。<br>
-而至于在这些控制组下面的资源文件里填上什么值，就靠用户执行 docker run 时的参数指定了，比如这样一条命令：</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="builtin-name">run</span> -it <span class="attribute">--cpu-period</span>=100000 <span class="attribute">--cpu-quota</span>=20000 ubuntu /bin/sh</span><br></pre></td></tr></table></figure>
-<p>在启动这个容器后，我们可以通过查看 Cgroups 文件系统下，CPU 子系统中，“docker”这个控制组里的资源限制文件的内容来确认：</p>
-<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ cat <span class="meta-keyword">/sys/</span>fs<span class="meta-keyword">/cgroup/</span>cpu<span class="meta-keyword">/docker/</span><span class="number">5</span>d5c9f67d/cpu.cfs_period_us </span><br><span class="line"><span class="number">100000</span></span><br><span class="line">$ cat <span class="meta-keyword">/sys/</span>fs<span class="meta-keyword">/cgroup/</span>cpu<span class="meta-keyword">/docker/</span><span class="number">5</span>d5c9f67d/cpu.cfs_quota_us </span><br><span class="line"><span class="number">20000</span></span><br></pre></td></tr></table></figure>
-<p>这就意味着这个 Docker 容器，只能使用到 20% 的 CPU 带宽。</p>
-<p>一个正在运行的 Docker 容器，其实就是一个启用了多个 Linux Namespace 的应用进程，而这个进程能够使用的资源量，则受 Cgroups 配置的限制。</p>
-<p>这也是容器技术中一个非常重要的概念，即：容器是一个“单进程”模型</p>
-<p></p><h4 style="color:red"><span id="推荐阅读">推荐阅读</span></h4><p></p>
-<ol>
-<li><a href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A" target="_blank" rel="noopener">SpringCloud学习系列汇总</a></li>
-<li><a href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg" target="_blank" rel="noopener">为什么一线大厂面试必问redis，有啥好问的？</a></li>
-<li><a href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q/" target="_blank" rel="noopener">多线程面试必备基础知识汇总</a></li>
-<li><a href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ" target="_blank" rel="noopener">Java集合源码分析汇总-JDK1.8</a></li>
-<li><a href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA" target="_blank" rel="noopener">Linux常用命令速查-汇总篇</a></li>
-<li><a href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw" target="_blank" rel="noopener">JVM系列文章汇总</a></li>
-<li><a href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA" target="_blank" rel="noopener">MySQL系列文章汇总</a></li>
-<li><a href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw" target="_blank" rel="noopener">RabbitMQ系列文章汇总</a></li>
-</ol>
-<p></p><h4 style="color:red"><span id="博客所有文章首发于公众号java学习录转载请保留扫码关注公众号即可领取2000gjava学习资源">博客所有文章首发于公众号《Java学习录》转载请保留<br>
-扫码关注公众号即可领取2000GJava学习资源 </span></h4><p></p>
+        <h4><span id="前言">前言</span></h4>
+<p><code>BeanPostProcessor</code>接口是Spring中一个非常重要的接口，它的接口定义如下</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public<span class="built_in"> interface </span>BeanPostProcessor &#123;</span><br><span class="line"></span><br><span class="line">    Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException;</span><br><span class="line">    </span><br><span class="line">    Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当你实现了这个接口的时候，Spring会保证在每一个bean对象初始化方法调用之前调用<code>postProcessBeforeInitialization</code>方法，在初始化方法调用之后调用<code>postProcessAfterInitialization</code></p>
+<h4><span id="beanpostprocessor的注册"><code>BeanPostProcessor</code>的注册</span></h4>
+<p>看过我之前写的IOC源码分析系列文章的同学应该对这个都比较有印象<br>
+<img src="/2019/09/10/Spring扩展点之BeanPostProcessor/21.png" alt="1"><br>
+Spring在执行到这的时候会把所有实现<code>BeanPostProcessor</code>接口的实现类都注册到<code>BeanFactory</code>中，一起来看一下实现的细节</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">	protected void registerBeanPostProcessors(ConfigurableListableBeanFactory <span class="keyword">beanFactory) </span>&#123;</span><br><span class="line">		PostProcessorRegistrationDelegate.registerBeanPostProcessors(<span class="keyword">beanFactory, </span>this)<span class="comment">;</span></span><br><span class="line">	&#125;</span><br><span class="line"><span class="symbol">public</span> static void registerBeanPostProcessors(</span><br><span class="line">			ConfigurableListableBeanFactory <span class="keyword">beanFactory, </span>AbstractApplicationContext applicationContext) &#123;</span><br><span class="line">		//获取所有<span class="keyword">BeanPostProcessor的实现类</span></span><br><span class="line"><span class="keyword">	</span>	<span class="keyword">String[] </span>postProcessorNames = <span class="keyword">beanFactory.getBeanNamesForType(BeanPostProcessor.class, </span>true, false)<span class="comment">;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">		int <span class="keyword">beanProcessorTargetCount </span>= <span class="keyword">beanFactory.getBeanPostProcessorCount() </span>+ <span class="number">1</span> + postProcessorNames.length<span class="comment">;</span></span><br><span class="line">		<span class="keyword">beanFactory.addBeanPostProcessor(new </span><span class="keyword">BeanPostProcessorChecker(beanFactory, </span><span class="keyword">beanProcessorTargetCount));</span></span><br><span class="line"><span class="keyword"></span></span><br><span class="line"><span class="keyword">	</span>      // 这里把实现PriorityOrdered接口,Ordered 接口的<span class="keyword">BeanPostProcessors </span>和其他类型的<span class="keyword">BeanPostProcessors </span>区分开</span><br><span class="line">		List&lt;<span class="keyword">BeanPostProcessor&gt; </span>priorityOrderedPostProcessors = new ArrayList&lt;&gt;()<span class="comment">;</span></span><br><span class="line">		List&lt;<span class="keyword">BeanPostProcessor&gt; </span>internalPostProcessors = new ArrayList&lt;&gt;()<span class="comment">;</span></span><br><span class="line">		List&lt;<span class="keyword">String&gt; </span>orderedPostProcessorNames = new ArrayList&lt;&gt;()<span class="comment">;</span></span><br><span class="line">		List&lt;<span class="keyword">String&gt; </span>nonOrderedPostProcessorNames = new ArrayList&lt;&gt;()<span class="comment">;</span></span><br><span class="line">		for (<span class="keyword">String </span>ppName : postProcessorNames) &#123;</span><br><span class="line">			<span class="meta">if</span> (<span class="keyword">beanFactory.isTypeMatch(ppName, </span>PriorityOrdered.class)) &#123;</span><br><span class="line">				<span class="keyword">BeanPostProcessor </span>pp = <span class="keyword">beanFactory.getBean(ppName, </span><span class="keyword">BeanPostProcessor.class);</span></span><br><span class="line"><span class="keyword">	</span>			priorityOrderedPostProcessors.<span class="keyword">add(pp);</span></span><br><span class="line"><span class="keyword">	</span>			<span class="meta">if</span> (pp instanceof MergedBeanDefinitionPostProcessor) &#123;</span><br><span class="line">					internalPostProcessors.<span class="keyword">add(pp);</span></span><br><span class="line"><span class="keyword">	</span>			&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="meta">else</span> <span class="meta">if</span> (<span class="keyword">beanFactory.isTypeMatch(ppName, </span>Ordered.class)) &#123;</span><br><span class="line">				orderedPostProcessorNames.<span class="keyword">add(ppName);</span></span><br><span class="line"><span class="keyword">	</span>		&#125;</span><br><span class="line">			<span class="meta">else</span> &#123;</span><br><span class="line">				nonOrderedPostProcessorNames.<span class="keyword">add(ppName);</span></span><br><span class="line"><span class="keyword">	</span>		&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		//对实现了PriorityOrdered接口的按优先级排序</span><br><span class="line">		sortPostProcessors(<span class="keyword">beanFactory, </span>priorityOrderedPostProcessors)<span class="comment">;</span></span><br><span class="line">       //这里就是注册了，下面会说</span><br><span class="line">		registerBeanPostProcessors(<span class="keyword">beanFactory, </span>priorityOrderedPostProcessors)<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">		</span><br><span class="line">		List&lt;<span class="keyword">BeanPostProcessor&gt; </span>orderedPostProcessors = new ArrayList&lt;&gt;()<span class="comment">;</span></span><br><span class="line">		for (<span class="keyword">String </span>ppName : orderedPostProcessorNames) &#123;</span><br><span class="line">			<span class="keyword">BeanPostProcessor </span>pp = <span class="keyword">beanFactory.getBean(ppName, </span><span class="keyword">BeanPostProcessor.class);</span></span><br><span class="line"><span class="keyword">	</span>		orderedPostProcessors.<span class="keyword">add(pp);</span></span><br><span class="line"><span class="keyword">	</span>		<span class="meta">if</span> (pp instanceof MergedBeanDefinitionPostProcessor) &#123;</span><br><span class="line">				internalPostProcessors.<span class="keyword">add(pp);</span></span><br><span class="line"><span class="keyword">	</span>		&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		sortPostProcessors(<span class="keyword">beanFactory, </span>orderedPostProcessors)<span class="comment">;</span></span><br><span class="line">       //注册</span><br><span class="line">		registerBeanPostProcessors(<span class="keyword">beanFactory, </span>orderedPostProcessors)<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">		List&lt;<span class="keyword">BeanPostProcessor&gt; </span>nonOrderedPostProcessors = new ArrayList&lt;&gt;()<span class="comment">;</span></span><br><span class="line">		for (<span class="keyword">String </span>ppName : nonOrderedPostProcessorNames) &#123;</span><br><span class="line">			<span class="keyword">BeanPostProcessor </span>pp = <span class="keyword">beanFactory.getBean(ppName, </span><span class="keyword">BeanPostProcessor.class);</span></span><br><span class="line"><span class="keyword">	</span>		nonOrderedPostProcessors.<span class="keyword">add(pp);</span></span><br><span class="line"><span class="keyword">	</span>		<span class="meta">if</span> (pp instanceof MergedBeanDefinitionPostProcessor) &#123;</span><br><span class="line">				internalPostProcessors.<span class="keyword">add(pp);</span></span><br><span class="line"><span class="keyword">	</span>		&#125;</span><br><span class="line">		&#125;</span><br><span class="line"> 		//注册</span><br><span class="line">		registerBeanPostProcessors(<span class="keyword">beanFactory, </span>nonOrderedPostProcessors)<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">		// 最后注册常规的</span><br><span class="line">		sortPostProcessors(<span class="keyword">beanFactory, </span>internalPostProcessors)<span class="comment">;</span></span><br><span class="line">		registerBeanPostProcessors(<span class="keyword">beanFactory, </span>internalPostProcessors)<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">beanFactory.addBeanPostProcessor(new </span>ApplicationListenerDetector(applicationContext))<span class="comment">;</span></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到上方的代码就是把这些<code>BeanPostProcessor</code>分为了几类，然后分别根据规则排序后注册进BeanFactory中，而BeanFactory中其实就只是维护了一个<code>BeanPostProcessor</code>的列表而已</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> List&lt;BeanPostProcessor&gt; beanPostProcessors = <span class="keyword">new</span> ArrayList();</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> registerBeanPostProcessors(</span><br><span class="line">			ConfigurableListableBeanFactory beanFactory, List&lt;BeanPostProcessor&gt; postProcessors) &#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">for</span> (BeanPostProcessor postProcessor : postProcessors) &#123;</span><br><span class="line">			beanFactory.addBeanPostProcessor(postProcessor);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">addBeanPostProcessor</span><span class="params">(BeanPostProcessor beanPostProcessor)</span> </span>&#123;</span><br><span class="line">        Assert.notNull(beanPostProcessor, <span class="string">"BeanPostProcessor must not be null"</span>);</span><br><span class="line">        <span class="keyword">this</span>.beanPostProcessors.remove(beanPostProcessor);</span><br><span class="line">        <span class="keyword">this</span>.beanPostProcessors.add(beanPostProcessor);</span><br><span class="line">        <span class="keyword">if</span> (beanPostProcessor <span class="keyword">instanceof</span> InstantiationAwareBeanPostProcessor) &#123;</span><br><span class="line">            <span class="keyword">this</span>.hasInstantiationAwareBeanPostProcessors = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (beanPostProcessor <span class="keyword">instanceof</span> DestructionAwareBeanPostProcessor) &#123;</span><br><span class="line">            <span class="keyword">this</span>.hasDestructionAwareBeanPostProcessors = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4><span id="执行原理">执行原理</span></h4>
+<p>我们知道Bean的初始化是在定义在容器的刷新过程中，而具体的实现则是由<code>AbstractAutowireCapableBeanFactory.initializeBean()</code>方法完成的。在这个方法中就包含了<code>BeanPostProcessor</code>的调用逻辑</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">Object</span> initializeBean(<span class="keyword">final</span> <span class="keyword">String</span> beanName, <span class="keyword">final</span> <span class="keyword">Object</span> bean, RootBeanDefinition mbd) &#123;</span><br><span class="line">		<span class="keyword">if</span> (System.getSecurityManager() != <span class="keyword">null</span>) &#123;</span><br><span class="line">			AccessController.doPrivileged(<span class="keyword">new</span> PrivilegedAction&lt;<span class="keyword">Object</span>&gt;() &#123;</span><br><span class="line">				@Override</span><br><span class="line">				<span class="keyword">public</span> <span class="keyword">Object</span> run() &#123;</span><br><span class="line">					invokeAwareMethods(beanName, bean);</span><br><span class="line">					<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;, getAccessControlContext());</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			invokeAwareMethods(beanName, bean);</span><br><span class="line">		&#125;</span><br><span class="line"> </span><br><span class="line">		<span class="keyword">Object</span> wrappedBean = bean;</span><br><span class="line">		<span class="keyword">if</span> (mbd == <span class="keyword">null</span> || !mbd.isSynthetic()) &#123;</span><br><span class="line">            <span class="comment">// BeanPostProcessors 的Before 方法</span></span><br><span class="line">			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);</span><br><span class="line">		&#125;</span><br><span class="line"> </span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 调用初始化方法</span></span><br><span class="line">			invokeInitMethods(beanName, wrappedBean, mbd);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> BeanCreationException(</span><br><span class="line">					(mbd != <span class="keyword">null</span> ? mbd.getResourceDescription() : <span class="keyword">null</span>),</span><br><span class="line">					beanName, <span class="string">"Invocation of init method failed"</span>, ex);</span><br><span class="line">		&#125;</span><br><span class="line"> </span><br><span class="line">		<span class="keyword">if</span> (mbd == <span class="keyword">null</span> || !mbd.isSynthetic()) &#123;</span><br><span class="line">            <span class="comment">// BeanPostProcessors 的After方法</span></span><br><span class="line">			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> wrappedBean;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>而这里面的执行逻辑我们也可以猜到，无非就是循环遍历所有的<code>BeanPostProcessor</code>，然后一一执行</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">Object</span> applyBeanPostProcessorsBeforeInitialization(<span class="keyword">Object</span> existingBean, <span class="keyword">String</span> beanName)</span><br><span class="line">        <span class="keyword">throws</span> BeansException &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">Object</span> result = existingBean;</span><br><span class="line">    <span class="keyword">for</span> (BeanPostProcessor beanProcessor : getBeanPostProcessors()) &#123;</span><br><span class="line">        result = beanProcessor.postProcessBeforeInitialization(result, beanName);</span><br><span class="line">        <span class="keyword">if</span> (result == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;&#125;</span><br></pre></td></tr></table></figure>
+<p>其中<code>applyBeanPostProcessorsAfterInitialization</code>的实现内容跟这个是一样的</p>
+<p>但是这里面有一个主意的点，那就是如果具体的实现一但返回null，那么就会跳出for循环，后面的就得不到机会执行了</p>
+<h4><span id="常见用例">常见用例</span></h4>
+<p>查看这个接口的继承体系，可以看到这个接口的实现类是非常多的，各个实现类的功能如果感兴趣大家可以去慢慢挖掘一下<br>
+<img src="/2019/09/10/Spring扩展点之BeanPostProcessor/22.png" alt="2"></p>
 <p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>
 
       
@@ -460,7 +411,7 @@ Linux 操作系统还提供了 Mount、UTS、IPC、Network 和 User 这些 Names
       
         <div class="post-tags">
           
-            <a href="/tags/Docker/" rel="tag"># Docker</a>
+            <a href="/tags/Spring扩展点/" rel="tag"># Spring扩展点</a>
           
         </div>
       
@@ -473,8 +424,8 @@ Linux 操作系统还提供了 Mount、UTS、IPC、Network 和 User 这些 Names
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/07/07/abbitMQ如何实现高可用/" rel="next" title="RabbitMQ如何实现高可用">
-                <i class="fa fa-chevron-left"></i> RabbitMQ如何实现高可用
+              <a href="/2019/09/08/哪些你不知道的阅读源码的技巧/" rel="next" title="有哪些你不知道的阅读源码的技巧">
+                <i class="fa fa-chevron-left"></i> 有哪些你不知道的阅读源码的技巧
               </a>
             
           </div>
@@ -483,8 +434,8 @@ Linux 操作系统还提供了 Mount、UTS、IPC、Network 和 User 这些 Names
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/07/09/l-pod、deployment、service/" rel="prev" title="k8s核心yml--Pod、Deployment、Service">
-                k8s核心yml--Pod、Deployment、Service <i class="fa fa-chevron-right"></i>
+              <a href="/2019/09/10/Spring扩展点之BeanFactoryPostProcessor/" rel="prev" title="Spring扩展点之BeanFactoryPostProcessor">
+                Spring扩展点之BeanFactoryPostProcessor <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
