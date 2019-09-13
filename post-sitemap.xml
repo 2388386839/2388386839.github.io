@@ -7,6 +7,30 @@
     </url>
 
     <url>
+        <loc>https://shiyujun.cn/2019/09/13/Spring%E4%BA%8B%E4%BB%B6%E7%9B%91%E5%90%AC%E6%9C%BA%E5%88%B6/</loc>
+        <lastmod>2019-09-13T12:29:22.197Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/2019/09/13/ring%E6%89%A9%E5%B1%95%E7%82%B9%E4%B9%8BFactoryBean/</loc>
+        <lastmod>2019-09-13T12:02:05.248Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/2019/09/13/pring%E6%89%A9%E5%B1%95%E7%82%B9%E4%B9%8BAware%E6%8E%A5%E5%8F%A3%E6%97%8F/</loc>
+        <lastmod>2019-09-13T11:54:30.839Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://shiyujun.cn/2019/09/10/Spring%E6%89%A9%E5%B1%95%E7%82%B9%E4%B9%8BBeanFactoryPostProcessor/</loc>
         <lastmod>2019-09-10T14:03:30.485Z</lastmod>
         <changefreq>weekly</changefreq>

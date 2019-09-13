@@ -67,7 +67,7 @@
 
 
 
-  <meta name="keywords" content="RabbitMQ," />
+  <meta name="keywords" content="Spring扩展点," />
 
 
 
@@ -78,19 +78,19 @@
 
 
 
-<meta name="description" content="本文涉及：投递失败的消息怎么处理、如何实现延时队列、如何指定消息的优先级、消息的持久化是如何实现的、如何保证消息不丢失  投递失败的消息怎么处理 首先投递失败存在如下两个情况  当交换器无法根据自身的类型和路由键找到符合条件的队列 如果交换器在将消息路由到队列时发现队列上并不存在任何消费者 解决方案： 在生产者投递消息时指定mandatory或者imrnediate参数设为 true 时，Rab">
-<meta name="keywords" content="RabbitMQ">
+<meta name="description" content="前言 Spring中的事件机制其实就是设计模式中的观察者模式，主要由以下角色构成：  事件 事件监听器（监听并处理事件） 事件发布者（发布事件）  首先看一下监听器和发布者的接口定义 1234567891011public interface ApplicationListener&amp;lt;E extends ApplicationEvent&amp;gt; extends EventListener &amp;#">
+<meta name="keywords" content="Spring扩展点">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RabbitMQ高级面试题">
-<meta property="og:url" content="https://shiyujun.cn/2019/07/07/abbitMQ高级面试题/index.html">
+<meta property="og:title" content="Spring事件监听机制">
+<meta property="og:url" content="https://shiyujun.cn/2019/09/13/Spring事件监听机制/index.html">
 <meta property="og:site_name" content="Java学习录">
-<meta property="og:description" content="本文涉及：投递失败的消息怎么处理、如何实现延时队列、如何指定消息的优先级、消息的持久化是如何实现的、如何保证消息不丢失  投递失败的消息怎么处理 首先投递失败存在如下两个情况  当交换器无法根据自身的类型和路由键找到符合条件的队列 如果交换器在将消息路由到队列时发现队列上并不存在任何消费者 解决方案： 在生产者投递消息时指定mandatory或者imrnediate参数设为 true 时，Rab">
+<meta property="og:description" content="前言 Spring中的事件机制其实就是设计模式中的观察者模式，主要由以下角色构成：  事件 事件监听器（监听并处理事件） 事件发布者（发布事件）  首先看一下监听器和发布者的接口定义 1234567891011public interface ApplicationListener&amp;lt;E extends ApplicationEvent&amp;gt; extends EventListener &amp;#">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://shiyujun.cn/img/gongzhonghao.jpg">
-<meta property="og:updated_time" content="2019-07-07T08:14:05.814Z">
+<meta property="og:updated_time" content="2019-09-13T12:29:22.197Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RabbitMQ高级面试题">
-<meta name="twitter:description" content="本文涉及：投递失败的消息怎么处理、如何实现延时队列、如何指定消息的优先级、消息的持久化是如何实现的、如何保证消息不丢失  投递失败的消息怎么处理 首先投递失败存在如下两个情况  当交换器无法根据自身的类型和路由键找到符合条件的队列 如果交换器在将消息路由到队列时发现队列上并不存在任何消费者 解决方案： 在生产者投递消息时指定mandatory或者imrnediate参数设为 true 时，Rab">
+<meta name="twitter:title" content="Spring事件监听机制">
+<meta name="twitter:description" content="前言 Spring中的事件机制其实就是设计模式中的观察者模式，主要由以下角色构成：  事件 事件监听器（监听并处理事件） 事件发布者（发布事件）  首先看一下监听器和发布者的接口定义 1234567891011public interface ApplicationListener&amp;lt;E extends ApplicationEvent&amp;gt; extends EventListener &amp;#">
 <meta name="twitter:image" content="https://shiyujun.cn/img/gongzhonghao.jpg">
 
 
@@ -121,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="https://shiyujun.cn/2019/07/07/abbitMQ高级面试题/"/>
+  <link rel="canonical" href="https://shiyujun.cn/2019/09/13/Spring事件监听机制/"/>
 
 
 
 
 
-  <title>RabbitMQ高级面试题 | Java学习录</title>
+  <title>Spring事件监听机制 | Java学习录</title>
   
 
 
@@ -288,7 +288,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://shiyujun.cn/2019/07/07/abbitMQ高级面试题/">
+    <link itemprop="mainEntityOfPage" href="https://shiyujun.cn/2019/09/13/Spring事件监听机制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="石玉军">
@@ -305,7 +305,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">RabbitMQ高级面试题</h2>
+          <h2 class="post-title" itemprop="name headline">Spring事件监听机制</h2>
         
 
         <div class="post-meta">
@@ -317,8 +317,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-07T16:08:00+08:00">
-                2019-07-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-13T20:13:00+08:00">
+                2019-09-13
               </time>
             
 
@@ -336,8 +336,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/07/07/abbitMQ高级面试题/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2019/07/07/abbitMQ高级面试题/" itemprop="commentCount"></span>
+                <a href="/2019/09/13/Spring事件监听机制/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/09/13/Spring事件监听机制/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -370,63 +370,27 @@
       
 
       
-        <blockquote>
-<p>本文涉及：投递失败的消息怎么处理、如何实现延时队列、如何指定消息的优先级、消息的持久化是如何实现的、如何保证消息不丢失</p>
-</blockquote>
-<h5><span id="投递失败的消息怎么处理">投递失败的消息怎么处理</span></h5>
-<p>首先投递失败存在如下两个情况</p>
-<ul>
-<li>当交换器无法根据自身的类型和路由键找到符合条件的队列</li>
-<li>如果交换器在将消息路由到队列时发现队列上并不存在任何消费者<br>
-解决方案：<br>
-在生产者投递消息时指定mandatory或者imrnediate参数设为 true 时，RabbitMQ 会把无法投递的消息通过Basic.Return 命令将消息返回给生产者，此时生产者需要调用channel.addReturnListener 来添加 ReturnListener 监昕器实现监听投递失败的消息</li>
-</ul>
-<p>如果设置了上方两个参数就要添加ReturnListener 逻辑，使生产者的逻辑变得复杂，RabbitMQ中的备份交换机也可以处理这个问题<br>
-以通过在声明交换器(调用 channel.exchangeDeclare 方法)的时候添加alternate-exchange 参数来实现<br>
-对于备份交换器，使用时包含几种特殊情况:<br>
-如果设置的备份交换器不存在，客户端和 RabbitMQ 服务端都不会有异常出现，此时消息会丢失<br>
-如果备份交换器没有绑定任何队列，客户端和 RabbitMQ 服务端都不会有异常出现，此时消息会丢失<br>
-如果备份交换器没有任何匹配的队列，客户端和 RabbitMQ 服务端都不会有异常出现，此时消息会丢失<br>
-如果备份交换器和 mandatory 参数一起使用，那么 mandatory 参数无效</p>
-<h5><span id="如何设置消息的过期时间">如何设置消息的过期时间</span></h5>
-<p>设置队列属性，队列中所有消息都有相同的过期时间<br>
-对消息本身进行单独设置，每条消息的 TTL 可以不同<br>
-如果两种方法一起使用，则消息的 TTL 以两者之间较小的那个数值为准</p>
-<h5><span id="如何实现延时队列">如何实现延时队列</span></h5>
-<ul>
-<li>使用死信交换机<br>
-消息投递到一个没有消费者的队列中，为这个队列指定死信队列，当消息达到设置过期时间还没有被消费时将会被发布到死信队列中，而消费者订阅死信队列直接消费到了一份延时消息</li>
-</ul>
-<p>延时消息插件<br>
-从以下地址下载延时插件rabbitmq_delayed_message_exchange</p>
-<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">https:</span><span class="comment">//www.rabbitmq.com/community-plugins.html</span></span><br></pre></td></tr></table></figure>
-<p>把下载好的插件放到以下目录</p>
-<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="class"><span class="keyword">lib</span>/<span class="title">rabbitmq</span>/<span class="title">lib</span>/<span class="title">rabbitmq_server3</span>.6.4/<span class="title">plugins</span></span></span><br></pre></td></tr></table></figure>
-<p>启动插件</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmq-plugins <span class="builtin-name">enable</span> rabbitmq_delayed_message_exchange</span><br></pre></td></tr></table></figure>
-<p>声明交换器类型为x-delayed-message来标示此交换机为延时交换机<br>
-发送消息时在header中添加”x-delay”参数来控制消息的延时时间</p>
-<h5><span id="如何指定消息的优先级">如何指定消息的优先级</span></h5>
-<p>设置队列的 max priority 参数，RabbitMQ中消息的优先级默认是0，最大值是10</p>
-<h5><span id="消息的持久化是如何实现的">消息的持久化是如何实现的</span></h5>
-<p>RabbitMQ的持久化分为:交换器的持久化、队列的持久化和消息的持久化</p>
-<h5><span id="交换器和队列的持久化都是通过在声明时将-durable-参数置为-true-实现的">交换器和队列的持久化都是通过在声明时将 durable 参数置为 true 实现的</span></h5>
-<p>消息的持久化是在发送消息指定deliveryMode为2实现的</p>
-<h5><span id="如何保证消息不丢失">如何保证消息不丢失</span></h5>
-<p>生产者开启事务或者发送方确认机制，交换机、队列和消息全部设置持久化，消费者开启消费确认机制</p>
-<p></p><h4 style="color:red"><span id="推荐阅读">推荐阅读</span></h4><p></p>
+        <h4><span id="前言">前言</span></h4>
+<p>Spring中的事件机制其实就是设计模式中的观察者模式，主要由以下角色构成：</p>
 <ol>
-<li><a href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A" target="_blank" rel="noopener">SpringCloud学习系列汇总</a></li>
-<li><a href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg" target="_blank" rel="noopener">为什么一线大厂面试必问redis，有啥好问的？</a></li>
-<li><a href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q/" target="_blank" rel="noopener">多线程面试必备基础知识汇总</a></li>
-<li><a href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ" target="_blank" rel="noopener">Java集合源码分析汇总-JDK1.8</a></li>
-<li><a href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA" target="_blank" rel="noopener">Linux常用命令速查-汇总篇</a></li>
-<li><a href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw" target="_blank" rel="noopener">JVM系列文章汇总</a></li>
-<li><a href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA" target="_blank" rel="noopener">MySQL系列文章汇总</a></li>
-<li><a href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw" target="_blank" rel="noopener">RabbitMQ系列文章汇总</a></li>
+<li>事件</li>
+<li>事件监听器（监听并处理事件）</li>
+<li>事件发布者（发布事件）</li>
 </ol>
-<p></p><h4 style="color:red"><span id="博客所有文章首发于公众号java学习录转载请保留扫码关注公众号即可领取2000gjava学习资源">博客所有文章首发于公众号《Java学习录》转载请保留<br>
-扫码关注公众号即可领取2000GJava学习资源 </span></h4><p></p>
+<p>首先看一下监听器和发布者的接口定义</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public<span class="built_in"> interface </span>ApplicationListener&lt;E extends ApplicationEvent&gt; extends EventListener &#123;</span><br><span class="line">      void onApplicationEvent(E event);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  public<span class="built_in"> interface </span>ApplicationEventPublisher &#123;</span><br><span class="line"><span class="built_in">	default </span>void publishEvent(ApplicationEvent event) &#123;</span><br><span class="line">		publishEvent((Object) event);</span><br><span class="line">	&#125;</span><br><span class="line">	void publishEvent(Object event);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4><span id="事件流转流程">事件流转流程</span></h4>
+<h5><span id="初始化事件广播器">初始化事件广播器</span></h5>
+<p>看一下这个方法<code>AbstractApplicationContext.refresh</code>，在IOC源码解析那篇文章已经把这个方法分析完了，所以直接关注事件广播器和事件发布相关的逻辑即可</p>
+<figure class="highlight d"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">void</span> refresh() throws BeansException, IllegalStateException &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>.startupShutdownMonitor) &#123;</span><br><span class="line">            <span class="comment">// Prepare this context for refreshing.</span></span><br><span class="line">            prepareRefresh();</span><br><span class="line"> </span><br><span class="line">            <span class="comment">// Tell the subclass to refresh the internal bean factory.</span></span><br><span class="line">            ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();</span><br><span class="line"> </span><br><span class="line">            <span class="comment">// Prepare the bean factory for use in this context.</span></span><br><span class="line">            prepareBeanFactory(beanFactory);</span><br><span class="line"> </span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// Allows post-processing of the bean factory in context subclasses.</span></span><br><span class="line">                postProcessBeanFactory(beanFactory);</span><br><span class="line"> </span><br><span class="line">                <span class="comment">// Invoke factory processors registered as beans in the context.</span></span><br><span class="line">                invokeBeanFactoryPostProcessors(beanFactory);</span><br><span class="line"> </span><br><span class="line">                <span class="comment">// Register bean processors that intercept bean creation.</span></span><br><span class="line">                registerBeanPostProcessors(beanFactory);</span><br><span class="line"> </span><br><span class="line">                <span class="comment">// Initialize message source for this context.</span></span><br><span class="line">                initMessageSource();</span><br><span class="line"> </span><br><span class="line">                <span class="comment">// 初始化事件广播器</span></span><br><span class="line">                initApplicationEventMulticaster();</span><br><span class="line"> </span><br><span class="line">                <span class="comment">// Initialize other special beans in specific context subclasses.</span></span><br><span class="line">                onRefresh();</span><br><span class="line"> </span><br><span class="line">                <span class="comment">// Check for listener beans and register them.</span></span><br><span class="line">                registerListeners();</span><br><span class="line"> </span><br><span class="line">                <span class="comment">// Instantiate all remaining (non-lazy-init) singletons.</span></span><br><span class="line">                finishBeanFactoryInitialization(beanFactory);</span><br><span class="line"> </span><br><span class="line">                <span class="comment">// 发布事件</span></span><br><span class="line">                finishRefresh();</span><br><span class="line">            &#125;</span><br><span class="line"> </span><br><span class="line">            <span class="keyword">catch</span> (BeansException ex) &#123;</span><br><span class="line">                logger.warn(<span class="string">"Exception encountered during context initialization - cancelling refresh attempt"</span>, ex);</span><br><span class="line"> </span><br><span class="line">                <span class="comment">// Destroy already created singletons to avoid dangling resources.</span></span><br><span class="line">                destroyBeans();</span><br><span class="line"> </span><br><span class="line">                <span class="comment">// Reset 'active' flag.</span></span><br><span class="line">                cancelRefresh(ex);</span><br><span class="line"> </span><br><span class="line">                <span class="comment">// Propagate exception to caller.</span></span><br><span class="line">                <span class="keyword">throw</span> ex;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> initApplicationEventMulticaster() &#123;</span><br><span class="line">        ConfigurableListableBeanFactory beanFactory = getBeanFactory();</span><br><span class="line">        <span class="keyword">if</span> (beanFactory.containsLocalBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME)) &#123;</span><br><span class="line">            <span class="keyword">this</span>.applicationEventMulticaster =</span><br><span class="line">                    beanFactory.getBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, ApplicationEventMulticaster.<span class="keyword">class</span>);</span><br><span class="line">            <span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">                logger.<span class="keyword">debug</span>(<span class="string">"Using ApplicationEventMulticaster ["</span> + <span class="keyword">this</span>.applicationEventMulticaster + <span class="string">"]"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.applicationEventMulticaster = <span class="keyword">new</span> SimpleApplicationEventMulticaster(beanFactory);</span><br><span class="line">            beanFactory.registerSingleton(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, <span class="keyword">this</span>.applicationEventMulticaster);</span><br><span class="line">            <span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">                logger.<span class="keyword">debug</span>(<span class="string">"Unable to locate ApplicationEventMulticaster with name '"</span> +</span><br><span class="line">                        APPLICATION_EVENT_MULTICASTER_BEAN_NAME +</span><br><span class="line">                        <span class="string">"': using default ["</span> + <span class="keyword">this</span>.applicationEventMulticaster + <span class="string">"]"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到如果没有自定义的事件广播器，默认是使用<code>SimpleApplicationEventMulticaster</code>的</p>
+<h5><span id="发布事件">发布事件</span></h5>
+<p>发布事件是在bean的初始化之后的</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">finishRefresh</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="comment">// Initialize lifecycle processor for this context.</span></span><br><span class="line">        initLifecycleProcessor();</span><br><span class="line"> </span><br><span class="line">        <span class="comment">// Propagate refresh to lifecycle processor first.</span></span><br><span class="line">        getLifecycleProcessor().onRefresh();</span><br><span class="line"> </span><br><span class="line">        <span class="comment">// 发布事件</span></span><br><span class="line">        publishEvent(<span class="keyword">new</span> ContextRefreshedEvent(<span class="keyword">this</span>));</span><br><span class="line"> </span><br><span class="line">        <span class="comment">// Participate in LiveBeansView MBean, if active.</span></span><br><span class="line">        LiveBeansView.registerApplicationContext(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">publishEvent</span>(<span class="params">ApplicationEvent <span class="keyword">event</span></span>) </span>&#123;</span><br><span class="line">        Assert.notNull(<span class="keyword">event</span>, <span class="string">"Event must not be null"</span>);</span><br><span class="line">        <span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">            logger.trace(<span class="string">"Publishing event in "</span> + getDisplayName() + <span class="string">": "</span> + <span class="keyword">event</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//1. 获取到事件广播器，发布事件</span></span><br><span class="line">        getApplicationEventMulticaster().multicastEvent(<span class="keyword">event</span>);</span><br><span class="line">        <span class="comment">//2. 如果存在父容器，父容器也将发布事件</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.parent != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.parent.publishEvent(<span class="keyword">event</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>具体的发布逻辑在<code>multicastEvent</code>方法中</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">multicastEvent</span>(<span class="params">final ApplicationEvent <span class="keyword">event</span></span>) </span>&#123;</span><br><span class="line">        <span class="comment">//遍历执行listener，getApplicationListeners调用AbstractApplicationEventMulticaster父类方法</span></span><br><span class="line">        <span class="keyword">for</span> (final ApplicationListener listener : getApplicationListeners(<span class="keyword">event</span>)) &#123;</span><br><span class="line">            Executor executor = getTaskExecutor();</span><br><span class="line">            <span class="keyword">if</span> (executor != <span class="literal">null</span>) &#123;</span><br><span class="line">                executor.execute(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">                        listener.onApplicationEvent(<span class="keyword">event</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                listener.onApplicationEvent(<span class="keyword">event</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到也没啥特殊的，无非就是起个线程池去调用这些监听器的方法</p>
+<p>而监听器的处理就看各个监听器的具体实现了</p>
 <p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>
 
       
@@ -445,7 +409,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/RabbitMQ/" rel="tag"># RabbitMQ</a>
+            <a href="/tags/Spring扩展点/" rel="tag"># Spring扩展点</a>
           
         </div>
       
@@ -458,8 +422,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/07/07/abbitMQ如何实现高可用/" rel="next" title="RabbitMQ如何实现高可用">
-                <i class="fa fa-chevron-left"></i> RabbitMQ如何实现高可用
+              <a href="/2019/09/13/ring扩展点之FactoryBean/" rel="next" title="Spring扩展点之FactoryBean接口">
+                <i class="fa fa-chevron-left"></i> Spring扩展点之FactoryBean接口
               </a>
             
           </div>
@@ -467,10 +431,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/07/07/ubernetes是什么东西？/" rel="prev" title="Kubernetes是什么东西？">
-                Kubernetes是什么东西？ <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
