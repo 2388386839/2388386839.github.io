@@ -262,7 +262,14 @@
 
     <url>
         <loc>https://shiyujun.cn/tags/Spring/</loc>
-        <lastmod>2019-09-13T15:52:05.506Z</lastmod>
+        <lastmod>2019-09-19T15:07:11.665Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shiyujun.cn/tags/SpringBoot%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+        <lastmod>2019-09-19T15:34:12.809Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
