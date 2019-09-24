@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+
+
+  <meta name="keywords" content="SpringBoot源码解析," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在读本篇文章之前如果你读过这篇文章SpringBoot自动装配原理解析应该会更加轻松  准备工作 我们知道SpringBoot的自动装配的秘密在org.springframework.boot.autoconfigure包下的spring.factories文件中，而嵌入Tomcat的原理就在这个文件中加载的一个配置类：org.springframework.boot.autoconfigure">
+<meta name="keywords" content="SpringBoot源码解析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot嵌入式Tomcat的自动配置原理">
+<meta property="og:url" content="https://shiyujun.cn/2019/09/25/ringBoot嵌入式Tomcat的自动配置原理/index.html">
+<meta property="og:site_name" content="Java学习录">
+<meta property="og:description" content="在读本篇文章之前如果你读过这篇文章SpringBoot自动装配原理解析应该会更加轻松  准备工作 我们知道SpringBoot的自动装配的秘密在org.springframework.boot.autoconfigure包下的spring.factories文件中，而嵌入Tomcat的原理就在这个文件中加载的一个配置类：org.springframework.boot.autoconfigure">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://shiyujun.cn/img/gongzhonghao.jpg">
+<meta property="og:updated_time" content="2019-09-24T16:15:15.576Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SpringBoot嵌入式Tomcat的自动配置原理">
+<meta name="twitter:description" content="在读本篇文章之前如果你读过这篇文章SpringBoot自动装配原理解析应该会更加轻松  准备工作 我们知道SpringBoot的自动装配的秘密在org.springframework.boot.autoconfigure包下的spring.factories文件中，而嵌入Tomcat的原理就在这个文件中加载的一个配置类：org.springframework.boot.autoconfigure">
+<meta name="twitter:image" content="https://shiyujun.cn/img/gongzhonghao.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shiyujun.cn/2019/09/25/ringBoot嵌入式Tomcat的自动配置原理/"/>
+
+
+
+
+
+  <title>SpringBoot嵌入式Tomcat的自动配置原理 | Java学习录</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?eb90dcd1823a43971326ae1a2633c8f7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Java学习录</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">专注于Java知识体系学习，Spring、SpringBoot、SpringCloud源码解析</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shiyujun.cn/2019/09/25/ringBoot嵌入式Tomcat的自动配置原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="石玉军">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://shiyujun.cn/img/qrcode.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Java学习录">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">SpringBoot嵌入式Tomcat的自动配置原理</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T00:12:00+08:00">
+                2019-09-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/09/25/ringBoot嵌入式Tomcat的自动配置原理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/09/25/ringBoot嵌入式Tomcat的自动配置原理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>在读本篇文章之前如果你读过这篇文章<a href="https://mp.weixin.qq.com/s/I3-sM55JSb4BFJ-zPosZgQ" target="_blank" rel="noopener">SpringBoot自动装配原理解析</a>应该会更加轻松</p>
+</blockquote>
+<h5><span id="准备工作">准备工作</span></h5>
+<p>我们知道SpringBoot的自动装配的秘密在<code>org.springframework.boot.autoconfigure</code>包下的<code>spring.factories</code>文件中，而嵌入Tomcat的原理就在这个文件中加载的一个配置类：<code>org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@AutoConfigureOrder</span>(Ordered.HIGHEST_PRECEDENCE)</span><br><span class="line"><span class="meta">@ConditionalOnClass</span>(ServletRequest.class)</span><br><span class="line"><span class="meta">@ConditionalOnWebApplication</span>(type = Type.SERVLET)</span><br><span class="line"><span class="meta">@EnableConfigurationProperties</span>(ServerProperties.class)</span><br><span class="line"><span class="meta">@Import</span>(&#123; ServletWebServerFactoryAutoConfiguration.BeanPostProcessorsRegistrar.class,</span><br><span class="line">		ServletWebServerFactoryConfiguration.EmbeddedTomcat.class,</span><br><span class="line">		ServletWebServerFactoryConfiguration.EmbeddedJetty.class,</span><br><span class="line">		ServletWebServerFactoryConfiguration.EmbeddedUndertow.class &#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServletWebServerFactoryAutoConfiguration</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> ServletWebServerFactoryCustomizer <span class="title">servletWebServerFactoryCustomizer</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">			ServerProperties serverProperties)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> ServletWebServerFactoryCustomizer(serverProperties);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="meta">@ConditionalOnClass</span>(name = <span class="string">"org.apache.catalina.startup.Tomcat"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> TomcatServletWebServerFactoryCustomizer <span class="title">tomcatServletWebServerFactoryCustomizer</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">			ServerProperties serverProperties)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> TomcatServletWebServerFactoryCustomizer(serverProperties);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Registers a &#123;<span class="doctag">@link</span> WebServerFactoryCustomizerBeanPostProcessor&#125;. Registered via</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@link</span> ImportBeanDefinitionRegistrar&#125; for early registration.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">BeanPostProcessorsRegistrar</span></span></span><br><span class="line"><span class="class">			<span class="keyword">implements</span> <span class="title">ImportBeanDefinitionRegistrar</span>, <span class="title">BeanFactoryAware</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">private</span> ConfigurableListableBeanFactory beanFactory;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setBeanFactory</span><span class="params">(BeanFactory beanFactory)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">			<span class="keyword">if</span> (beanFactory <span class="keyword">instanceof</span> ConfigurableListableBeanFactory) &#123;</span><br><span class="line">				<span class="keyword">this</span>.beanFactory = (ConfigurableListableBeanFactory) beanFactory;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerBeanDefinitions</span><span class="params">(AnnotationMetadata importingClassMetadata,</span></span></span><br><span class="line"><span class="function"><span class="params">				BeanDefinitionRegistry registry)</span> </span>&#123;</span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.beanFactory == <span class="keyword">null</span>) &#123;</span><br><span class="line">				<span class="keyword">return</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			registerSyntheticBeanIfMissing(registry,</span><br><span class="line">					<span class="string">"webServerFactoryCustomizerBeanPostProcessor"</span>,</span><br><span class="line">					WebServerFactoryCustomizerBeanPostProcessor.class);</span><br><span class="line">			registerSyntheticBeanIfMissing(registry,</span><br><span class="line">					<span class="string">"errorPageRegistrarBeanPostProcessor"</span>,</span><br><span class="line">					ErrorPageRegistrarBeanPostProcessor.class);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">registerSyntheticBeanIfMissing</span><span class="params">(BeanDefinitionRegistry registry,</span></span></span><br><span class="line"><span class="function"><span class="params">				String name, Class&lt;?&gt; beanClass)</span> </span>&#123;</span><br><span class="line">			<span class="keyword">if</span> (ObjectUtils.isEmpty(</span><br><span class="line">					<span class="keyword">this</span>.beanFactory.getBeanNamesForType(beanClass, <span class="keyword">true</span>, <span class="keyword">false</span>))) &#123;</span><br><span class="line">				RootBeanDefinition beanDefinition = <span class="keyword">new</span> RootBeanDefinition(beanClass);</span><br><span class="line">				beanDefinition.setSynthetic(<span class="keyword">true</span>);</span><br><span class="line">				registry.registerBeanDefinition(name, beanDefinition);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先看一下上方的几个注解</p>
+<ol>
+<li><code>@AutoConfigureOrder</code>这个注解是决定配置类的加载顺序的，当注解里的值越小越先加载，而<code>Ordered.HIGHEST_PRECEDENCE</code>的值是<code>Integer.MIN_VALUE</code>也就是说这个类肯定是最先加载的那一批</li>
+<li><code>@ConditionalOnXXX</code>在之前的文章中已经无数次提到了，就不再阐述了</li>
+<li><code>@EnableConfigurationProperties</code>开启<code>ServerProperties</code>类的属性值配置。而这个类里面包含的就是Web服务的配置</li>
+</ol>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties</span>(prefix = <span class="string">"server"</span>, ignoreUnknownFields = <span class="keyword">true</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServerProperties</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> Integer port;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> InetAddress address;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@NestedConfigurationProperty</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> ErrorProperties <span class="keyword">error</span> = <span class="keyword">new</span> ErrorProperties();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> Boolean useForwardHeaders;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> String serverHeader;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> maxHttpHeaderSize = <span class="number">0</span>; <span class="comment">// bytes</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> Duration connectionTimeout;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@NestedConfigurationProperty</span></span><br><span class="line">	<span class="keyword">private</span> Ssl ssl;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@NestedConfigurationProperty</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> Compression compression = <span class="keyword">new</span> Compression();</span><br><span class="line"></span><br><span class="line">	<span class="meta">@NestedConfigurationProperty</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> Http2 http2 = <span class="keyword">new</span> Http2();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> Servlet servlet = <span class="keyword">new</span> Servlet();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> Tomcat tomcat = <span class="keyword">new</span> Tomcat();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> Jetty jetty = <span class="keyword">new</span> Jetty();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> Undertow undertow = <span class="keyword">new</span> Undertow();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个类的代码太多了，这里就不一一贴出来了，我们平常在<code>application.properties</code>中配置的server.xxx就是这个类中属性</p>
+<ol start="4">
+<li><code>@Import</code>引入了4个类，看都是什么吧</li>
+<li><code>BeanPostProcessorsRegistrar</code></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">BeanPostProcessorsRegistrar</span></span></span><br><span class="line"><span class="class">			<span class="keyword">implements</span> <span class="title">ImportBeanDefinitionRegistrar</span>, <span class="title">BeanFactoryAware</span> </span>&#123;</span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerBeanDefinitions</span><span class="params">(AnnotationMetadata importingClassMetadata,</span></span></span><br><span class="line"><span class="function"><span class="params">				BeanDefinitionRegistry registry)</span> </span>&#123;</span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.beanFactory == <span class="keyword">null</span>) &#123;</span><br><span class="line">				<span class="keyword">return</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			registerSyntheticBeanIfMissing(registry,</span><br><span class="line">					<span class="string">"webServerFactoryCustomizerBeanPostProcessor"</span>,</span><br><span class="line">					WebServerFactoryCustomizerBeanPostProcessor.class);</span><br><span class="line">			registerSyntheticBeanIfMissing(registry,</span><br><span class="line">					<span class="string">"errorPageRegistrarBeanPostProcessor"</span>,</span><br><span class="line">					ErrorPageRegistrarBeanPostProcessor.class);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">registerSyntheticBeanIfMissing</span><span class="params">(BeanDefinitionRegistry registry,</span></span></span><br><span class="line"><span class="function"><span class="params">				String name, Class&lt;?&gt; beanClass)</span> </span>&#123;</span><br><span class="line">			<span class="keyword">if</span> (ObjectUtils.isEmpty(</span><br><span class="line">					<span class="keyword">this</span>.beanFactory.getBeanNamesForType(beanClass, <span class="keyword">true</span>, <span class="keyword">false</span>))) &#123;</span><br><span class="line">				RootBeanDefinition beanDefinition = <span class="keyword">new</span> RootBeanDefinition(beanClass);</span><br><span class="line">				beanDefinition.setSynthetic(<span class="keyword">true</span>);</span><br><span class="line">				registry.registerBeanDefinition(name, beanDefinition);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>这个类注册了两个bean：<code>WebServerFactoryCustomizerBeanPostProcessor</code>和<code>ErrorPageRegistrarBeanPostProcessor</code>关于这两个bean的作用稍后再详细介绍</p>
+<ol start="2">
+<li><code>EmbeddedTomcat</code></li>
+</ol>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@Configuration</span></span><br><span class="line">	<span class="variable">@ConditionalOnClass</span>(&#123; Servlet.class, Tomcat.class, UpgradeProtocol.class &#125;)</span><br><span class="line">	<span class="variable">@ConditionalOnMissingBean</span>(value = ServletWebServerFactory.class, search = SearchStrategy.CURRENT)</span><br><span class="line">	public static class EmbeddedTomcat &#123;</span><br><span class="line"></span><br><span class="line">		<span class="variable">@Bean</span></span><br><span class="line">		public TomcatServletWebServerFactory tomcatServletWebServerFactory() &#123;</span><br><span class="line">			<span class="selector-tag">return</span> <span class="selector-tag">new</span> <span class="selector-tag">TomcatServletWebServerFactory</span>();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>这个类会在存在Tomcat相关jar包时添加一个<code>TomcatServletWebServerFactory</code>bean</p>
+<p>其他两个相信大家都知道怎么回事了</p>
+<ol start="5">
+<li>除了这些这个类还注入了两个类<code>ServletWebServerFactoryCustomizer</code>和<code>TomcatServletWebServerFactoryCustomizer</code></li>
+</ol>
+<p>现在前期准备工作已经做好了，看一下这个Tomcat是如何启动的吧</p>
+<h5><span id="启动">启动</span></h5>
+<p>启动入口在<code>ServletWebServerApplicationContext</code>中的<code>onRefresh</code>方法</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">onRefresh</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>.onRefresh();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			createWebServer();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> ApplicationContextException(<span class="string">"Unable to start web server"</span>, ex);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>Tomcat的启动就在<code>createWebServer</code>方法里面了</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">void</span> <span class="title">createWebServer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		WebServer webServer = <span class="keyword">this</span>.webServer;</span><br><span class="line">		ServletContext servletContext = getServletContext();</span><br><span class="line">  		<span class="comment">//第一次访问的时候两个对象都为空</span></span><br><span class="line">		<span class="keyword">if</span> (webServer == <span class="keyword">null</span> &amp;&amp; servletContext == <span class="keyword">null</span>) &#123;</span><br><span class="line">			ServletWebServerFactory factory = getWebServerFactory();</span><br><span class="line">			<span class="keyword">this</span>.webServer = factory.getWebServer(getSelfInitializer());</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(servletContext != <span class="keyword">null</span>)</span> </span>&#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				getSelfInitializer().onStartup(servletContext);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">catch</span> (ServletException ex) &#123;</span><br><span class="line">				<span class="keyword">throw</span> <span class="keyword">new</span> ApplicationContextException(<span class="string">"Cannot initialize servlet context"</span>,</span><br><span class="line">						ex);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		initPropertySources();</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>首先看一下<code>getWebServerFactory</code></p>
+<figure class="highlight d"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> ServletWebServerFactory getWebServerFactory() &#123;</span><br><span class="line">		<span class="comment">// 这里获取的beanname就是上方注册的tomcatServletWebServerFactory了</span></span><br><span class="line">		String[] beanNames = getBeanFactory()</span><br><span class="line">				.getBeanNamesForType(ServletWebServerFactory.<span class="keyword">class</span>);</span><br><span class="line">		<span class="keyword">if</span> (beanNames.length == <span class="number">0</span>) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> ApplicationContextException(</span><br><span class="line">					<span class="string">"Unable to start ServletWebServerApplicationContext due to missing "</span></span><br><span class="line">							+ <span class="string">"ServletWebServerFactory bean."</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (beanNames.length &gt; <span class="number">1</span>) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> ApplicationContextException(</span><br><span class="line">					<span class="string">"Unable to start ServletWebServerApplicationContext due to multiple "</span></span><br><span class="line">							+ <span class="string">"ServletWebServerFactory beans : "</span></span><br><span class="line">							+ StringUtils.arrayToCommaDelimitedString(beanNames));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> getBeanFactory().getBean(beanNames[<span class="number">0</span>], ServletWebServerFactory.<span class="keyword">class</span>);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>准备环境里注册的bean现在出来一个了。注意，上方还注册了一个后置处理器<code>EmbeddedServletContainerCustomizerBeanPostProcessor</code>，获取bean<code>tomcatServletWebServerFactory</code>的时候就会执行后置处理器的<code>postProcessBeforeInitialization</code>方法</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Object postProcessBeforeInitialization(Object bean, String beanName)</span><br><span class="line">			throws BeansException &#123;</span><br><span class="line">	<span class="keyword">if</span> (bean instanceof WebServerFactory) &#123;</span><br><span class="line">		postProcessBeforeInitialization((WebServerFactory) bean);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> bean;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> void postProcessBeforeInitialization(WebServerFactory webServerFactory) &#123;</span><br><span class="line">		LambdaSafe</span><br><span class="line">				.callbacks(WebServerFactoryCustomizer.<span class="keyword">class</span>, getCustomizers(),</span><br><span class="line">						webServerFactory)</span><br><span class="line">				.withLogger(WebServerFactoryCustomizerBeanPostProcessor.<span class="keyword">class</span>)</span><br><span class="line">				.invoke((customizer) -&gt; customizer.customize(webServerFactory));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> Collection&lt;WebServerFactoryCustomizer&lt;?&gt;&gt; getCustomizers() &#123;</span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.customizers == <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="comment">// Look up does not include the parent context</span></span><br><span class="line">			<span class="keyword">this</span>.customizers = new ArrayList&lt;&gt;(getWebServerFactoryCustomizerBeans());</span><br><span class="line">			<span class="keyword">this</span>.customizers.sort(AnnotationAwareOrderComparator.INSTANCE);</span><br><span class="line">			<span class="keyword">this</span>.customizers = Collections.unmodifiableList(<span class="keyword">this</span>.customizers);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.customizers;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@SuppressWarnings(&#123; <span class="meta-string">"unchecked"</span>, <span class="meta-string">"rawtypes"</span> &#125;)</span></span><br><span class="line">	<span class="keyword">private</span> Collection&lt;WebServerFactoryCustomizer&lt;?&gt;&gt; getWebServerFactoryCustomizerBeans() &#123;</span><br><span class="line">		<span class="keyword">return</span> (Collection) <span class="keyword">this</span>.beanFactory</span><br><span class="line">				.getBeansOfType(WebServerFactoryCustomizer.<span class="keyword">class</span>, <span class="literal">false</span>, <span class="literal">false</span>).values();</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>这个处理器的作用是获得所有定制器，然后执行定制器的方法</p>
+<h6><span id="接着往下看">接着往下看</span></h6>
+<p>这个时候就可以启动Tomcat了</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> WebServer <span class="title">getWebServer</span>(<span class="params">ServletContextInitializer... initializers</span>) </span>&#123;</span><br><span class="line">		Tomcat tomcat = <span class="keyword">new</span> Tomcat();</span><br><span class="line">		File baseDir = (<span class="keyword">this</span>.baseDirectory != <span class="literal">null</span> ? <span class="keyword">this</span>.baseDirectory</span><br><span class="line">				: createTempDir(<span class="string">"tomcat"</span>));</span><br><span class="line">		tomcat.setBaseDir(baseDir.getAbsolutePath());</span><br><span class="line">		Connector connector = <span class="keyword">new</span> Connector(<span class="keyword">this</span>.protocol);</span><br><span class="line">		tomcat.getService().addConnector(connector);</span><br><span class="line">		customizeConnector(connector);</span><br><span class="line">		tomcat.setConnector(connector);</span><br><span class="line">		tomcat.getHost().setAutoDeploy(<span class="literal">false</span>);</span><br><span class="line">		configureEngine(tomcat.getEngine());</span><br><span class="line">		<span class="keyword">for</span> (Connector additionalConnector : <span class="keyword">this</span>.additionalTomcatConnectors) &#123;</span><br><span class="line">			tomcat.getService().addConnector(additionalConnector);</span><br><span class="line">		&#125;</span><br><span class="line">		prepareContext(tomcat.getHost(), initializers);</span><br><span class="line">		<span class="keyword">return</span> getTomcatWebServer(tomcat);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="function"><span class="keyword">protected</span> TomcatWebServer <span class="title">getTomcatWebServer</span>(<span class="params">Tomcat tomcat</span>) </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> TomcatWebServer(tomcat, getPort() &gt;= <span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">TomcatWebServer</span>(<span class="params">Tomcat tomcat, boolean autoStart</span>) </span>&#123;</span><br><span class="line">		Assert.notNull(tomcat, <span class="string">"Tomcat Server must not be null"</span>);</span><br><span class="line">		<span class="keyword">this</span>.tomcat = tomcat;</span><br><span class="line">		<span class="keyword">this</span>.autoStart = autoStart;</span><br><span class="line">		initialize();</span><br><span class="line">	&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initialize</span>(<span class="params"></span>) throws WebServerException </span>&#123;</span><br><span class="line">		TomcatWebServer.logger</span><br><span class="line">				.info(<span class="string">"Tomcat initialized with port(s): "</span> + getPortsDescription(<span class="literal">false</span>));</span><br><span class="line">		synchronized (<span class="keyword">this</span>.monitor) &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				addInstanceIdToEngineName();</span><br><span class="line"></span><br><span class="line">				Context context = findContext();</span><br><span class="line">				context.addLifecycleListener((<span class="keyword">event</span>) -&gt; &#123;</span><br><span class="line">					<span class="keyword">if</span> (context.<span class="keyword">equals</span>(<span class="keyword">event</span>.getSource())</span><br><span class="line">							&amp;&amp; Lifecycle.START_EVENT.<span class="keyword">equals</span>(<span class="keyword">event</span>.getType())) &#123;</span><br><span class="line">						<span class="comment">// Remove service connectors so that protocol binding doesn't</span></span><br><span class="line">						<span class="comment">// happen when the service is started.</span></span><br><span class="line">						removeServiceConnectors();</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;);</span><br><span class="line"></span><br><span class="line">				<span class="comment">// Start the server to trigger initialization listeners</span></span><br><span class="line">				<span class="keyword">this</span>.tomcat.start();</span><br><span class="line"></span><br><span class="line">				<span class="comment">// We can re-throw failure exception directly in the main thread</span></span><br><span class="line">				rethrowDeferredStartupExceptions();</span><br><span class="line"></span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					ContextBindings.bindClassLoader(context, context.getNamingToken(),</span><br><span class="line">							getClass().getClassLoader());</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">catch</span> (NamingException ex) &#123;</span><br><span class="line">					<span class="comment">// Naming is not enabled. Continue</span></span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				<span class="comment">// Unlike Jetty, all Tomcat threads are daemon threads. We create a</span></span><br><span class="line">				<span class="comment">// blocking non-daemon to stop immediate shutdown</span></span><br><span class="line">				startDaemonAwaitThread();</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">catch</span> (Exception ex) &#123;</span><br><span class="line">				<span class="keyword">throw</span> <span class="keyword">new</span> WebServerException(<span class="string">"Unable to start embedded Tomcat"</span>, ex);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://shiyujun.cn/img/gongzhonghao.jpg" alt="1"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SpringBoot源码解析/" rel="tag"># SpringBoot源码解析</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/25/pringApplication到底run了什么（下）/" rel="next" title=" SpringApplication到底run了什么（下）">
+                <i class="fa fa-chevron-left"></i>  SpringApplication到底run了什么（下）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first">
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle">
+      <span class="sidebar-toggle-line sidebar-toggle-line-last">
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+
+
+
+
+
+
+
+<h5>微信公众号</h5>
+
+
+<img src="https://shiyujun.cn/img/qrcode.jpg" width="200px" height="200px">
+
+ <h5 >
+    推荐阅读
+    </h5>
+
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/TL4w0u6QA-wFx19IH9Xs6A">SpringCloud系列文章汇总</a>
+           <br>
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/NSojCEA-lF8ocR1XeuXbsg">Redis系列文章汇总</a>
+            <br>
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/WG4ZWfId-MRslWtcDtx0aA">Linux常用命令速查-汇总篇</a>
+            <br>
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/uDftoMTwJqk7H9bfQaa0sw">JVM系列文章汇总</a>
+            <br>
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/SUV1DRSFhOIksj9C_qC7aA">MySQL系列文章汇总</a>
+            <br>
+			     <a  target="_blank" href="https://mp.weixin.qq.com/s/rDqhdBk879neFM_CZzK9Yw">RabbitMQ系列文章汇总</a>
+			      <br>
+            <a  target="_blank" href="https://mp.weixin.qq.com/s/c3ngvdAc6lAs4d1sIdg16Q">多线程系列文章汇总</a>
+            <br>
+           <a  target="_blank" href="https://mp.weixin.qq.com/s/UAGihOEUPmFnwrgkSJZqpQ">Java集合源码分析系列文章汇总</a>
+
+    <h5 >
+    github
+    </h5>
+
+
+                <iframe src="https://ghbtns.com/github-btn.html?user=shiyujun&type=follow&count=true" frameborder="0" scrolling="0" width="200px" height="30px"></iframe>
+
+
+
+
+
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">石玉军</span>
+
+  
+</div>
+
+
+
+
+
+京ICP备19041898号-1
+
+
+
+
+        
+<div class="busuanzi-count">
+            <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: 'CTwhbj5tF7oh31nUjHQvN0yM-gzGzoHsz',
+        appKey: 'PQBQIOjP7wrUJELjrIQ8J6Dx',
+        placeholder: '说点什么呢',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
